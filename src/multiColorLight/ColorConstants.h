@@ -1,0 +1,9 @@
+static const uint32_t RED = 0xFF0000;
+static const uint32_t GREEN = 0x00FF00;
+static const uint32_t BLUE = 0x0000FF;
+static const uint32_t WHITE = 0xFFFFFF;
+static const uint32_t ORANGE = 0x961E00;
+static const uint32_t YELLOW = 0x965000;
+static const uint32_t TURQUOISE = 0x005064;
+static const uint32_t PURPEL = 0x320064;
+static const uint32_t PINK = 0x960064;
