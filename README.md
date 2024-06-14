@@ -4,6 +4,9 @@
 * [PDF-Doku Code](https://hardwarelabor.imn.htwk-leipzig.de/dezibot/dezibot.pdf)
 * [PDF-Doku Device](https://hardwarelabor.imn.htwk-leipzig.de/dezibot/dezibot-4doku.pdf)
 
+## Link to Software
+* [Library](https://github.com/hhaupt-dezibot/Dezibot)
+
 ## Introduction
 
 The project focuses on the software for the Dezibot4 robot and its use in the classroom.<br>
