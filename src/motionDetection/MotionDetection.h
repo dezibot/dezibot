@@ -88,7 +88,7 @@ protected:
 
     SPIClass * handler = NULL;
 
-    uint gForceCalib = 4050;
+    uint gForceCalib = 2050;
      
     
 public:
@@ -201,5 +201,12 @@ public:
      * @return the amount of acutally fetched packages 
     */
     uint getDataFromFIFO(FIFO_Package* buffer);
+
+    /**
+     * @brief set Motion as a friend class
+     * so it can access the methods to start and stop writing data to FIFO
+     * 
+     */
+    friend class Motion;
 };
 #endif //MotionDetection

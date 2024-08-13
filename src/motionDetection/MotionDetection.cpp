@@ -21,6 +21,7 @@ void MotionDetection::begin(void){
     this->writeRegister(0x23,0x37);
     //Prepare FIFO to take Accel and Gyro data
     this->initFIFO();
+    this->stopFIFO();
     
 };
 
@@ -198,8 +199,6 @@ void MotionDetection::writeToRegisterBank(registerBank bank, uint8_t reg, uint8_
         delay(100);
     }
     uint8_t result = this->readRegister(PWR_MGMT0);
-    Serial.print("MADDR_W: ");
-    Serial.println(readRegister(MADDR_W)); 
     //set Idle Bit
     this->writeRegister(PWR_MGMT0,result|0x10);
     switch(bank){
