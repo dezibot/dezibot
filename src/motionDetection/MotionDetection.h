@@ -67,7 +67,24 @@ protected:
     uint8_t readRegister(uint8_t reg);
     int16_t readDoubleRegister(uint8_t lowerReg);
     void writeRegister(uint8_t reg, uint8_t value);
-    void initFIFO();
+    /**
+     * @brief makes all settings necessary so it is possible to use the FIFO,
+     * but does not actually start writing packages to FIFO
+     * 
+     */
+    void initFIFO(void);
+    /**
+     * @brief starts writing the measurment results to the FIFO-Storage
+     * @attention before usage, the method initFIFO() must be called once
+     * 
+     */
+    void startFIFO(void);
+    /**
+     * @brief stops writing results to FIFO-Storage
+     * needs to be called before Data Registers (such as GYRO_DATA_*, ACCEL_DATA_*) are read
+     * 
+     */
+    void stopFIFO(void);
 
     SPIClass * handler = NULL;
 
@@ -177,6 +194,7 @@ public:
 
     /**
      * @brief will read all availible packages from fifo, after 40ms Fifo is full
+     * Only works when startFIFO was called
      * 
      * @param buffer pointer to FIFO_Package Struct that at least must have size 64 (this is the max package count with APEX Enabled)
      * 

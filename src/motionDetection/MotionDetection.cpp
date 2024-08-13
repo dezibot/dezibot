@@ -19,12 +19,15 @@ void MotionDetection::begin(void){
     this->writeRegister(0x20,0x25);
     //set Gyro Filter
     this->writeRegister(0x23,0x37);
-    //Enable Gyro and Acceldata in FIFO
+    //Prepare FIFO to take Accel and Gyro data
     this->initFIFO();
+    
 };
+
 void MotionDetection::end(void){
     this->writeRegister(PWR_MGMT0,0x00);
 };
+
 IMUResult MotionDetection::getAcceleration(){
     IMUResult result;
     result.x = readRegister(ACCEL_DATA_X_HIGH)<<8 | readRegister(ACCEL_DATA_X_LOW);
@@ -32,6 +35,7 @@ IMUResult MotionDetection::getAcceleration(){
     result.z = readRegister(ACCEL_DATA_Z_HIGH)<<8 | readRegister(ACCEL_DATA_Z_LOW);
     return result;
 };
+
 IMUResult MotionDetection::getRotation(){
     IMUResult result;
     result.x = readRegister(GYRO_DATA_X_HIGH) <<8;
@@ -111,7 +115,6 @@ Orientation MotionDetection::getTilt(){
         } else{
             yAngle = -1*(180-yAngle);
         }
-        //yAngle = -1*yAngle-90;
     }
           
 
@@ -124,8 +127,6 @@ Direction MotionDetection::getTiltDirection(uint tolerance){
         return Flipped;
     }
     Orientation Rot = this->getTilt();
-    Serial.println(Rot.xRotation);
-    Serial.println(Rot.xRotation == INT_MAX);
     if ((Rot.xRotation == INT_MAX)){
         return Error;
     }
@@ -216,8 +217,6 @@ void MotionDetection::writeToRegisterBank(registerBank bank, uint8_t reg, uint8_
     this->writeRegister(M_W,value);
     delayMicroseconds(10);
     this->writeRegister(PWR_MGMT0,result&0xEF);
-    Serial.print("MADDR_W: ");
-    Serial.println(readRegister(MADDR_W));
     this->resetRegisterBankAccess();
 };
 
@@ -229,11 +228,6 @@ void MotionDetection::resetRegisterBankAccess(){
 };
 
 void MotionDetection::initFIFO(){
-    delay(60);
-    //set INTF_CONFIG0 FIFO_COUNT_REC_RECORD und Little Endian
-    this->writeRegister(INTF_CONFIG0,0x60);
-    //set FIFO_CONFIG1 to Mode Snapshot and BYPASS Off
-    this->writeRegister(FIFO_CONFIG1,0x00);
     //set TMST_CONFIG1_MREG1 TMST_CONFIIG1_TMST_EN
     this->writeToRegisterBank(MREG1,TMST_CONFIG1,0x00);
     //set FiFO config 5 GYRO_EN,TMST_FSYNC, ACCEL_EN, WM_GT_TH_EN
@@ -242,16 +236,25 @@ void MotionDetection::initFIFO(){
     this->writeRegister(FIFO_CONFIG2,0x0A);
 };
 
+void MotionDetection::startFIFO(){
+    //set INTF_CONFIG0 FIFO_COUNT_REC_RECORD und Little Endian
+    this->writeRegister(INTF_CONFIG0,0x60);
+    //set FIFO_CONFIG1 to Mode Snapshot and BYPASS Off
+    this->writeRegister(FIFO_CONFIG1,0x00);
+}
+
+void MotionDetection::stopFIFO(){
+    //set INTF_CONFIG0 FIFO_COUNT_REC_RECORD und Little Endian
+    this->writeRegister(INTF_CONFIG0,0x30);
+    //set FIFO_CONFIG1 to Mode Snapshot and BYPASS Off
+    this->writeRegister(FIFO_CONFIG1,0x01);
+}
+
 uint MotionDetection::getDataFromFIFO(FIFO_Package* buffer){
     int16_t fifocount = 0;
     int8_t fifohigh = this->readRegister(FIFO_COUNTH);
     int8_t fifolow = this->readRegister(FIFO_COUNTL);  
     fifocount = (fifohigh<<8)|fifolow;
-    //fifocount |= this->readRegister(FIFO_COUNTL);
-    //fifocount = (this->readRegister(FIFO_COUNTH)<<8);
-    Serial.println(fifolow);
-    Serial.println(fifohigh);
-    Serial.println(fifocount);
     handler->beginTransaction(SPISettings(frequency,SPI_MSBFIRST,SPI_MODE0));
     digitalWrite(34,LOW);
     handler->transfer(cmdRead(FIFO_DATA));
