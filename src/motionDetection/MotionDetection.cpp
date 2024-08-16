@@ -236,16 +236,16 @@ void MotionDetection::initFIFO(){
 };
 
 void MotionDetection::startFIFO(){
-    //set INTF_CONFIG0 FIFO_COUNT_REC_RECORD und Little Endian
+    //set INTF_CONFIG0 FIFO_COUNT_FORMAT to Records and SENSOR_DATA_ENDIAN to Big Endian
     this->writeRegister(INTF_CONFIG0,0x60);
-    //set FIFO_CONFIG1 to Mode Snapshot and BYPASS Off
+    //set FIFO_CONFIG1 to BYPASS Off
     this->writeRegister(FIFO_CONFIG1,0x00);
 }
 
 void MotionDetection::stopFIFO(){
-    //set INTF_CONFIG0 FIFO_COUNT_REC_RECORD und Little Endian
+    //set INTF_CONFIG0 FIFO_COUNT_FORMAT to bytes and SENSOR_DATA_ENDIAN to Little Endian (default)
     this->writeRegister(INTF_CONFIG0,0x30);
-    //set FIFO_CONFIG1 to Mode Snapshot and BYPASS Off
+    //set FIFO_CONFIG1 BYPASS On
     this->writeRegister(FIFO_CONFIG1,0x01);
 }
 
