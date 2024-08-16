@@ -201,5 +201,6 @@ void Motion::stop(void){
     }
     Motion::left.setSpeed(0);
     Motion::right.setSpeed(0);
+    detection.stopFIFO();
 }
  

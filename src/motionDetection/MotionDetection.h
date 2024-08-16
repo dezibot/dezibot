@@ -2,6 +2,8 @@
  * @file MotionDetection.h
  * @author Hans Haupt
  * @brief This component controls the IMU (Accelerometer & Gyroscope) ICM-42670-P
+ * @attention This componend is used internally by the Motion Class 
+ *      - whenever any of the Motion Functions is executed, the result of the MotionDetection Methods may be invalid 
  * @version 0.1
  * @date 2023-12-15
  * 
