@@ -2,10 +2,6 @@
 Dezibot dezibot = Dezibot(); 
 void setup() {   
     dezibot.begin();
-<<<<<<< HEAD:example/motion_indicating/motion_indicating.ino
-=======
-    Serial.begin(115200); 
->>>>>>> remotes/origin/feature/#9-display:example/motion/motion.ino
 }  
 void loop() {   
     dezibot.motion.move(1000);   
