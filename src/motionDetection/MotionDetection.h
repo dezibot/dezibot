@@ -2,6 +2,8 @@
  * @file MotionDetection.h
  * @author Hans Haupt
  * @brief This component controls the IMU (Accelerometer & Gyroscope) ICM-42670-P
+ * @attention This componend is used internally by the Motion Class 
+ *      - whenever any of the Motion Functions is executed, the result of the MotionDetection Methods may be invalid 
  * @version 0.1
  * @date 2023-12-15
  * 
@@ -67,11 +69,28 @@ protected:
     uint8_t readRegister(uint8_t reg);
     int16_t readDoubleRegister(uint8_t lowerReg);
     void writeRegister(uint8_t reg, uint8_t value);
-    void initFIFO();
+    /**
+     * @brief makes all settings necessary so it is possible to use the FIFO,
+     * but does not actually start writing packages to FIFO
+     * 
+     */
+    void initFIFO(void);
+    /**
+     * @brief starts writing the measurment results to the FIFO-Storage
+     * @attention before usage, the method initFIFO() must be called once
+     * 
+     */
+    void startFIFO(void);
+    /**
+     * @brief stops writing results to FIFO-Storage
+     * needs to be called before Data Registers (such as GYRO_DATA_*, ACCEL_DATA_*) are read
+     * 
+     */
+    void stopFIFO(void);
 
     SPIClass * handler = NULL;
 
-    uint gForceCalib = 4050;
+    uint gForceCalib = 2050;
      
     
 public:
@@ -177,11 +196,19 @@ public:
 
     /**
      * @brief will read all availible packages from fifo, after 40ms Fifo is full
+     * Only works when startFIFO was called
      * 
      * @param buffer pointer to FIFO_Package Struct that at least must have size 64 (this is the max package count with APEX Enabled)
      * 
      * @return the amount of acutally fetched packages 
     */
     uint getDataFromFIFO(FIFO_Package* buffer);
+
+    /**
+     * @brief set Motion as a friend class
+     * so it can access the methods to start and stop writing data to FIFO
+     * 
+     */
+    friend class Motion;
 };
 #endif //MotionDetection
