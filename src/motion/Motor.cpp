@@ -19,7 +19,6 @@ void Motor::begin(void){
         .hpoint         = 0
     };
     ledc_channel_config(&channelConfig);
-    Serial.println("Motor begin done");
 };
 
 void Motor::setSpeed(uint16_t duty){
