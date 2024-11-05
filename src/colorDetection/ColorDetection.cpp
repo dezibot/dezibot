@@ -44,16 +44,12 @@ uint16_t ColorDetection::getColorValue(color color){
     switch(color) {
         case VEML_RED:
             return rgbwSensor.getRed();
-            break;
         case VEML_GREEN:
             return rgbwSensor.getGreen();
-            break;
         case VEML_BLUE: 
             return rgbwSensor.getBlue();
-            break;
         case VEML_WHITE:
             return rgbwSensor.getWhite();
-            break;
         default:
             Serial.println("Color is not supported by the sensor");
             return 0;

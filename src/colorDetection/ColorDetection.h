@@ -58,7 +58,7 @@ public:
      * @brief Start RBGW sensor with default configuration.
      * 
      */
-    void beginAutoMode(void);
+    void beginAutoMode();
     
     /**
      * @brief Begin RGBW sensor with passed configuration values.
