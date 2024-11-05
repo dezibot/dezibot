@@ -82,4 +82,4 @@ public:
 protected:
     VEML6040 rgbwSensor;
 };
-#endif // ColorDetection_h
+#endif //ColorDetection_h
