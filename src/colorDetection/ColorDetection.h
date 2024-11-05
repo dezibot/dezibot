@@ -2,6 +2,9 @@
  * @file ColorDetecion.h
  * @author Nico Schramm, Ines Rohrbach, Hans Haupt
  * @brief Class that controls the color sensor (VEML6040) of the dezibot.
+ * 
+ * This module uses the VEML6040 library (version 0.3.2) by thewknd (MIT license).
+ * 
  * @version 0.2
  * @date 2024-11-05
  * 
