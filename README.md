@@ -5,7 +5,7 @@
 * [PDF-Doku Device](https://hardwarelabor.imn.htwk-leipzig.de/dezibot/dezibot-4doku.pdf)
 
 ## Link to Software
-* [Library](https://github.com/hhaupt-dezibot/Dezibot)
+* [Library](https://github.com/dezibot/dezibot)
 
 ## Introduction
 
