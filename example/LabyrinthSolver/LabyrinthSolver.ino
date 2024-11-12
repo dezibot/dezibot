@@ -7,12 +7,14 @@ VEML6040 rgbwSensor;
 
 const double MAX_COLOR_VALUE = 65536;
 
-const double TARGET_RED = 36.88;
-const double TARGET_GREEN = 33.15;
-const double TARGET_BLUE = 29.92;
-const double THRESHOLD_RED = 1;
-const double THRESHOLD_GREEN = 1;
-const double THRESHOLD_BLUE = 1;
+double TARGET_RED;
+double TARGET_GREEN;
+double TARGET_BLUE;
+const double THRESHOLD_RED = 0.5;
+const double THRESHOLD_GREEN = 0.5;
+const double THRESHOLD_BLUE = 0.5;
+
+double initialYellowValue;
 
 void setup() {
   Serial.begin(9600);
@@ -27,8 +29,28 @@ void setup() {
   
   rgbwSensor.setConfiguration(VEML6040_IT_320MS + VEML6040_AF_AUTO + VEML6040_SD_ENABLE);
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
-  
-  delay(1000);
+
+  dezibot.display.print("PLACE IT UNDER COLOR RED");
+  delay(10000);
+  TARGET_RED = getRawColorValue(VEML_RED);
+
+  dezibot.display.print("PLACE IT UNDER COLOR GREEN");
+  delay(10000);
+  TARGET_GREEN = getRawColorValue(VEML_GREEN);
+
+  dezibot.display.print("PLACE IT UNDER COLOR BLUE");
+  delay(10000);
+  TARGET_BLUE = getRawColorValue(VEML_BLUE);
+
+  double sumColor = TARGET_RED + TARGET_GREEN + TARGET_BLUE;
+  double percentageRed = (TARGET_RED / sumColor) * 100;
+  double percentageGreen = (TARGET_GREEN / sumColor) * 100;
+  double percentageBlue = (TARGET_BLUE / sumColor) * 100;
+
+  printValue(percentageRed, "R");
+  printValue(percentageGreen, "G");
+  printValue(percentageBlue, "B");
+  delay(10000);
 }
 
 void loop() {
@@ -50,21 +72,23 @@ void loop() {
   printValue(percentageGreen, "G");
   printValue(percentageBlue, "B");
 
-  dezibot.display.print(isBlackLine(percentageRed, percentageGreen, percentageBlue));
+  // if(percentageRed <= ... && percentageBlue   >=)
 
-  // if (!isBlackLine(percentageRed, percentageGreen, percentageBlue)) {
-  //   dezibot.motion.rotateAntiClockwise(3000);
-  //   delay(3000);
-  //   if(!isBlackLine(percentageRed, percentageGreen, percentageBlue)){
-  //     dezibot.motion.rotateClockwise(3000);
-  //     delay(3000);
-  //   }
-  // }
+  // dezibot.display.print(isBlackLine(percentageRed, percentageGreen, percentageBlue));
 
-  // dezibot.motion.stop();
-  delay(2000);
-  Serial.println("");
-  dezibot.display.clear();
+  // // if (!isBlackLine(percentageRed, percentageGreen, percentageBlue)) {
+  // //   dezibot.motion.rotateAntiClockwise(3000);
+  // //   delay(3000);
+  // //   if(!isBlackLine(percentageRed, percentageGreen, percentageBlue)){
+  // //     dezibot.motion.rotateClockwise(3000);
+  // //     delay(3000);
+  // //   }
+  // // }
+
+  // // dezibot.motion.stop();
+  // delay(2000);
+  // Serial.println("");
+  // dezibot.display.clear();
 }
 
 
