@@ -30,16 +30,10 @@ void setup() {
   rgbwSensor.setConfiguration(VEML6040_IT_320MS + VEML6040_AF_AUTO + VEML6040_SD_ENABLE);
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
 
-  dezibot.display.print("PLACE IT UNDER COLOR RED");
+  dezibot.display.print("Platziere den Sensor\nUnter der gelben Linie");
   delay(10000);
   TARGET_RED = getRawColorValue(VEML_RED);
-
-  dezibot.display.print("PLACE IT UNDER COLOR GREEN");
-  delay(10000);
   TARGET_GREEN = getRawColorValue(VEML_GREEN);
-
-  dezibot.display.print("PLACE IT UNDER COLOR BLUE");
-  delay(10000);
   TARGET_BLUE = getRawColorValue(VEML_BLUE);
 
   double sumColor = TARGET_RED + TARGET_GREEN + TARGET_BLUE;
