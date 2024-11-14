@@ -108,7 +108,7 @@ switch(brightest(magnitude)){
 }
 
 photoTransistors brightest(float *magnitudes){
-  int pos;
+  int pos = 0;
   float maxMagnitude = 0; 
   for(int index = 0; index <4; index++){
     if (magnitudes[index] > maxMagnitude){
