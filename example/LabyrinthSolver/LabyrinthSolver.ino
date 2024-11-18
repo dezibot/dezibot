@@ -1,57 +1,50 @@
 #include <Dezibot.h>
 #include <Wire.h>
-#include <veml6040.h>
 
 Dezibot dezibot = Dezibot();
-VEML6040 rgbwSensor;
-
-const double MAX_COLOR_VALUE = 65536;
 
 double TARGET_RED;
 double TARGET_GREEN;
 double TARGET_BLUE;
+double initialYellowValue;
+
 const double THRESHOLD_RED = 0.5;
 const double THRESHOLD_GREEN = 0.5;
 const double THRESHOLD_BLUE = 0.5;
 
-double initialYellowValue;
-
 void setup() {
-  Serial.begin(9600);
-  Serial.println("Started");
+  Serial.begin(115200);
   dezibot.begin();
-  Serial.println("Initialised");
 
-  if (!rgbwSensor.begin()) {
-    Serial.println("ERROR: couldn't detect the sensor");
-    while (1) {}
-  }
-  
-  rgbwSensor.setConfiguration(VEML6040_IT_320MS + VEML6040_AF_AUTO + VEML6040_SD_ENABLE);
-  dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
+  //dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
 
-  dezibot.display.print("Platziere den Sensor\nUnter der gelben Linie");
-  delay(10000);
-  TARGET_RED = getRawColorValue(VEML_RED);
-  TARGET_GREEN = getRawColorValue(VEML_GREEN);
-  TARGET_BLUE = getRawColorValue(VEML_BLUE);
 
-  double sumColor = TARGET_RED + TARGET_GREEN + TARGET_BLUE;
-  double percentageRed = (TARGET_RED / sumColor) * 100;
-  double percentageGreen = (TARGET_GREEN / sumColor) * 100;
-  double percentageBlue = (TARGET_BLUE / sumColor) * 100;
+  // dezibot.display.print("Platziere den Sensor Unter der gelben Linie");
+  // delay(10000);
+  // TARGET_RED = dezibot.colorDetection.getColorValue(VEML_RED);
+  // TARGET_GREEN = dezibot.colorDetection.getColorValue(VEML_GREEN);
+  // TARGET_BLUE = dezibot.colorDetection.getColorValue(VEML_BLUE);
 
-  printValue(percentageRed, "R");
-  printValue(percentageGreen, "G");
-  printValue(percentageBlue, "B");
-  delay(10000);
+  // double sumColor = TARGET_RED + TARGET_GREEN + TARGET_BLUE;
+  // double percentageRed = (TARGET_RED / sumColor) * 100;
+  // double percentageGreen = (TARGET_GREEN / sumColor) * 100;
+  // double percentageBlue = (TARGET_BLUE / sumColor) * 100;
+
+  // printValue(percentageRed, "R");
+  // printValue(percentageGreen, "G");
+  // printValue(percentageBlue, "B");
+  // delay(10000);
+  delay(2000);
 }
 
 void loop() {
+  Serial.println("");
+  dezibot.display.clear();
+
   // dezibot.motion.move(0);
-  double red = getRawColorValue(VEML_RED);
-  double green = getRawColorValue(VEML_GREEN);
-  double blue = getRawColorValue(VEML_BLUE);
+  uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED);
+  uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
+  uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
   double sumColor = red + green + blue;
 
   double percentageRed = (red / sumColor) * 100;
@@ -80,37 +73,22 @@ void loop() {
   // // }
 
   // // dezibot.motion.stop();
-  // delay(2000);
-  // Serial.println("");
-  // dezibot.display.clear();
+  delay(1000);
 }
 
 
-bool isBlackLine(double red, double green, double blue) {
-  return (abs(red - TARGET_RED) <= THRESHOLD_RED) &&
-         (abs(green - TARGET_GREEN) <= THRESHOLD_GREEN) &&
-         (abs(blue - TARGET_BLUE) <= THRESHOLD_BLUE);
-}
+// bool isBlackLine(double red, double green, double blue) {
+//   return (abs(red - TARGET_RED) <= THRESHOLD_RED) &&
+//          (abs(green - TARGET_GREEN) <= THRESHOLD_GREEN) &&
+//          (abs(blue - TARGET_BLUE) <= THRESHOLD_BLUE);
+// }
 
-double getRawColorValue(color color) {
-  switch (color) {
-    case VEML_RED:
-      return rgbwSensor.getRed();
-    case VEML_GREEN:
-      return rgbwSensor.getGreen();
-    case VEML_BLUE:
-      return rgbwSensor.getBlue();
-    case VEML_WHITE:
-      return rgbwSensor.getWhite();
-  }
-}
-
-void printValue(double colorValue, const char* prefix) {
+void printValue(double colorValue, String prefix) {
   dezibot.display.print(prefix);
   dezibot.display.print(" ");
-  dezibot.display.println(String(colorValue, 2));
-  
+  dezibot.display.println(colorValue, 2);
+
   Serial.print(prefix);
   Serial.print(" ");
-  Serial.println(colorValue);
+  Serial.println(colorValue, 2);
 }
