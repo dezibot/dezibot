@@ -37,6 +37,15 @@ class Display{
         void sendDisplayCMD(uint8_t cmd);
 
         /**
+         * @brief Like sendDisplayCMD, but less I2C overhead when sending multiple 
+         * commands at once. cmd_count must be <= I2C_BUFFER_LENGTH - 1
+         * 
+         * @param cmds pointer to bytes of instructions
+         * @param cmd_count the amount of instructions
+         */
+        void sendDisplayCMDs(uint8_t *cmds, size_t cmd_count);
+
+        /**
          * @brief should be called whenever characters where printed to the display.
          * Updates the data of the class to handle linebreaks correctly
          * @param charAmount How many characters where added to the screen
