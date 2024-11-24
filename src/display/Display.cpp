@@ -1,9 +1,9 @@
 /**
  * @file Display.cpp
- * @author Hans Haupt (hans.haupt@dezibot.de)
+ * @author Hans Haupt (hans.haupt@dezibot.de), Florian Schmidt
  * @brief Adds the ability to print to the display of the robot.
- * @version 0.1
- * @date 2024-06-05
+ * @version 0.2
+ * @date 2024-11-24
  * 
  * @copyright Copyright (c) 2024
  */
@@ -189,4 +189,46 @@ void Display::invertColor(void){
         sendDisplayCMD(setInverseMode);
     }
     this->colorInverted = !this->colorInverted;
+};
+
+void Display::displayBattery(uint8_t batteryLevel, BatteryLocation location){
+    uint8_t startx = (location == BatteryLocation::TOP_LEFT || location == BatteryLocation::BOTTOM_LEFT) ? 0 : 112;
+    uint8_t starty = (location == BatteryLocation::TOP_LEFT || location == BatteryLocation::TOP_RIGHT) ? 0 : 7;
+
+    // 8 control bytes
+    uint8_t ctrl_cmds[8] = {
+        addressingMode,
+        0x00,
+        colRange,
+        startx,
+        startx+15,
+        pageRange,
+        starty,
+        starty,
+    };
+    sendDisplayCMDs(ctrl_cmds, sizeof(ctrl_cmds));
+
+    // 16 data bytes (16 cols*1 page)
+    uint8_t data_cmds[16];
+
+    // essentially round(battLevel * 12 / 100) without floating point arithmetic
+    const uint8_t battSegments = 12;
+    uint16_t temp = (uint16_t)batteryLevel * battSegments;
+    uint8_t upperSegment = (temp + 50) / 100;
+
+    data_cmds[0] = B01111110;
+    for (int i = 1; i < battSegments + 1; i++)
+    {
+        data_cmds[i] = i <= upperSegment ? 0xff : B10000001;
+    };
+    data_cmds[13] = 0xff;
+    data_cmds[14] = data_cmds[15] = B00111100;
+
+    Wire.beginTransmission(DisplayAdress);
+    Wire.write(data_byte);
+    for (int i = 0; i < sizeof(data_cmds); i++)
+    {
+        Wire.write(data_cmds[i]);
+    };
+    Wire.endTransmission();
 };

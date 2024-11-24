@@ -1,9 +1,9 @@
 /**
  * @file InfraredLight.h
- * @author Hans Haupt (hans.haupt@dezibot.de)
+ * @author Hans Haupt (hans.haupt@dezibot.de), Florian Schmidt
  * @brief Adds the ability to print to the display of the robot.
- * @version 0.1
- * @date 2024-05-24
+ * @version 0.2
+ * @date 2024-11-24
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -14,6 +14,13 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include "DisplayCMDs.h"
+
+enum class BatteryLocation {
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT
+};
 
 class Display{
     protected:
@@ -130,6 +137,17 @@ class Display{
          * 
          */
         void invertColor(void);
+
+        /**
+         * @brief displays a battery icon on one of the corners
+         * 
+         * example:
+         * 
+         * @code
+         * dezibot.display.displayBattery(dezibot.battery.getBatteryLevel(), BatteryLocation::TOP_LEFT);
+         * @endcode
+         */
+        void displayBattery(uint8_t batteryLevel, BatteryLocation location);
 };
 
 
