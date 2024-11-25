@@ -18,7 +18,7 @@ void Battery::begin(void){
 };
 
 bool Battery::isCharging(void){
-    bool vusb_inv = (bool) digitalRead(VUSB_SENS_PIN);
+    bool vusb_inv = (bool)digitalRead(VUSB_SENS_PIN);
     return !vusb_inv;
 };
 
