@@ -12,6 +12,11 @@
 #include "Battery.h"
 #include <Arduino.h>
 
+const float Battery::CHARGE_COEFFS[6] = {357.72441f, -5032.4026f,
+    24018.272f, -34322.036f, -47802.877f, 125260.37f};
+const float Battery::DISCHARGE_COEFFS[6] = {-266.14885f, 5549.0926f, -45814.116f,
+    187370.92f, -379715.32f, 305088.72f};
+
 void Battery::begin(void){
     pinMode(BAT_ADC_EN_PIN, OUTPUT);
     pinMode(VUSB_SENS_PIN, INPUT_PULLUP);

@@ -70,12 +70,9 @@ protected:
     static inline uint8_t BAT_ADC_EN_PIN = 9;
     static inline uint8_t BAT_ADC_PIN = 10;
     static inline uint8_t VUSB_SENS_PIN = 38;
-    // when changing the length of coeff arrays, Battery::voltsToBatLevel() must be updated
-    static constexpr float CHARGE_COEFFS[6] = {357.72441f, -5032.4026f, 24018.272f, -34322.036f,
-    -47802.877f, 125260.37f};
-    // these coefficients are the most accurate for high batt loads (^= highest voltage drop)
-    static constexpr float DISCHARGE_COEFFS[6] = {-266.14885f, 5549.0926f, -45814.116f, 187370.92f,
-    -379715.32f, 305088.72f};
+    // when changing the declared lengths, their definitions and Battery::voltsToBatLevel() must be updated
+    static const float CHARGE_COEFFS[6];
+    static const float DISCHARGE_COEFFS[6];
 };
 
 #endif //Battery_h
