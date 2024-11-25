@@ -101,11 +101,12 @@ void Display::print(char *value){
 	        //check if next character is a linebreak
             if(*value=='\n')
             {
-                // updateLine can be skipped, result will always be currLine++ and charsOnCL = 0
+                // updateLine can be skipped, only need to check 8+ overflow;
+                // otherwise result will always be currLine++ and charsOnCL = 0
                 // skip to next line
                 Wire.beginTransmission(DisplayAdress);
                 Wire.write(0x00); // cmd mode
-                Wire.write(0xB0 | currLine+1); // set page start bit-OR next line
+                Wire.write(0xB0 | (currLine+1) % 8); // set page start bit-OR next line
                 Wire.write(0x00); // lower column address (0 since newline)
                 Wire.write(0x10); // upper column address (still 0)
                 Wire.endTransmission();
