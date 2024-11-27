@@ -139,15 +139,17 @@ class Display{
         void invertColor(void);
 
         /**
-         * @brief displays a battery icon on one of the corners
+         * @brief displays a battery icon on one of the corners.
+         * 
+         * Since display.print/println() overdraws the whole row, this function should be called last.
          * 
          * example:
          * 
          * @code
-         * dezibot.display.displayBattery(dezibot.battery.getBatteryLevel(), BatteryLocation::TOP_LEFT);
+         * dezibot.display.drawBattery(dezibot.battery.getBatteryLevel(), BatteryLocation::TOP_LEFT);
          * @endcode
          */
-        void displayBattery(uint8_t batteryLevel, BatteryLocation location);
+        void drawBattery(uint8_t batteryLevel, BatteryLocation location);
 };
 
 

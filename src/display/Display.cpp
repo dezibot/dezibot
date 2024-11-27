@@ -101,16 +101,16 @@ void Display::print(char *value){
 	        //check if next character is a linebreak
             if(*value=='\n')
             {
-                // updateLine can be skipped, only need to check 8+ overflow;
-                // otherwise result will always be currLine++ and charsOnCL = 0
-                // skip to next line
-                Wire.beginTransmission(DisplayAdress);
-                Wire.write(0x00); // cmd mode
-                Wire.write(0xB0 | (currLine+1) % 8); // set page start bit-OR next line
-                Wire.write(0x00); // lower column address (0 since newline)
-                Wire.write(0x10); // upper column address (still 0)
-                Wire.endTransmission();
-
+                //fill the current line with blanks
+                while(this->charsOnCurrLine<16)
+                {
+                    updateLine(1);
+                    Wire.beginTransmission(DisplayAdress);
+                    for(int i = 0;i<9;i++){
+                        Wire.write(font8x8_colwise[0][i]);
+                    }
+                    Wire.endTransmission();
+                }
                 //make the linebreak
                 this->currLine=currLine+1;
                 this->charsOnCurrLine=0;
@@ -191,7 +191,7 @@ void Display::invertColor(void){
     this->colorInverted = !this->colorInverted;
 };
 
-void Display::displayBattery(uint8_t batteryLevel, BatteryLocation location){
+void Display::drawBattery(uint8_t batteryLevel, BatteryLocation location){
     uint8_t startx = (location == BatteryLocation::TOP_LEFT || location == BatteryLocation::BOTTOM_LEFT) ? 0 : 112;
     uint8_t starty = (location == BatteryLocation::TOP_LEFT || location == BatteryLocation::TOP_RIGHT) ? 0 : 7;
 
@@ -233,10 +233,18 @@ void Display::displayBattery(uint8_t batteryLevel, BatteryLocation location){
     Wire.endTransmission();
 
     // restore colRange/pageRange
-    ctrl_cmds[3] = 0x00;
-    ctrl_cmds[4] = 0x7f;
-    ctrl_cmds[6] = 0x00;
-    ctrl_cmds[7] = 0x07;
-
-    sendDisplayCMDs(ctrl_cmds, sizeof(ctrl_cmds));
+    uint8_t reset_cmds[11] = {
+        addressingMode,
+        0x00,
+        colRange,
+        0x00,
+        0x7f,
+        pageRange,
+        0x00,
+        0x07,
+        0xB0 | (currLine) % 8, // restore page start
+        0x00, // lower column address (0 since newline)
+        0x10, // upper column address (still 0)
+    };
+    sendDisplayCMDs(reset_cmds, sizeof(reset_cmds));
 };
