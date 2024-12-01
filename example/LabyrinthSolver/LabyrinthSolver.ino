@@ -1,94 +1,91 @@
-#include <Dezibot.h>
-#include <Wire.h>
+// #include <Dezibot.h>
 
-Dezibot dezibot = Dezibot();
+// Dezibot dezibot = Dezibot();
 
-double TARGET_RED;
-double TARGET_GREEN;
-double TARGET_BLUE;
-double initialYellowValue;
+// double TARGET_RED;
+// double TARGET_GREEN;
 
-const double THRESHOLD_RED = 0.5;
-const double THRESHOLD_GREEN = 0.5;
-const double THRESHOLD_BLUE = 0.5;
+// const double THRESHOLD = 0.15;
+// const double BASE_SPEED = 3900;
 
-void setup() {
-  Serial.begin(115200);
-  dezibot.begin();
-
-  //dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
-
-
-  // dezibot.display.print("Platziere den Sensor Unter der gelben Linie");
-  // delay(10000);
-  // TARGET_RED = dezibot.colorDetection.getColorValue(VEML_RED);
-  // TARGET_GREEN = dezibot.colorDetection.getColorValue(VEML_GREEN);
-  // TARGET_BLUE = dezibot.colorDetection.getColorValue(VEML_BLUE);
-
-  // double sumColor = TARGET_RED + TARGET_GREEN + TARGET_BLUE;
-  // double percentageRed = (TARGET_RED / sumColor) * 100;
-  // double percentageGreen = (TARGET_GREEN / sumColor) * 100;
-  // double percentageBlue = (TARGET_BLUE / sumColor) * 100;
-
-  // printValue(percentageRed, "R");
-  // printValue(percentageGreen, "G");
-  // printValue(percentageBlue, "B");
-  // delay(10000);
-  delay(2000);
-}
-
-void loop() {
-  Serial.println("");
-  dezibot.display.clear();
-
-  // dezibot.motion.move(0);
-  uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED);
-  uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
-  uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
-  double sumColor = red + green + blue;
-
-  double percentageRed = (red / sumColor) * 100;
-  double percentageGreen = (green / sumColor) * 100;
-  double percentageBlue = (blue / sumColor) * 100;
-
-  printValue(red, "R");
-  printValue(green, "G");
-  printValue(blue, "B");
-
-  printValue(percentageRed, "R");
-  printValue(percentageGreen, "G");
-  printValue(percentageBlue, "B");
-
-  // if(percentageRed <= ... && percentageBlue   >=)
-
-  // dezibot.display.print(isBlackLine(percentageRed, percentageGreen, percentageBlue));
-
-  // // if (!isBlackLine(percentageRed, percentageGreen, percentageBlue)) {
-  // //   dezibot.motion.rotateAntiClockwise(3000);
-  // //   delay(3000);
-  // //   if(!isBlackLine(percentageRed, percentageGreen, percentageBlue)){
-  // //     dezibot.motion.rotateClockwise(3000);
-  // //     delay(3000);
-  // //   }
-  // // }
-
-  // // dezibot.motion.stop();
-  delay(1000);
-}
-
-
-// bool isBlackLine(double red, double green, double blue) {
-//   return (abs(red - TARGET_RED) <= THRESHOLD_RED) &&
-//          (abs(green - TARGET_GREEN) <= THRESHOLD_GREEN) &&
-//          (abs(blue - TARGET_BLUE) <= THRESHOLD_BLUE);
+// void setup() {
+//   Serial.begin(115200);
+//   dezibot.begin();
+//   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
+//   displayMessage("Kalibrierung");
+//   delay(3000);
+//   calibrateYellow();
 // }
 
-void printValue(double colorValue, String prefix) {
-  dezibot.display.print(prefix);
-  dezibot.display.print(" ");
-  dezibot.display.println(colorValue, 2);
+// void loop() {
+//   dezibot.display.clear();
+//   double percentageRed, percentageGreen, percentageBlue;
+//   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
-  Serial.print(prefix);
-  Serial.print(" ");
-  Serial.println(colorValue, 2);
-}
+//   dezibot.display.println(String(percentageRed, 2) + " " + String(percentageGreen, 2));
+//   dezibot.display.println(String(abs(percentageRed - TARGET_RED), 2) + " " + String(abs(percentageGreen - TARGET_GREEN), 2));
+//   delay(5000);
+
+//   if (abs(percentageRed - TARGET_RED) <= THRESHOLD && abs(percentageGreen - TARGET_GREEN) <= THRESHOLD) {
+//     displayMessage("Gelb erkannt. Geradeaus fahren.");
+//     dezibot.motion.left.setSpeed(BASE_SPEED);
+//     dezibot.motion.right.setSpeed(BASE_SPEED);
+//   } else {
+//     displayMessage("Von Gelb abgekommen. Korrigiere Richtung.");
+//     double initialRed = percentageRed;
+//     double initialGreen = percentageGreen;
+
+//     // Kurz nach links drehen
+//     dezibot.motion.left.setSpeed(0);
+//     dezibot.motion.right.setSpeed(BASE_SPEED);
+//     delay(500);
+//     getColorPercentages(percentageRed, percentageGreen, percentageBlue);
+
+//     if (percentageRed < initialRed || percentageGreen < initialGreen) {
+//       displayMessage("GEHE RECHTS.");
+//       dezibot.motion.left.setSpeed(BASE_SPEED);
+//       dezibot.motion.right.setSpeed(0);
+//     } else {
+//       displayMessage("GEHE LINKS.");
+//       dezibot.motion.left.setSpeed(0);
+//       dezibot.motion.right.setSpeed(BASE_SPEED);
+//     }
+
+//     while (true) {
+//       getColorPercentages(percentageRed, percentageGreen, percentageBlue);
+//       if (abs(percentageRed - TARGET_RED) < THRESHOLD && abs(percentageGreen - TARGET_GREEN) < THRESHOLD) {
+//         displayMessage("Linie gefunden");
+//         break;
+//       }
+//     }
+
+//     displayMessage("Linie wiedergefunden. Weiter geradeaus.");
+//     dezibot.motion.left.setSpeed(BASE_SPEED);
+//     dezibot.motion.right.setSpeed(BASE_SPEED);
+//   }
+// }
+
+// void calibrateYellow() {
+//   double percentageRed, percentageGreen, percentageBlue;
+//   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
+
+//   TARGET_RED = percentageRed;
+//   TARGET_GREEN = percentageGreen;
+// }
+
+// void getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) {
+//   uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED);
+//   uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
+//   uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
+//   double sumColor = red + green + blue;
+
+//   percentageRed = (red / sumColor) * 100.0;
+//   percentageGreen = (green / sumColor) * 100.0;
+//   percentageBlue = (blue / sumColor) * 100.0;
+// }
+
+// void displayMessage(const char *message) {
+//   dezibot.display.clear();
+//   dezibot.display.println(message);
+//   Serial.println(message);
+// }

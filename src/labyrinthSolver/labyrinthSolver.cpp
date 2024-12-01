@@ -1,97 +1,93 @@
-#include <Dezibot.h>
-#include <Wire.h>
-#include <veml6040.h>
+// #include <Dezibot.h>
+// #include <Wire.h>
+// #include <veml6040.h>
 
-Dezibot dezibot = Dezibot();
-VEML6040 rgbwSensor;
+// // Konstruktor
+// LabyrinthSolver::LabyrinthSolver(Dezibot& dezibot) : dezibot(dezibot), TARGET_RED(0.0), TARGET_GREEN(0.0) {}
 
-const double MAX_COLOR_VALUE = 65536;
+// // Setup-Methode
+// void LabyrinthSolver::setup() {
+    // Serial.begin(115200);
+    // dezibot.begin();
 
-const double TARGET_RED = 31.5;
-const double TARGET_GREEN = 35;
-const double TARGET_BLUE = 33.14;
-const double THRESHOLD = 1.3;
+    // Serial.println("Bitte Sensor über Gelb halten. Kalibrierung startet in 3 Sekunden...");
+    // delay(3000);
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Started");
-  dezibot.begin();
-  Serial.println("Initialised");
+    // calibrateYellow();
 
-  if (!rgbwSensor.begin()) {
-    Serial.println("ERROR: couldn't detect the sensor");
-    while (1) {}
-  }
-  
-  rgbwSensor.setConfiguration(VEML6040_IT_320MS + VEML6040_AF_AUTO + VEML6040_SD_ENABLE);
-  dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
-  delay(1000);
-}
+    // Serial.println("Kalibrierung abgeschlossen.");
+    // Serial.print("TARGET_RED: ");
+    // Serial.println(TARGET_RED, 2);
+    // Serial.print("TARGET_GREEN: ");
+    // Serial.println(TARGET_GREEN, 2);
+// }
 
-void loop() {
-  dezibot.motion.move();
-  dezibot.motion.rotateClockwise(5000); //TODO: hier weitermachen MOVE muss ausgeführt werden beim rotate sonst kein rotate und Delay muss mind. Summe der Zeit des rotates sein sonst abbruch
-  delay(5000);
+// // Haupt-Loop-Methode
+// void LabyrinthSolver::loop() {
+    // // Farbwerte in Prozent berechnen
+    // double percentageRed, percentageGreen, percentageBlue;
+    // getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
-  double red = getRawColorValue(VEML_RED);
-  double green = getRawColorValue(VEML_GREEN);
-  double blue = getRawColorValue(VEML_BLUE);
-  double sumColor = red + green + blue;
+    // // Gelb erkennen basierend auf prozentualen Farbwerten
+    // if (isYellowDetected(percentageRed, percentageGreen)) {
+        // Serial.println("Gelb erkannt. Geradeaus fahren.");
+        // dezibot.motion.move(0, 200);  // Geradeaus bewegen
+    // } else {
+        // Serial.println("Von Gelb abgekommen. Korrigiere Richtung.");
 
-  double percentageRed = (red / sumColor) * 100;
-  double percentageGreen = (green / sumColor) * 100;
-  double percentageBlue = (blue / sumColor) * 100;
+        // // Korrektur der Richtung
+        // correctToYellow();
+    // }
 
-  printValue(percentageRed, "R");
-  printValue(percentageGreen, "G");
-  printValue(percentageBlue, "B");
-  dezibot.display.println(isBlackLine(percentageRed, percentageGreen, percentageBlue));
-    
-  dezibot.motion.move();
+    // delay(50);  // Kleine Verzögerung zur Stabilität
+// }
 
-  dezibot.motion.rotateAntiClockwise(1000);
-  delay(200);
-  if (isBlackLine(percentageRed, percentageGreen, percentageBlue)) {
-    dezibot.motion.move();
-  } 
-  else 
-  {
-    dezibot.motion.rotateClockwise(1000);
-    delay(200);
-  }
+// // Kalibrierung der Gelbwerte
+// void LabyrinthSolver::calibrateYellow() {
+    // // Farbwerte erfassen und Zielwerte für Gelb berechnen
+    // double percentageRed, percentageGreen, percentageBlue;
+    // getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
- }
-  delay(1000);
-  Serial.println("");
-  dezibot.display.clear();
-}
+    // TARGET_RED = percentageRed;
+    // TARGET_GREEN = percentageGreen;
+// }
 
+// // Farbwerte in Prozent berechnen
+// void LabyrinthSolver::getColorPercentages(double& percentageRed, double& percentageGreen, double& percentageBlue) {
+    // uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED);
+    // uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
+    // uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
+    // double sumColor = red + green + blue;
 
-bool isBlackLine(double red, double green, double blue) {
-  return (abs(red - TARGET_RED) <= THRESHOLD) &&
-         (abs(green - TARGET_GREEN) <= THRESHOLD) &&
-         (abs(blue - TARGET_BLUE) <= THRESHOLD);
-}
+    // percentageRed = (red / sumColor) * 100.0;
+    // percentageGreen = (green / sumColor) * 100.0;
+    // percentageBlue = (blue / sumColor) * 100.0;
+// }
 
-double getRawColorValue(color color) {
-  switch (color) {
-    case VEML_RED:
-      return rgbwSensor.getRed();
-    case VEML_GREEN:
-      return rgbwSensor.getGreen();
-    case VEML_BLUE:
-      return rgbwSensor.getBlue();
-    case VEML_WHITE:
-      return rgbwSensor.getWhite();
-  }
-}
+// // Prüft, ob Gelb erkannt wurde
+// bool LabyrinthSolver::isYellowDetected(double percentageRed, double percentageGreen) {
+    // return abs(percentageRed - TARGET_RED) <= THRESHOLD &&
+           // abs(percentageGreen - TARGET_GREEN) <= THRESHOLD;
+// }
 
-void printValue(double colorValue, const char* prefix) {
-  dezibot.display.print(prefix);
-  dezibot.display.print(" ");
-  dezibot.display.println(String(colorValue, 2));
-  
-  Serial.print(prefix);
-  Serial.print(" ");
-  Serial.println(colorValue);
-}
+// // Korrektur der Richtung, um Gelb zu finden
+// void LabyrinthSolver::correctToYellow() {
+    // double percentageRed, percentageGreen, percentageBlue;
+
+    // while (true) {
+        // dezibot.motion.rotateAntiClockwise(200, 150);
+        // delay(300);
+
+        // getColorPercentages(percentageRed, percentageGreen, percentageBlue);
+        // if (isYellowDetected(percentageRed, percentageGreen)) break;
+
+        // dezibot.motion.rotateClockwise(200, 150);
+        // delay(300);
+
+        // getColorPercentages(percentageRed, percentageGreen, percentageBlue);
+        // if (isYellowDetected(percentageRed, percentageGreen)) break;
+    // }
+
+    // Serial.println("Linie wiedergefunden. Zurück zur Linie.");
+    // dezibot.motion.move(0, 200);  // Geradeaus bewegen
+// }
