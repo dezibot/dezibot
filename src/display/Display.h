@@ -1,9 +1,9 @@
 /**
  * @file InfraredLight.h
- * @author Hans Haupt (hans.haupt@dezibot.de)
+ * @author Hans Haupt (hans.haupt@dezibot.de), Florian Schmidt
  * @brief Adds the ability to print to the display of the robot.
- * @version 0.1
- * @date 2024-05-24
+ * @version 0.2
+ * @date 2024-11-24
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -14,6 +14,13 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include "DisplayCMDs.h"
+
+enum class BatteryLocation {
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT
+};
 
 class Display{
     protected:
@@ -35,6 +42,15 @@ class Display{
          * @param cmd the byte instruction that shold by sent 
          */
         void sendDisplayCMD(uint8_t cmd);
+
+        /**
+         * @brief Like sendDisplayCMD, but less I2C overhead when sending multiple 
+         * commands at once. cmd_count must be <= I2C_BUFFER_LENGTH - 1
+         * 
+         * @param cmds pointer to bytes of instructions
+         * @param cmd_count the amount of instructions
+         */
+        void sendDisplayCMDs(uint8_t *cmds, size_t cmd_count);
 
         /**
          * @brief should be called whenever characters where printed to the display.
@@ -121,6 +137,19 @@ class Display{
          * 
          */
         void invertColor(void);
+
+        /**
+         * @brief displays a battery icon on one of the corners.
+         * 
+         * Since display.print/println() overdraws the whole row, this function should be called last.
+         * 
+         * example:
+         * 
+         * @code
+         * dezibot.display.drawBattery(dezibot.battery.getBatteryLevel(), BatteryLocation::TOP_LEFT);
+         * @endcode
+         */
+        void drawBattery(uint8_t batteryLevel, BatteryLocation location);
 };
 
 

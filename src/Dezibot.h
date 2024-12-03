@@ -19,6 +19,7 @@
 #include "infraredLight/InfraredLight.h"
 #include "communication/Communication.h"
 #include "display/Display.h"
+#include "battery/Battery.h"
 
 
 class Dezibot {
@@ -33,6 +34,7 @@ public:
     InfraredLight infraredLight;
     Communication communication;
     Display display;
+    Battery battery;
     void begin(void);
 };
 
