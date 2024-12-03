@@ -15,6 +15,8 @@ void setup() {
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
 }
 //TODO: Scale Wert für dunklen Raum --> mit perfekten Hütchen messen
+//TODO: Links Linken und rechts lenken Methoden
+//TODO: DeadEnd Rotation Methode
 void loop() {
   double percentageRed, percentageGreen, percentageBlue;
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
