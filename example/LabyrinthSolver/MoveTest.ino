@@ -14,10 +14,16 @@ void setup() {
   dezibot.begin();
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
 }
-//TODO: Scale Wert für dunklen Raum --> mit perfekten Hütchen messen
-//TODO: Links Linken und rechts lenken Methoden
+//TODO: Scale Wert für dunklen Raum --> mit perfekten Hütchen messen bzw. dunkler Raum
+//TODO: Links Lenken und rechts lenken Methoden
 //TODO: DeadEnd Rotation Methode
 void loop() {
+
+  if(true){
+    rotateLeft();
+    delay(20000);
+  }
+
   double percentageRed, percentageGreen, percentageBlue;
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
@@ -26,6 +32,31 @@ void loop() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
+
+// void deadEndRotation(){
+
+// }
+
+void rotateLeft() {
+  dezibot.motion.left.setSpeed(0);              
+  dezibot.motion.right.setSpeed(MAX_SPEED);    
+  colorSwitch();                               
+  delay(3000);                                 
+  stopMotors();                                
+}
+
+void rotateRight() {
+  dezibot.motion.left.setSpeed(MAX_SPEED);     
+  dezibot.motion.right.setSpeed(0);           
+  colorSwitch();                               
+  delay(3000);                                 
+  stopMotors();
+}
+
+void stopMotors() {
+  dezibot.motion.left.setSpeed(0);
+  dezibot.motion.right.setSpeed(0);
+}
 
 void colorSwitch() {
   invertComparison = !invertComparison;
