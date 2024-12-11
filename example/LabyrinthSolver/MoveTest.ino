@@ -9,29 +9,24 @@ const double ROTATE_SCALE = 1.0;
 const double RED_SCALE = 1.0075;
 const int ROTATE_DURATION = 4000;
 
-bool once = true;
-
 bool invertComparison = false;
 
 void setup() {
   Serial.begin(115200);
   dezibot.begin();
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
+
+  //rotateLeft();
   colorSwitch();  //auskommentieren wenn links grün und rechts rot zum start
+  deadEndRotation();
 }
-//TODO: Scale Wert für dunklen Raum --> mit perfekten Hütchen messen bzw. dunkler Raum
-//TODO: DeadEnd Rotation Methode
+
 void loop() {
-
-  // if (once) {
-  //   once = false;
-  //   deadEndRotation();
-  // }
-
   double percentageRed, percentageGreen, percentageBlue;
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
   bool isFirstGreater = compareColors(percentageRed, percentageGreen);
+  Serial.println(isFirstGreater);
   controlMotors(isFirstGreater);
 }
 
@@ -42,35 +37,32 @@ bool isColorCloseTo(double initialValue, double newValue, double tolerance = 0.5
 }
 
 void deadEndRotation() {
-  colorSwitch();
+  // dezibot.motion.left.setSpeed(0);
+  // dezibot.motion.right.setSpeed(MAX_SPEED);
 
-  dezibot.motion.left.setSpeed(0);
-  dezibot.motion.right.setSpeed(MAX_SPEED);
+  // delay(2000);
+  // dezibot.motion.left.setSpeed(MAX_SPEED);
+  // dezibot.motion.right.setSpeed(0);
 
-  delay(2000);
-  dezibot.motion.left.setSpeed(MAX_SPEED);
-  dezibot.motion.right.setSpeed(0);
+  // delay(4000);
 
-  delay(5000);
+  // double initialRed, initialGreen, initialBlue;
+  // getColorPercentages(initialRed, initialGreen, initialBlue);
 
-  double initialRed, initialGreen, initialBlue;
-  getColorPercentages(initialRed, initialGreen, initialBlue);
+  // double newRed, newGreen, newBlue;
+  // bool stillOnWhite = true;
 
+  // while (stillOnWhite) {
+  //   getColorPercentages(newRed, newGreen, newBlue);
+  //   stillOnWhite = isColorCloseTo(initialRed, newRed) && isColorCloseTo(initialGreen, newGreen);
+  // }
 
-  double newRed, newGreen, newBlue;
-  bool stillOnWhite = true;
-
-  while (stillOnWhite) {
-    getColorPercentages(newRed, newGreen, newBlue);
-    dezibot.display.println(isColorCloseTo(initialRed, newRed));
-    dezibot.display.println(isColorCloseTo(initialGreen, newGreen));
-    // Serial.println(String(initialGreen - newGreen),2);
-    // Serial.println(String(initialGreen - newGreen),2);
-    stillOnWhite = isColorCloseTo(initialRed, newRed) && isColorCloseTo(initialGreen, newGreen);
-  }
-
-  stopMotors();
-  delay(3000);
+  // dezibot.motion.left.setSpeed(BASE_SPEED);
+  // dezibot.motion.right.setSpeed(BASE_SPEED);
+  // delay(700);
+  // stopMotors();
+  // delay(2000);
+  //colorSwitch();
 }
 
 void rotateLeft() {
@@ -104,6 +96,11 @@ void getColorPercentages(double &percentageRed, double &percentageGreen, double 
   uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
   double sumColor = red + green + blue;
 
+   if (sumColor == 0) {
+    percentageRed = percentageGreen = percentageBlue = 0;
+    return;
+  }
+
   percentageRed = (red / sumColor) * 100.0;
   percentageGreen = (green / sumColor) * 100.0;
   percentageBlue = (blue / sumColor) * 100.0;
@@ -121,6 +118,7 @@ void controlMotors(bool isFirstGreater) {
     dezibot.motion.left.setSpeed(ROTATE_SPEED);
     dezibot.motion.right.setSpeed(BASE_SPEED);
   }
+  delay(100);
 }
 
 void displayMessage(const char *message) {
