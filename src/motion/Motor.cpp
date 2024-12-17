@@ -22,26 +22,29 @@ void Motor::begin(void){
     Serial.println("Motor begin done");
 };
 
-void Motor::setSpeed(uint16_t duty){
-    
-    int difference = duty-this->getSpeed();
-    if (difference > 0){
-        for(int i = 0;i<difference;i+=difference/20){
-            this->duty += difference/20;
-            ledc_set_duty(LEDC_MODE,this->channel,duty);
-            ledc_update_duty(LEDC_MODE,this->channel);
+void Motor::setSpeed(uint16_t duty) {
+    int difference = duty - this->getSpeed();
+    int step = max(abs(difference / 20), 1);
+
+    if (difference > 0) {
+        for (int i = 0; i < difference; i += step) {
+            this->duty += step;
+            this->duty = min(this->duty, duty);
+            ledc_set_duty(LEDC_MODE, this->channel, this->duty);
+            ledc_update_duty(LEDC_MODE, this->channel);
             delayMicroseconds(5);
         }
     } else {
-        for(int i = 0;i>difference;i-=abs(difference/20)){
-            this->duty -= abs(difference/20);
-            ledc_set_duty(LEDC_MODE,this->channel,duty);
-            ledc_update_duty(LEDC_MODE,this->channel);
+        for (int i = 0; i > difference; i -= step) {
+            this->duty -= step;
+            this->duty = max(this->duty, duty);
+            ledc_set_duty(LEDC_MODE, this->channel, this->duty);
+            ledc_update_duty(LEDC_MODE, this->channel);
             delayMicroseconds(5);
         }
     }
+}
 
-};
 
 uint16_t Motor::getSpeed(void){
     return this->duty;
