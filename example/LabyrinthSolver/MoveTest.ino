@@ -9,8 +9,6 @@ const double ROTATE_SCALE = 1.0;
 const double RED_SCALE = 1.0075;
 const int ROTATE_DURATION = 4000;
 
-bool once = true;
-
 bool invertComparison = false;
 
 void setup() {
@@ -27,6 +25,7 @@ void loop() {
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
   bool isFirstGreater = compareColors(percentageRed, percentageGreen);
+  Serial.println(isFirstGreater);
   controlMotors(isFirstGreater);
 }
 
@@ -41,18 +40,24 @@ void deadEndRotation() {
   Serial.println("Begin Deadend Rotation");
   colorSwitch();
 
-  dezibot.motion.left.setSpeed(0);
-  dezibot.motion.right.setSpeed(MAX_SPEED);
-
-  delay(3000);
+  delay(2500);
   dezibot.motion.left.setSpeed(MAX_SPEED);
   dezibot.motion.right.setSpeed(0);
 
   delay(5000);
+  dezibot.motion.left.setSpeed(MAX_SPEED);
+  dezibot.motion.right.setSpeed(0);
 
   double initialRed, initialGreen, initialBlue;
   getColorPercentages(initialRed, initialGreen, initialBlue);
 
+  double newRed, newGreen, newBlue;
+  bool stillOnWhite = true;
+
+  while (stillOnWhite) {
+    getColorPercentages(newRed, newGreen, newBlue);
+    stillOnWhite = isColorCloseTo(initialRed, newRed) && isColorCloseTo(initialGreen, newGreen);
+  }
 
   double newRed, newGreen, newBlue;
   bool stillOnWhite = true;
@@ -110,6 +115,11 @@ void getColorPercentages(double &percentageRed, double &percentageGreen, double 
   uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
   uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
   double sumColor = red + green + blue;
+
+   if (sumColor == 0) {
+    percentageRed = percentageGreen = percentageBlue = 0;
+    return;
+  }
 
   percentageRed = (red / sumColor) * 100.0;
   percentageGreen = (green / sumColor) * 100.0;
