@@ -24,12 +24,22 @@ void Motor::begin(void){
 
 void Motor::setSpeed(uint16_t duty) {
     int difference = duty - this->getSpeed();
-    int step = max(abs(difference / 20), 1);
+
+    // Sicherheitsüberprüfung: Unterschied zu klein -> Direkte Zuweisung
+    if (abs(difference) < 20) {
+        this->duty = duty;
+        ledc_set_duty(LEDC_MODE, this->channel, duty);
+        ledc_update_duty(LEDC_MODE, this->channel);
+        return;
+    }
+
+    int step = abs(difference) / 20;
+    step = step > 0 ? step : 1; // Sicherstellen, dass der Schrittwert niemals 0 ist.
 
     if (difference > 0) {
         for (int i = 0; i < difference; i += step) {
             this->duty += step;
-            this->duty = min(this->duty, duty);
+            if (this->duty > duty) this->duty = duty; // Begrenzung
             ledc_set_duty(LEDC_MODE, this->channel, this->duty);
             ledc_update_duty(LEDC_MODE, this->channel);
             delayMicroseconds(5);
@@ -37,13 +47,19 @@ void Motor::setSpeed(uint16_t duty) {
     } else {
         for (int i = 0; i > difference; i -= step) {
             this->duty -= step;
-            this->duty = max(this->duty, duty);
+            if (this->duty < duty) this->duty = duty; // Begrenzung
             ledc_set_duty(LEDC_MODE, this->channel, this->duty);
             ledc_update_duty(LEDC_MODE, this->channel);
             delayMicroseconds(5);
         }
     }
+
+    // Am Ende sicherstellen, dass der Zielwert erreicht wird
+    this->duty = duty;
+    ledc_set_duty(LEDC_MODE, this->channel, duty);
+    ledc_update_duty(LEDC_MODE, this->channel);
 }
+
 
 
 uint16_t Motor::getSpeed(void){
