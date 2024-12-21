@@ -14,7 +14,7 @@ double CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE;
 bool invertComparison = false;
 bool isOnWhite = false;
 
-bool isColorCloseTo(double initialValue, double newValue, double tolerance = 0.65) {
+bool isColorCloseTo(double initialValue, double newValue, double tolerance = 0.7) {
   return abs(initialValue - newValue) <= tolerance;
 }
 
@@ -37,10 +37,10 @@ void loop() {
   double percentageRed, percentageGreen, percentageBlue;
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
-  isOnWhite = isColorCloseTo(CALIBRATED_RED, percentageRed) && isColorCloseTo(CALIBRATED_GREEN, percentageGreen);
-  if(isOnWhite){
-    deadEndRotation();
-  }
+  // isOnWhite = isColorCloseTo(CALIBRATED_RED, percentageRed) && isColorCloseTo(CALIBRATED_GREEN, percentageGreen);
+  // if(isOnWhite){
+  //   deadEndRotation();
+  // }
 
   bool isFirstGreater = compareColors(percentageRed, percentageGreen);
   Serial.println(isFirstGreater);
