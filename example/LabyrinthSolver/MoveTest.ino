@@ -1,5 +1,8 @@
 #include <Dezibot.h>
 
+#define RED_LEFT 0
+#define GREEN_LEFT 1
+
 class RobotConfig {
 private:
   uint16_t baseSpeed = 3900;
@@ -63,20 +66,19 @@ double CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE;
 bool invertComparison = false;
 bool isOnWhite = false;
 
-enum ColorMode { RED_LEFT, GREEN_LEFT };
-ColorMode currentColorMode = RED_LEFT;
+int currentColorMode = RED_LEFT;
 
-// void setColorMode(ColorMode colorMode){
-//   currentColorMode = colorMode;
-// }
+void setColorMode(int colorMode) {
+  currentColorMode = colorMode;
+}
 
-// ColorMode getColorMode() {
-//   return currentColorMode;
-// }
+int getColorMode() {
+  return currentColorMode;
+}
 
-// void toggleColorMode() {
-//   currentColorMode = (currentColorMode == RED_LEFT) ? GREEN_LEFT : RED_LEFT;
-// }
+void toggleColorMode() {
+  currentColorMode = (currentColorMode == RED_LEFT) ? GREEN_LEFT : RED_LEFT;
+}
 
 void calibrateWhite() {
   dezibot.display.println("Weiß Kal.");
@@ -192,7 +194,7 @@ void setup() {
   Serial.begin(115200);
   dezibot.begin();
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
-  //setColorMode(GREEN_LEFT);
+  setColorMode(GREEN_LEFT);
   calibrateWhite();
 }
 
