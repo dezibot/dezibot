@@ -8,9 +8,10 @@ private:
   uint16_t baseSpeed = 3900;
   uint16_t maxSpeed = 8192;
   uint16_t rotateSpeed = 2500;
-  double rotateScale = 1.0;
-  double redScale = 1.0075;
-  int rotateDuration = 4000;
+  double redScale = 1.01;
+  double greenScale = 1.01;
+  int rotateDuration = 1500;
+  int moveStraightDuration = 1500;
   double whiteTolerance = 0.7;
 
 public:
@@ -23,14 +24,17 @@ public:
   uint16_t getRotateSpeed() const {
     return rotateSpeed;
   }
-  double getRotateScale() const {
-    return rotateScale;
-  }
   double getRedScale() const {
     return redScale;
   }
+  double getGreenScale() const {
+    return greenScale;
+  }
   int getRotateDuration() const {
     return rotateDuration;
+  }
+  int getMoveStraightDuration() const {
+    return moveStraightDuration;
   }
   double getWhiteTolerance() const {
     return whiteTolerance;
@@ -45,14 +49,17 @@ public:
   void setRotateSpeed(uint16_t speed) {
     rotateSpeed = speed;
   }
-  void setRotateScale(double scale) {
-    rotateScale = scale;
-  }
   void setRedScale(double scale) {
     redScale = scale;
   }
+  void setGreenScale(double scale) {
+    greenScale = scale;
+  }
   void setRotateDuration(int duration) {
     rotateDuration = duration;
+  }
+  void setMoveStraightDuration(int duration) {
+    moveStraightDuration = duration;
   }
   void setWhiteTolerance(double tolerance) {
     whiteTolerance = tolerance;
@@ -94,7 +101,7 @@ void deadEndRotation() {
   dezibot.motion.left.setSpeed(0);
   dezibot.motion.right.setSpeed(config.getMaxSpeed());
 
-  delay(3500);
+  delay(3000);
 
   dezibot.motion.left.setSpeed(config.getMaxSpeed());
   dezibot.motion.right.setSpeed(0);
@@ -116,7 +123,7 @@ void deadEndRotation() {
   dezibot.motion.left.setSpeed(config.getBaseSpeed());
   dezibot.motion.right.setSpeed(config.getBaseSpeed());
 
-  delay(1500);
+  delay(1000);
   stopMotors();
 }
 
@@ -124,12 +131,12 @@ void moveStraight() {
   dezibot.motion.left.setSpeed(config.getBaseSpeed());
   dezibot.motion.right.setSpeed(config.getBaseSpeed());
   colorSwitch();
-  delay(config.getRotateDuration());
+  delay(config.getMoveStraightDuration());
   stopMotors();
 }
 
 void rotateLeft() {
-  dezibot.motion.left.setSpeed(config.getRotateSpeed() * config.getRotateScale());
+  dezibot.motion.left.setSpeed(config.getRotateSpeed());
   dezibot.motion.right.setSpeed(config.getBaseSpeed());
   colorSwitch();
   delay(config.getRotateDuration());
@@ -138,7 +145,7 @@ void rotateLeft() {
 
 void rotateRight() {
   dezibot.motion.left.setSpeed(config.getBaseSpeed());
-  dezibot.motion.right.setSpeed(config.getRotateSpeed() * config.getRotateScale());
+  dezibot.motion.right.setSpeed(config.getRotateSpeed());
   colorSwitch();
   delay(config.getRotateDuration());
   stopMotors();
@@ -155,7 +162,7 @@ void colorSwitch() {
 
 void getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) {
   uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) * config.getRedScale();
-  uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
+  uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN) * config.getGreenScale();
   uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
   double sumColor = red + green + blue;
 
@@ -195,17 +202,19 @@ void setup() {
   dezibot.begin();
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
   setColorMode(GREEN_LEFT);
-  calibrateWhite();
+  // calibrateWhite();
+
+  //rotateLeft();
 }
 
 void loop() {
   double percentageRed, percentageGreen, percentageBlue;
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
-  isOnWhite = isColorCloseTo(CALIBRATED_RED, percentageRed, config.getWhiteTolerance()) && isColorCloseTo(CALIBRATED_GREEN, percentageGreen, config.getWhiteTolerance());
-  if (isOnWhite) {
-    deadEndRotation();
-  }
+  // isOnWhite = isColorCloseTo(CALIBRATED_RED, percentageRed, config.getWhiteTolerance()) && isColorCloseTo(CALIBRATED_GREEN, percentageGreen, config.getWhiteTolerance());
+  // if (isOnWhite) {
+  //   deadEndRotation();
+  // }
 
   bool isFirstGreater = compareColors(percentageRed, percentageGreen);
   Serial.println(isFirstGreater);
