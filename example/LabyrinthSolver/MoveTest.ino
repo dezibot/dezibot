@@ -9,8 +9,8 @@ private:
   uint16_t maxSpeed = 8192;
   uint16_t rotateSpeed = 2500;
   double redScale = 1.01;
-  double greenScale = 1.01;
-  int rotateDuration = 1500;
+  double greenScale = 0.97;
+  int rotateDuration = 2000;
   int moveStraightDuration = 1500;
   double whiteTolerance = 0.7;
 
@@ -73,7 +73,7 @@ double CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE;
 bool invertComparison = false;
 bool isOnWhite = false;
 
-int currentColorMode = RED_LEFT;
+int currentColorMode = GREEN_LEFT;
 
 void setColorMode(int colorMode) {
   currentColorMode = colorMode;
@@ -88,7 +88,7 @@ void toggleColorMode() {
 }
 
 void calibrateWhite() {
-  dezibot.display.println("Weiß Kal.");
+  dezibot.display.println("Weiss Kal.");
   delay(3000);
   getColorPercentages(CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE);
   dezibot.display.println("Auf Feld");
@@ -185,7 +185,6 @@ bool isColorCloseTo(double initialValue, double newValue, double tolerance) {
 }
 
 void controlMotors(bool isFirstGreater) {
-  Serial.println(isFirstGreater);
   if (isFirstGreater) {
     dezibot.motion.left.setSpeed(config.getBaseSpeed());
     dezibot.motion.right.setSpeed(config.getRotateSpeed());
@@ -202,21 +201,18 @@ void setup() {
   dezibot.begin();
   dezibot.multiColorLight.setLed(BOTTOM, 100, 100, 100);
   setColorMode(GREEN_LEFT);
-  // calibrateWhite();
-
-  //rotateLeft();
+  calibrateWhite();
 }
 
 void loop() {
   double percentageRed, percentageGreen, percentageBlue;
   getColorPercentages(percentageRed, percentageGreen, percentageBlue);
 
-  // isOnWhite = isColorCloseTo(CALIBRATED_RED, percentageRed, config.getWhiteTolerance()) && isColorCloseTo(CALIBRATED_GREEN, percentageGreen, config.getWhiteTolerance());
-  // if (isOnWhite) {
-  //   deadEndRotation();
-  // }
+  isOnWhite = isColorCloseTo(CALIBRATED_RED, percentageRed, config.getWhiteTolerance()) && isColorCloseTo(CALIBRATED_GREEN, percentageGreen, config.getWhiteTolerance());
+  if (isOnWhite) {
+    deadEndRotation();
+  }
 
   bool isFirstGreater = compareColors(percentageRed, percentageGreen);
-  Serial.println(isFirstGreater);
   controlMotors(isFirstGreater);
 }
