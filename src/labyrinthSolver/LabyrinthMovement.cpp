@@ -28,12 +28,15 @@ void LabyrinthMovement::calibrateWhite() {
 void LabyrinthMovement::deadEndRotation() {
     colorSwitch();
 
+    //First go left for a better turn around
     setMotorSpeeds(0, config.getMaxSpeed());
 
     delay(3000);
 
+    //Then go right to turn around
     setMotorSpeeds(config.getMaxSpeed(), 0);
 
+    //while the color is white, keep turning
     delay(5000);
     double initialRed, initialGreen, initialBlue;
     getColorPercentages(initialRed, initialGreen, initialBlue);
@@ -46,9 +49,10 @@ void LabyrinthMovement::deadEndRotation() {
         stillOnWhite = isColorCloseTo(initialRed, newRed, config.getWhiteTolerance()) && isColorCloseTo(initialGreen, newGreen, config.getWhiteTolerance());
     }
 
+    //Go straight for a bit to be in the middle of the line
     setMotorSpeeds(config.getBaseSpeed(), config.getBaseSpeed());
-
     delay(1000);
+
     stopMotors();
 }
 
