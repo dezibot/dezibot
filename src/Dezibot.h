@@ -1,13 +1,3 @@
-/**
- * @file Dezibot.h
- * @author Hans Haupt, Jens Wagner, Anina Morgner, Anton Jacker, Saskia Dübener
- * @brief 
- * @version 0.1
- * @date 2023-11-19
- * 
- * @copyright Copyright (c) 2023
- * 
- */
 #ifndef Dezibot_h
 #define Dezibot_h
 
@@ -19,8 +9,8 @@
 #include "infraredLight/InfraredLight.h"
 #include "communication/Communication.h"
 #include "display/Display.h"
-//#include "labyrinthSolver.h" TODO
-
+#include "labyrinthSolver/LabyrinthConfig.h"
+#include "labyrinthSolver/LabyrinthMovement.h"
 
 class Dezibot {
 protected:
@@ -34,7 +24,8 @@ public:
     InfraredLight infraredLight;
     Communication communication;
     Display display;
-    //LabyrinthSolver labyrinthSolver; TODO
+    LabyrinthConfig labyrinthConfig;
+    LabyrinthMovement labyrinthMovement;
     void begin(void);
 };
 
