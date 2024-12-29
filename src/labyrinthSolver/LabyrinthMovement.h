@@ -8,17 +8,11 @@
 #define RED_LEFT 1  
 
 class LabyrinthMovement {
-private:
-    LabyrinthConfig& config;
-    double calibratedRed, calibratedGreen, calibratedBlue;
-    bool invertComparison;
-    bool isOnWhite;
-    int currentColorMode;
-
 public:
     LabyrinthMovement(LabyrinthConfig& config);
+
     void setColorMode(int colorMode);
-    int getColorMode();
+    int getColorMode() const;
     void toggleColorMode();
     void calibrateWhite();
     void deadEndRotation();
@@ -28,16 +22,21 @@ public:
     void moveRight();
     void stopMotors();
     void colorSwitch();
-    void getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue);
-    bool compareColors(double percentageRed, double percentageGreen);
-    bool isColorCloseTo(double initialValue, double newValue, double tolerance);
+    void getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) const;
+    bool compareColors(double percentageRed, double percentageGreen) const;
+    bool isColorCloseTo(double initialValue, double newValue, double tolerance) const;
     void controlMotors(bool isFirstGreater);
     void setMotorSpeeds(uint16_t leftSpeed, uint16_t rightSpeed);
 
     bool getIsOnWhite() const;
     void setIsOnWhite(bool value);
-    double getCalibratedRed() const;
-    double getCalibratedGreen() const;
+
+private:
+    LabyrinthConfig& config;
+    double calibratedRed, calibratedGreen, calibratedBlue;
+    bool invertComparison;
+    bool isOnWhite;
+    int currentColorMode;
 };
 
-#endif
+#endif // LABYRINTH_MOVEMENT_H

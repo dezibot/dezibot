@@ -4,16 +4,6 @@
 #include <cstdint>
 
 class LabyrinthConfig {
-private:
-    uint16_t baseSpeed = 3900;
-    uint16_t maxSpeed = 8191;
-    uint16_t rotateSpeed = 2500;
-    double redScale = 1.00;
-    double greenScale = 0.98;
-    int rotateDuration = 2000;
-    int moveStraightDuration = 1500;
-    double whiteTolerance = 0.7;
-
 public:
     uint16_t getBaseSpeed() const;
     uint16_t getMaxSpeed() const;
@@ -32,6 +22,16 @@ public:
     void setRotateDuration(int duration);
     void setMoveStraightDuration(int duration);
     void setWhiteTolerance(double tolerance);
+
+private:
+    uint16_t baseSpeed = 3900;
+    uint16_t maxSpeed = 8191;
+    uint16_t rotateSpeed = 2500;
+    double redScale = 1.00;
+    double greenScale = 0.98;
+    int rotateDuration = 2000;
+    int moveStraightDuration = 1500;
+    double whiteTolerance = 0.7;
 };
 
-#endif
+#endif // LABYRINTH_CONFIG_H
