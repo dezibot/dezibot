@@ -4,7 +4,7 @@
 extern Dezibot dezibot;
 
 LabyrinthMovement::LabyrinthMovement(LabyrinthConfig& config) 
-    : config(config), invertComparison(false), isOnWhite(false), currentColorMode(GREEN_LEFT) {}
+    : config(config), isOnWhite(false), currentColorMode(GREEN_LEFT) {}
 
 void LabyrinthMovement::setColorMode(ColorMode colorMode) {
     currentColorMode = colorMode;
@@ -27,7 +27,7 @@ void LabyrinthMovement::calibrateWhite() {
 }
 
 void LabyrinthMovement::deadEndRotation() {
-    colorSwitch();
+    toggleColorMode();
 
     setMotorSpeeds(0, config.getMaxSpeed());
     delay(3000);
@@ -55,7 +55,7 @@ void LabyrinthMovement::deadEndRotation() {
 
 void LabyrinthMovement::moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration) {
     setMotorSpeeds(leftSpeed, rightSpeed);
-    colorSwitch();
+    toggleColorMode();
     delay(duration);
     stopMotors();
 }
@@ -74,10 +74,6 @@ void LabyrinthMovement::moveRight() {
 
 void LabyrinthMovement::stopMotors() {
     setMotorSpeeds(0, 0);
-}
-
-void LabyrinthMovement::colorSwitch() {
-    invertComparison = !invertComparison;
 }
 
 void LabyrinthMovement::getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) const {

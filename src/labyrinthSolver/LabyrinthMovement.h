@@ -88,11 +88,6 @@ public:
     void stopMotors();
 
     /**
-     * @brief Switches the color comparison mode.
-     */
-    void colorSwitch();
-
-    /**
      * @brief Gets the color percentages.
      * 
      * @param percentageRed Reference to store the red percentage.
@@ -170,7 +165,6 @@ private:
     ColorMode currentColorMode;
     LabyrinthConfig& config;
     double calibratedRed, calibratedGreen, calibratedBlue;
-    bool invertComparison;
     bool isOnWhite;
 };
 
