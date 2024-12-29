@@ -15,8 +15,10 @@
 #include <cstdint>
 #include "LabyrinthConfig.h"
 
-#define GREEN_LEFT 0
-#define RED_LEFT 1  
+enum ColorMode {
+    GREEN_LEFT,
+    RED_LEFT
+};
 
 class LabyrinthMovement {
 public:
@@ -32,14 +34,14 @@ public:
      * 
      * @param colorMode The color mode to set.
      */
-    void setColorMode(int colorMode);
+    void setColorMode(ColorMode colorMode);
 
     /**
      * @brief Gets the current color mode.
      * 
      * @return int The current color mode.
      */
-    int getColorMode() const;
+    ColorMode getColorMode() const;
 
     /**
      * @brief Toggles the color mode between RED_LEFT and GREEN_LEFT.
@@ -165,11 +167,11 @@ public:
     double getCalibratedGreen() const;
 
 private:
+    ColorMode currentColorMode;
     LabyrinthConfig& config;
     double calibratedRed, calibratedGreen, calibratedBlue;
     bool invertComparison;
     bool isOnWhite;
-    int currentColorMode;
 };
 
 #endif // LABYRINTH_MOVEMENT_H

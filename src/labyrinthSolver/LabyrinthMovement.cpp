@@ -6,11 +6,11 @@ extern Dezibot dezibot;
 LabyrinthMovement::LabyrinthMovement(LabyrinthConfig& config) 
     : config(config), invertComparison(false), isOnWhite(false), currentColorMode(GREEN_LEFT) {}
 
-void LabyrinthMovement::setColorMode(int colorMode) {
+void LabyrinthMovement::setColorMode(ColorMode colorMode) {
     currentColorMode = colorMode;
 }
 
-int LabyrinthMovement::getColorMode() const {
+ColorMode LabyrinthMovement::getColorMode() const {
     return currentColorMode;
 }
 
