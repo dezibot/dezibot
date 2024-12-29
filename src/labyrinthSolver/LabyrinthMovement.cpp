@@ -20,7 +20,7 @@ void LabyrinthMovement::toggleColorMode() {
 void LabyrinthMovement::calibrateWhite() {
     dezibot.display.println("Put On White");
     delay(3000);
-    getColorPercentages(CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE);
+    getColorPercentages(calibratedRed, calibratedGreen, calibratedBlue);
     dezibot.display.println("Put On Field");
     delay(3000);
 }
@@ -129,9 +129,9 @@ void LabyrinthMovement::setIsOnWhite(bool value) {
 }
 
 double LabyrinthMovement::getCalibratedRed() const {
-    return CALIBRATED_RED;
+    return calibratedRed;
 }
 
 double LabyrinthMovement::getCalibratedGreen() const {
-    return CALIBRATED_GREEN;
+    return calibratedGreen;
 }

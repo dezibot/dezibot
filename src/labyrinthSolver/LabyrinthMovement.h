@@ -10,7 +10,7 @@
 class LabyrinthMovement {
 private:
     LabyrinthConfig& config;
-    double CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE;
+    double calibratedRed, calibratedGreen, calibratedBlue;
     bool invertComparison;
     bool isOnWhite;
     int currentColorMode;
