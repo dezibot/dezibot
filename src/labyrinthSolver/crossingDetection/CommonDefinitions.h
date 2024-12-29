@@ -10,16 +10,14 @@ struct PredictionData {
     float CCT;
     float daylight;
 };
-enum CrossingTypeT {
+
+enum CrossingType {
     CROSSING_T1,
     CROSSING_T2,
     CROSSING_T3,
-    CROSSING_UNKNOWN
-};
-
-enum CrossingType {
     CROSSING_T,
-    CROSSING_X
+    CROSSING_X,
+    CROSSING_UNKNOWN
 };
 
 #endif

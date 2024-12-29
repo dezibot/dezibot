@@ -59,3 +59,7 @@ uint16_t ColorDetection::getColorValue(color color){
 float ColorDetection::getAmbientLight() {
     return rgbwSensor.getAmbientLight();
 };
+
+uint16_t ColorDetection::gettCCT(float offset) {
+    return rgbwSensor.getCCT(offset);
+};

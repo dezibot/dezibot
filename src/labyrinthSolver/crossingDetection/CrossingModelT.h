@@ -25,7 +25,7 @@ public:
      * @param SensorData all given Data from the sensor.
      * @return The predicted crossing as an enum.
      */
-    CrossingTypeT predictCrossingT(const PredictionData& SensorData);
+    CrossingType predictCrossingT(const PredictionData& SensorData);
 
 private:
     tflite::ErrorReporter* error_reporter;

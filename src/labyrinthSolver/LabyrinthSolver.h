@@ -1,44 +1,38 @@
-#ifndef LABYRINTH_MOVEMENT_H
-#define LABYRINTH_MOVEMENT_H
+#ifndef LABYRINTH_SOLVER_H
+#define LABYRINTH_SOLVER_H
 
-#include <cstdint>
-#include "LabyrinthConfig.h"
+#include "crossingDetection/CrossingModelT.h"
+#include "crossingDetection/CrossingModelXT.h"
+#include "labyrinthMapping/Graph.h"
+#include "movement/LabyrinthConfig.h"
+#include "movement/LabyrinthMovement.h"
 
-#define GREEN_LEFT 0
-#define RED_LEFT 1  
 
-class LabyrinthMovement {
-private:
-    LabyrinthConfig& config;
-    double CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE;
-    bool invertComparison;
-    bool isOnWhite;
-    int currentColorMode;
+enum class Marker {
+    Start,
+    Finish,
+    Crossing,
+    White,
+    Path
+};
+
+class LabyrinthSolver {
+private:  
+    CrossingType predictCrossing(PredictionData); 
+    PredictionData getSensorData();
+    bool startSolving();
 
 public:
-    LabyrinthMovement(LabyrinthConfig& config);
-    void setColorMode(int colorMode);
-    int getColorMode();
-    void toggleColorMode();
-    void calibrateWhite();
-    void deadEndRotation();
-    void moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration);
-    void moveStraight();
-    void moveLeft();
-    void moveRight();
-    void stopMotors();
-    void colorSwitch();
-    void getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue);
-    bool compareColors(double percentageRed, double percentageGreen);
-    bool isColorCloseTo(double initialValue, double newValue, double tolerance);
-    void controlMotors(bool isFirstGreater);
-    void setMotorSpeeds(uint16_t leftSpeed, uint16_t rightSpeed);
+    CrossingPredictorT crossingModelT;
+    CrossingPredictorXT crossingModelXT;
+    Graph labyrinthMap;
+    LabyrinthMovement movement;
+    LabyrinthConfig config;
 
-    // Getter and Setter methods for private members
-    bool getIsOnWhite() const;
-    void setIsOnWhite(bool value);
-    double getCalibratedRed() const;
-    double getCalibratedGreen() const;
+    LabyrinthSolver();
+    void begin();
+    void start();
+
 };
 
 #endif

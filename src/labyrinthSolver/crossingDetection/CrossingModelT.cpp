@@ -35,7 +35,7 @@ bool CrossingPredictorT::initialize() {
     return true;
 }
 
-CrossingTypeT CrossingPredictorT::predictCrossingT(const PredictionData& SensorData){
+CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorData){
     // Normalize and scale inputs
     float total_rgb = SensorData.red + SensorData.green + SensorData.blue;
     float red_ratio = SensorData.red / total_rgb;
