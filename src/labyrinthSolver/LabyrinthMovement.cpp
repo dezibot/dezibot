@@ -120,7 +120,6 @@ void LabyrinthMovement::setMotorSpeeds(uint16_t leftSpeed, uint16_t rightSpeed) 
     dezibot.motion.right.setSpeed(rightSpeed);
 }
 
-// Getter and Setter methods for private members
 bool LabyrinthMovement::getIsOnWhite() const {
     return isOnWhite;
 }

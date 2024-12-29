@@ -6,7 +6,7 @@
 class LabyrinthConfig {
 private:
     uint16_t baseSpeed = 3900;
-    uint16_t maxSpeed = 8192;
+    uint16_t maxSpeed = 8191;
     uint16_t rotateSpeed = 2500;
     double redScale = 1.00;
     double greenScale = 0.98;
