@@ -34,7 +34,6 @@ public:
     void controlMotors(bool isFirstGreater);
     void setMotorSpeeds(uint16_t leftSpeed, uint16_t rightSpeed);
 
-    // Getter and Setter methods for private members
     bool getIsOnWhite() const;
     void setIsOnWhite(bool value);
     double getCalibratedRed() const;
