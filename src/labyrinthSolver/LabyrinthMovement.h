@@ -2,7 +2,7 @@
  * @file LabyrinthMovement.h
  * @brief Header file for the LabyrinthMovement class.
  * @version 0.1
- * @date 2023-10-10
+ * @date 2024-12-30
  * 
  * @author Vladislav Antonov
  * 
