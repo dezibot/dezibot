@@ -3,13 +3,14 @@
 
 extern Dezibot dezibot;
 
-LabyrinthMovement::LabyrinthMovement(LabyrinthConfig& config) : config(config), invertComparison(false), isOnWhite(false), currentColorMode(GREEN_LEFT) {}
+LabyrinthMovement::LabyrinthMovement(LabyrinthConfig& config) 
+    : config(config), isOnWhite(false), currentColorMode(GREEN_LEFT) {}
 
-void LabyrinthMovement::setColorMode(int colorMode) {
+void LabyrinthMovement::setColorMode(ColorMode colorMode) {
     currentColorMode = colorMode;
 }
 
-int LabyrinthMovement::getColorMode() {
+ColorMode LabyrinthMovement::getColorMode() const {
     return currentColorMode;
 }
 
@@ -20,24 +21,20 @@ void LabyrinthMovement::toggleColorMode() {
 void LabyrinthMovement::calibrateWhite() {
     dezibot.display.println("Put On White");
     delay(3000);
-    getColorPercentages(CALIBRATED_RED, CALIBRATED_GREEN, CALIBRATED_BLUE);
+    getColorPercentages(calibratedRed, calibratedGreen, calibratedBlue);
     dezibot.display.println("Put On Field");
     delay(3000);
 }
 
 void LabyrinthMovement::deadEndRotation() {
-    colorSwitch();
+    toggleColorMode();
 
-    //First go left for a better turn around
     setMotorSpeeds(0, config.getMaxSpeed());
-
     delay(3000);
 
-    //Then go right to turn around
     setMotorSpeeds(config.getMaxSpeed(), 0);
-
-    //while the color is white, keep turning
     delay(5000);
+
     double initialRed, initialGreen, initialBlue;
     getColorPercentages(initialRed, initialGreen, initialBlue);
 
@@ -46,10 +43,10 @@ void LabyrinthMovement::deadEndRotation() {
 
     while (stillOnWhite) {
         getColorPercentages(newRed, newGreen, newBlue);
-        stillOnWhite = isColorCloseTo(initialRed, newRed, config.getWhiteTolerance()) && isColorCloseTo(initialGreen, newGreen, config.getWhiteTolerance());
+        stillOnWhite = isColorCloseTo(initialRed, newRed, config.getWhiteTolerance()) && 
+                       isColorCloseTo(initialGreen, newGreen, config.getWhiteTolerance());
     }
 
-    //Go straight for a bit to be in the middle of the line
     setMotorSpeeds(config.getBaseSpeed(), config.getBaseSpeed());
     delay(1000);
 
@@ -58,7 +55,7 @@ void LabyrinthMovement::deadEndRotation() {
 
 void LabyrinthMovement::moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration) {
     setMotorSpeeds(leftSpeed, rightSpeed);
-    colorSwitch();
+    toggleColorMode();
     delay(duration);
     stopMotors();
 }
@@ -79,11 +76,7 @@ void LabyrinthMovement::stopMotors() {
     setMotorSpeeds(0, 0);
 }
 
-void LabyrinthMovement::colorSwitch() {
-    invertComparison = !invertComparison;
-}
-
-void LabyrinthMovement::getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) {
+void LabyrinthMovement::getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) const {
     uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) * config.getRedScale();
     uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN) * config.getGreenScale();
     uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
@@ -99,11 +92,11 @@ void LabyrinthMovement::getColorPercentages(double &percentageRed, double &perce
     percentageBlue = (blue / sumColor) * 100.0;
 }
 
-bool LabyrinthMovement::compareColors(double percentageRed, double percentageGreen) {
+bool LabyrinthMovement::compareColors(double percentageRed, double percentageGreen) const {
     return currentColorMode == RED_LEFT ? (percentageRed > percentageGreen) : (percentageGreen > percentageRed);
 }
 
-bool LabyrinthMovement::isColorCloseTo(double initialValue, double newValue, double tolerance) {
+bool LabyrinthMovement::isColorCloseTo(double initialValue, double newValue, double tolerance) const {
     return abs(initialValue - newValue) <= tolerance;
 }
 
@@ -129,9 +122,9 @@ void LabyrinthMovement::setIsOnWhite(bool value) {
 }
 
 double LabyrinthMovement::getCalibratedRed() const {
-    return CALIBRATED_RED;
+    return calibratedRed;
 }
 
 double LabyrinthMovement::getCalibratedGreen() const {
-    return CALIBRATED_GREEN;
+    return calibratedGreen;
 }
