@@ -5,7 +5,7 @@
  * 
  * This module uses the VEML6040 library (version 0.3.2) by thewknd (MIT license).
  * 
- * @version 0.2
+ * @version 0.3
  * @date 2024-12-29
  * 
  * @copyright Copyright (c) 2024

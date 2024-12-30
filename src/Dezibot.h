@@ -10,7 +10,7 @@
 #include "communication/Communication.h"
 #include "display/Display.h"
 #include "labyrinthSolver/movement/LabyrinthConfig.h"
-#include "labyrinthSolver/movement//LabyrinthMovement.h"
+#include "labyrinthSolver/movement/LabyrinthMovement.h"
 
 class Dezibot {
 protected:

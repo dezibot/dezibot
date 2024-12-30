@@ -20,7 +20,7 @@ void LabyrinthSolver::start() {
 
 bool LabyrinthSolver::startExploring() {
     bool foundGoal = false;
-    while (foundGoal)
+    while (!foundGoal)
     {
         Marker marker = moveUntilMarker(); // methode muss erstellt werden
         if (marker == Marker::White){
@@ -58,8 +58,8 @@ CrossingType LabyrinthSolver::predictCrossing(PredictionData data) {
         return xtPrediction;
     }
 
-    CrossingType tPredictoin = crossingModelT.predictCrossingT(sensorData);
-    return tPredictoin(); 
+    CrossingType tPrediction = crossingModelT.predictCrossingT(sensorData);
+    return tPrediction; 
 }
 
 PredictionData LabyrinthSolver::getSensorData() {
