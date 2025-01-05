@@ -16,7 +16,7 @@ enum class CrossingType {
     T1,
     T2,
     T3,
-    T
+    T,
     DEAD_END
 };
 

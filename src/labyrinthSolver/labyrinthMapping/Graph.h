@@ -35,20 +35,11 @@ enum class Mode {
     SOLVER
 };
 
-enum class Direction {
+enum class DirectionLabyrinth {
     Straight = 0,
     Back,
     Left,
     Right
-};
-
-enum class CrossingType {
-    X,
-    T1,
-    T2,
-    T3,
-    T
-    DEAD_END
 };
 
 struct Node {
@@ -131,7 +122,7 @@ public:
      * 
      * @return The direction for the dezibot.
      */
-    Direction addCrossing(CrossingType crossingType);
+    DirectionLabyrinth addCrossing(CrossingType crossingType);
 
 private:
     int nextNodeId;
@@ -177,7 +168,7 @@ private:
      * 
      * @throws std::invalid_argument If the provided `node` is null.
      */
-    void setNeighbor(std::shared_ptr<Node> node, std::shared_ptr<Node> neighbor, Direction direction);
+    void setNeighbor(std::shared_ptr<Node> node, std::shared_ptr<Node> neighbor, DirectionLabyrinth direction);
     /**
     * @brief Adds a bidirectional edge between two nodes in the specified direction.
     * 
@@ -194,7 +185,7 @@ private:
     * 
     * @throws std::invalid_argument If either of the provided nodes is null.
     */
-    void addEdge(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> nextNode, Direction direction);
+    void addEdge(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> nextNode, DirectionLabyrinth direction);
     std::shared_ptr<Node> getLeftMostNeighbor(const std::shared_ptr<Node>& node);
     
     /**
@@ -218,7 +209,7 @@ private:
      * 
      * @throws std::invalid_argument If the current node is null.
      */
-    Direction addCrossingExploring(CrossingType crossingType);
+    DirectionLabyrinth addCrossingExploring(CrossingType crossingType);
     
     /**
      * @brief Retrieves the leftmost neighbor of the current node based on the direction 
@@ -273,12 +264,12 @@ private:
      * If the solution stack is empty or if the next node is not found in the current node's neighbors, 
      * a runtime error is thrown.
      * 
-     * @return Direction The direction to move towards the next node in the solution path.
+     * @return DirectionLabyrinth The direction to move towards the next node in the solution path.
      * 
      * @throws std::runtime_error If the solution stack is empty or the next node is not found in 
      * the current node's neighbors.
      */
-    Direction getDirection();
+    DirectionLabyrinth getDirection();
 
 };
 

@@ -15,4 +15,5 @@ void Dezibot::begin(void) {
     colorDetection.beginAutoMode();
     multiColorLight.begin();
     display.begin();
+    labyrinthSolver.begin();
 }

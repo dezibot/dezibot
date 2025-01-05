@@ -11,6 +11,7 @@
 #include "display/Display.h"
 #include "labyrinthSolver/movement/LabyrinthConfig.h"
 #include "labyrinthSolver/movement/LabyrinthMovement.h"
+#include "labyrinthSolver/LabyrinthSolver.h"
 
 class Dezibot {
 protected:
@@ -26,6 +27,7 @@ public:
     Display display;
     LabyrinthConfig labyrinthConfig;
     LabyrinthMovement labyrinthMovement;
+    LabyrinthSolver labyrinthSolver;
     void begin(void);
 };
 

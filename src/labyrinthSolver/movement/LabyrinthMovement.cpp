@@ -24,6 +24,7 @@ void LabyrinthMovement::calibrateWhite() {
     getColorPercentages(calibratedRed, calibratedGreen, calibratedBlue);
     dezibot.display.println("Put On Field");
     delay(3000);
+    dezibot.display.clear();
 }
 
 void LabyrinthMovement::deadEndRotation() {

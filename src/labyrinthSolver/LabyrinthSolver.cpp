@@ -3,9 +3,13 @@
 
 extern Dezibot dezibot;
 
-LabyrinthSolver::LabyrinthSolver() {
-    // TODO: Initialize class members here
-}
+LabyrinthSolver::LabyrinthSolver() 
+    : crossingModelT(),       
+      crossingModelXT(),      
+      labyrinthMap(),          
+      config(),           
+      movement(config)  
+{}
 
 void LabyrinthSolver::begin() {
     // TODO: alle begins etc aufrufen und schauen das es die instancen gibt evtl gar nicht und alles in die start
@@ -16,6 +20,11 @@ void LabyrinthSolver::start() {
     // configer funktion wird aufgerufen
     // solve funktion wird aufgerufen
     //
+    movement.setColorMode(RED_LEFT);
+    movement.calibrateWhite();
+    dezibot.display.println("Los Gehts");
+    startExploring();
+    startSolving();
 }
 
 bool LabyrinthSolver::startExploring() {
@@ -27,11 +36,60 @@ bool LabyrinthSolver::startExploring() {
     Marker::White,
     Marker::Crossing,
     Marker::Finish
-    }
+    };
 
-    for (size_t i = 0; i < 4; i++)    
+    for (size_t i = 0; i < 4; i++)     
     {
         // Marker marker = moveUntilMarker(); // TODO methode muss erstellt werden
+        delay(10000);
+        Marker marker = markers[i];
+        
+        // dezibot.display.println(String(marker));
+        if (marker == Marker::White){
+            labyrinthMap.addCrossing(CrossingType::DEAD_END);
+            movement.deadEndRotation();
+
+        }else if (marker == Marker::Finish){
+            foundGoal = true;
+        }else {
+            PredictionData sensorData = getSensorData();
+            CrossingType crossing = predictCrossing(sensorData);
+            Serial.print("Prediction: ");
+            // Serial.println(String(crossing));
+
+            DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
+
+            switch (direction){
+                case DirectionLabyrinth::Left :
+                    movement.moveLeft();
+                case DirectionLabyrinth::Right :
+                    movement.moveRight();
+                case DirectionLabyrinth::Straight :
+                    movement.moveStraight();
+            }
+        }
+    }
+
+    labyrinthMap.setGoalNode(); 
+    delay(15000); 
+      
+    dezibot.display.clear();
+}
+
+
+bool LabyrinthSolver::startSolving() {
+     bool foundGoal = false;
+    // while (!foundGoal)
+
+    std::array<Marker, 2> markers = {
+    Marker::Crossing,
+    Marker::Finish
+    };
+
+    for (size_t i = 0; i < 2; i++)     
+    {
+        // Marker marker = moveUntilMarker(); // TODO methode muss erstellt werden
+        delay(10000);
         Marker marker = markers[i];
         if (marker == Marker::White){
             labyrinthMap.addCrossing(CrossingType::DEAD_END);
@@ -41,22 +99,23 @@ bool LabyrinthSolver::startExploring() {
             foundGoal = true;
         }else {
             PredictionData sensorData = getSensorData();
-            CrossingType crossing = getCrossing(sensorData);
+            CrossingType crossing = predictCrossing(sensorData);
 
-            Direction direction = labyrinthMap.addCrossing(crossing);
+            DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
 
             switch (direction){
-                case Direction::Left :
+                case DirectionLabyrinth::Left :
                     movement.moveLeft();
-                case Direction::Right :
+                case DirectionLabyrinth::Right :
                     movement.moveRight();
-                case Direction::Straight :
+                case DirectionLabyrinth::Straight :
                     movement.moveStraight();
             }
         }
     }
 
-    labyrinthMap.setGoalNode();    
+    labyrinthMap.setGoalNode(); 
+    delay(15000);   
 }
 
 CrossingType LabyrinthSolver::predictCrossing(PredictionData data) {
@@ -64,7 +123,7 @@ CrossingType LabyrinthSolver::predictCrossing(PredictionData data) {
     
     CrossingType xtPrediction = crossingModelXT.predictCrossingXT(sensorData);
 
-    if(xtPrediction == CrossingType::CrossingType::X){
+    if(xtPrediction == CrossingType::X){
         return xtPrediction;
     }
 

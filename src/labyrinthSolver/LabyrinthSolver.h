@@ -19,7 +19,8 @@ enum class Marker {
 class LabyrinthSolver {
 private:  
     CrossingType predictCrossing(PredictionData); 
-    PredictionData getSensorData();
+    PredictionData getSensorData();    
+    bool startExploring();
     bool startSolving();
 
 public:
