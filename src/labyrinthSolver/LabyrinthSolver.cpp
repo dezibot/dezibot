@@ -20,9 +20,19 @@ void LabyrinthSolver::start() {
 
 bool LabyrinthSolver::startExploring() {
     bool foundGoal = false;
-    while (!foundGoal)
+    // while (!foundGoal)
+
+    std::array<Marker, 4> markers = {
+    Marker::Crossing,
+    Marker::White,
+    Marker::Crossing,
+    Marker::Finish
+    }
+
+    for (size_t i = 0; i < 4; i++)    
     {
-        Marker marker = moveUntilMarker(); // methode muss erstellt werden
+        // Marker marker = moveUntilMarker(); // TODO methode muss erstellt werden
+        Marker marker = markers[i];
         if (marker == Marker::White){
             labyrinthMap.addCrossing(CrossingType::DEAD_END);
             movement.deadEndRotation();
@@ -54,7 +64,7 @@ CrossingType LabyrinthSolver::predictCrossing(PredictionData data) {
     
     CrossingType xtPrediction = crossingModelXT.predictCrossingXT(sensorData);
 
-    if(xtPrediction == CrossingType::CROSSING_X){
+    if(xtPrediction == CrossingType::CrossingType::X){
         return xtPrediction;
     }
 

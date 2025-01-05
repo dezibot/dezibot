@@ -49,7 +49,7 @@ CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorDa
     // Perform inference
     if (interpreter->Invoke() != kTfLiteOk) {
         TF_LITE_REPORT_ERROR(error_reporter, "Inference failed");
-        return CROSSING_T1; // Default fallback
+        return CrossingType::T1; // Default fallback
     }
 
     float t1_score = output->data.f[0];
@@ -57,10 +57,10 @@ CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorDa
     float t3_score = output->data.f[2];
 
     if (t1_score > t2_score && t1_score > t3_score) {
-        return CROSSING_T1;
+        return CrossingType::T1;
     } else if (t2_score > t1_score && t2_score > t3_score) {
-        return CROSSING_T2;
+        return CrossingType::T2;
     } else {
-        return CROSSING_T3;
+        return CrossingType::T3;
     }
 }

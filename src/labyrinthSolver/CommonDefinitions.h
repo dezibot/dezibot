@@ -11,13 +11,13 @@ struct PredictionData {
     float daylight;
 };
 
-enum CrossingType {
-    CROSSING_T1,
-    CROSSING_T2,
-    CROSSING_T3,
-    CROSSING_T,
-    CROSSING_X,
-    CROSSING_UNKNOWN
+enum class CrossingType {
+    X,
+    T1,
+    T2,
+    T3,
+    T
+    DEAD_END
 };
 
 #endif

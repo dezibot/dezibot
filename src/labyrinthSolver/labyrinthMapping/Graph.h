@@ -26,6 +26,7 @@
 #include <array>
 #include <optional>
 #include <limits>
+#include "../CommonDefinitions.h"
 
 struct Node;
 
@@ -46,6 +47,7 @@ enum class CrossingType {
     T1,
     T2,
     T3,
+    T
     DEAD_END
 };
 
