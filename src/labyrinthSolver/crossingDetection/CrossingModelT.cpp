@@ -1,6 +1,6 @@
 // SensorPredictor.cpp
 #include "CrossingModelT.h"
-#include "modelXT.h"
+#include "modelT.h"
 
 CrossingPredictorT::CrossingPredictorT()
     : error_reporter(nullptr), model(nullptr), interpreter(nullptr), input(nullptr), output(nullptr) {}
@@ -44,7 +44,9 @@ CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorDa
 
     input->data.f[0] = (red_ratio - redR_mean) / redR_std;
     input->data.f[1] = (green_ratio - greenR_mean) / greenR_std;
-    input->data.f[2] = (blue_ratio - blueR_mean) / blueR_std;
+    input->data.f[2] = (blue_ratio - blueR_mean) / blueR_std;    
+    input->data.f[3] = (SensorData.white - white_mean) / white_std;
+    input->data.f[4] = (SensorData.ambient - ambient_mean) / ambient_std;
 
     // Perform inference
     if (interpreter->Invoke() != kTfLiteOk) {
