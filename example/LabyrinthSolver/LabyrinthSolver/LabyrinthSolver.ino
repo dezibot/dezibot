@@ -1,9 +1,9 @@
 #include <Dezibot.h>
-#include "movement/LabyrinthConfig.h"
-#include "movement/LabyrinthMovement.h"
-#include "labyrinthMapping/Graph.h"
-#include "crossingDetection/CrossingModelT.h"
-#include "crossingDetection/CrossingModelXT.h"
+#include "LabyrinthConfig.h"
+#include "LabyrinthMovement.h"
+#include "Graph.h"
+#include "CrossingModelT.h"
+#include "CrossingModelXT.h"
 
 CrossingPredictorT crossingModelT;
 CrossingPredictorXT crossingModelXT;
