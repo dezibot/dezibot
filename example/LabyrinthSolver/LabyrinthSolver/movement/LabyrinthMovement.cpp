@@ -1,5 +1,5 @@
 #include "LabyrinthMovement.h"
-#include "../../Dezibot.h"
+#include "../../../../src/Dezibot.h"
 
 extern Dezibot dezibot;
 
@@ -54,9 +54,11 @@ void LabyrinthMovement::deadEndRotation() {
     stopMotors();
 }
 
-void LabyrinthMovement::moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration) {
+void LabyrinthMovement::moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration, bool toggleColorModeFlag) {
     setMotorSpeeds(leftSpeed, rightSpeed);
-    toggleColorMode();
+    if (toggleColorModeFlag) {        
+        toggleColorMode();
+    }
     delay(duration);
     stopMotors();
 }

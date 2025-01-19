@@ -20,4 +20,12 @@ enum class CrossingType {
     DEAD_END
 };
 
+enum class Marker {
+    Start,
+    Finish,
+    Crossing,
+    White,
+    Path
+};
+
 #endif

@@ -65,7 +65,7 @@ public:
      * @param rightSpeed The speed of the right motor.
      * @param duration The duration to move the motor.
      */
-    void moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration);
+    void moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration, bool toggleColorModeFlag = true);
 
     /**
      * @brief Moves the robot straight.
