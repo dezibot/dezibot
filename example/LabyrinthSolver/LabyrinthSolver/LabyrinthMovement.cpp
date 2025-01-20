@@ -1,5 +1,5 @@
 #include "LabyrinthMovement.h"
-#include "../../../../src/Dezibot.h"
+#include <Dezibot.h>
 
 extern Dezibot dezibot;
 
