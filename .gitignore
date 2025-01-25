@@ -1,6 +1,3 @@
-# automatic gernerated source
-docs/*
-
 # Prerequisites
 *.d
 
@@ -39,3 +36,9 @@ docs/*
 .history/
 *.vsix
 *.workspace
+
+#Jetbrain IDE
+.idea
+
+#PlatformIO
+.pio
