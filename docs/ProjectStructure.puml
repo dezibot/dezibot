@@ -1,0 +1,83 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Package LoggingProject {
+    WebServer <-> DatabaseHandler : calls DB Data
+
+    class WebServer {
+        + begin()
+        + setup()
+    }
+
+    Note top of WebServer : setup() registers all appropriate\n page handlers
+
+    WebServer <-- PageProvider : "utilizes"
+
+    abstract PageProvider {
+        + handler()
+    }
+
+    LoggingPage -up-|> PageProvider : implements
+    MeasurementPage -up-|> PageProvider : implements
+    InfoPage -up-|> PageProvider : implements
+
+    class LoggingPage {}
+    class MeasurementPage {}
+    class InfoPage {}
+
+    Note right of PageProvider : Provides complete HTML Pages\n with JS,CSS and required libraries
+
+    Logger --> DatabaseHandler : adds DB entries
+
+    class Logger {
+        + List Instruments
+        + log(...)
+    }
+
+    Logger <.-> LoggingPOCO : builds POCOs from log()
+
+    abstract LoggingPOCO {
+        Message
+        Time
+        Component
+        Parameters
+        EntryType
+    }
+
+    Note right of LoggingPOCO : Contains all data used for\n whatever function is logged
+
+    LoggingPOCO .-> EntryType : uses
+
+    enum EntryType {
+        Automatic
+        UserCall
+    }
+
+    Note right of EntryType : Defines how the logging command\n was created
+
+    WebServer --> Logger : Provides required instruments\n for measurements
+
+    class DatabaseHandler {
+        - Database db
+        writePOCOToDB()
+        getPOCOs()
+    }
+}
+
+Package Dezibot {
+    Dezibot -right-> WebServer : calls
+    class Dezibot {}
+
+    Logger --> GenericRobotController : Requests measurement data\n when instructed
+    GenericRobotController -left-> Logger : calls
+
+    class GenericRobotController {
+
+    }
+
+    Note bottom of GenericRobotController : Example for a Robot Controller\nlike Motion.cpp
+}
+
+
+
+@enduml
