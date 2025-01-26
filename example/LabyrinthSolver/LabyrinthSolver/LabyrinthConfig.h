@@ -13,9 +13,58 @@
 #define LABYRINTH_CONFIG_H
 
 #include <cstdint>
+#include "CommonDefinitions.h"
 
 class LabyrinthConfig {
 public:
+    /**
+     * @brief calls all SetupMethods
+     */
+    void runSetUp();
+
+    /**
+     * @brief sets Goal values
+     */
+    void setUpGoal();
+
+    /**
+     * @brief sets White Values
+     */
+    void setUpWhite();
+
+    /**
+     * @brief sets Line Values
+     */
+    void setUpLine();
+
+    /**
+     * @brief csets SPeed Values
+     */
+    void setUpSpeed();
+
+    /**
+     * @brief gets the sensor data
+     * @return PredictionData the Sensordata
+     */
+    PredictionData getSensorData();
+
+    /**
+     * @brief gets the average sensor data
+     * @return PredictionData the average Sensordata
+     */
+    PredictionData getAverageSensor();
+
+    /**
+     * @brief prints all generated Data Values
+     */
+    void printPredictionData() const;
+
+    /**
+     * @brief prints single prediction data
+     * @param data The base data to be printed
+     */
+    void printSinglePredictionData(const PredictionData& data) const;
+
     /**
      * @brief Gets the base speed of the robot.
      * @return uint16_t The base speed.
@@ -121,6 +170,12 @@ private:
     int rotateDuration = 2000;
     int moveStraightDuration = 1500;
     double whiteTolerance = 0.7;
+
+    PredictionData GoalFiled = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    PredictionData White = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    PredictionData PathMiddle = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    PredictionData PathRed = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    PredictionData PathGreen = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 };
 
 #endif // LABYRINTH_CONFIG_H
