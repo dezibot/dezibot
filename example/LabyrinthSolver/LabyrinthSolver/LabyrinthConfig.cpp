@@ -265,3 +265,48 @@ void LabyrinthConfig::printSinglePredictionData(const PredictionData& data) cons
     Serial.print("  Daylight: "); Serial.println(data.daylight, 4);
     Serial.println();
 }
+
+Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) const {
+    float rgbSum = data.red + data.green + data.blue;
+    if (rgbSum == 0) {
+        return Marker::Path;
+    }
+    double redPercent = data.red * 100 / rgbSum;
+    double greenPercent = data.green * 100 / rgbSum;
+    double bluePercent = data.blue * 100 / rgbSum;
+
+    // Serial.println("Neue Messung ----------------------------------------------------");
+    // printSinglePredictionData(data);
+    Serial.println();
+    // Serial.print("Red Percent:   ");
+    Serial.println(redPercent);
+    // Serial.print("Green Percent: ");
+    Serial.println(greenPercent);
+    // Serial.print("Blue Percent:  ");
+    Serial.println(bluePercent);
+
+    if (redPercent > 30 && redPercent < 35 &&
+        greenPercent > 39 &&
+        bluePercent > 25 && bluePercent < 31) {
+        // Serial.println("Finish gefunden");
+        return Marker::Finish;
+    }
+
+    if (redPercent > 33 && redPercent < 36 &&
+        greenPercent > 33 && greenPercent < 36 &&
+        bluePercent > 30 && bluePercent < 33 &&
+        data.white > 10000) {
+        // Serial.println("White gefunden");
+        return Marker::White;
+    }
+
+    if ((redPercent > 41.5 &&
+        greenPercent > 31 && greenPercent < 35 &&
+        bluePercent < 27) || data.white < 6000) {
+        // Serial.println("Crossing gefunden");
+        return Marker::Crossing;
+    }
+
+    // Serial.println("No marker thresholds matched. Defaulting to Path marker.");
+    return Marker::Path;
+}

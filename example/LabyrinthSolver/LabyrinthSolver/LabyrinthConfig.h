@@ -60,6 +60,13 @@ public:
     void printPredictionData() const;
 
     /**
+     * @brief given sensorData returns the predictaet marker      * 
+     * @param data The sensor data used to get the marker
+     * @return marker for that segment default is path
+     */
+    Marker getMarkerFromPrediction(const PredictionData& data) const;
+
+    /**
      * @brief prints single prediction data
      * @param data The base data to be printed
      */
@@ -166,7 +173,7 @@ private:
     uint16_t maxSpeed = 8191;
     uint16_t rotateSpeed = 2500;
     double redScale = 1.00;
-    double greenScale = 0.98;
+    double greenScale = 1.16;
     int rotateDuration = 2000;
     int moveStraightDuration = 1500;
     double whiteTolerance = 0.7;
