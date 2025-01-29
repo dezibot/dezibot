@@ -38,11 +38,12 @@ void setup() {
     dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);
 
     Serial.println("start");
+    delay(4000);
     // config.runSetUp();    
     // Serial.println("setUpDone");
 
 
-    // movement.setColorMode(RED_LEFT);
+    movement.setColorMode(RED_LEFT);
     // movement.calibrateWhite();
 
     crossingModelXT.initialize();    
@@ -60,15 +61,11 @@ void loop() {
     // PredictionData data = config.getSensorData();
     // Marker mark = config.getMarkerFromPrediction(data);
 
-        // delay(1000);
-    if (markerFOund < 20){
+    // delay(1000);
+
+    if (markerFOund < 3){
     double percentageRed, percentageGreen, percentageBlue;
-    movement.getColorPercentages(percentageRed, percentageGreen, percentageBlue);
-    //   Serial.print("Red:    ");
-    //   Serial.println(percentageRed);
-    //   Serial.print("Green:  ");
-    //   Serial.println(percentageGreen);
-      
+    movement.getColorPercentages(percentageRed, percentageGreen, percentageBlue);     
     
       PredictionData data = config.getSensorData();
       Marker mark = config.getMarkerFromPrediction(data);
@@ -77,18 +74,20 @@ void loop() {
         case Marker::Finish:
             Serial.println("Finish");
             markerFOund++;
+            delay(200);
             break;
         case Marker::White:
             Serial.println("White");            
             markerFOund++;
+            delay(200);
             break;
         case Marker::Crossing:
             Serial.println("Crossing");           
             markerFOund++;
+            delay(200);
             break;
         case Marker::Path:
-            Serial.println("Path");           
-            // markerFOund = true;
+            Serial.println("Path");   
             break;
         }
     
