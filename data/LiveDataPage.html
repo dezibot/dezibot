@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Light Value</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #lightValue {
+      font-size: 2rem;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>Live Data from Dezibot</h1>
+<h2>Data from LightDetection</h2>
+<p></p>
+<div id="lightDetection.getValue">Loading...</div>
+<script>
+  function updateLightValue() {
+    fetch('/lightDetection.getValue')
+            .then(response => response.json())
+            .then(data => {
+              const lightValueElem = document.getElementById('lightDetection.getValue');
+              lightValueElem.textContent = `lightDetection.getValue: ${data.value}`; // Update the value
+            })
+            .catch(err => {
+              const lightValueElem = document.getElementById('lightDetection.getValue');
+              lightValueElem.textContent = 'Error fetching value';
+              console.error('Error:', err);
+            });
+  }
+  setInterval(updateLightValue, 50); //set update interval to 50 ms
+  updateLightValue();
+</script>
+</body>
+</html>
