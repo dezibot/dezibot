@@ -9,7 +9,7 @@ void setup() {
 }
 
 void loop() {
-    dezibot.debugServer.refreshPage();
+    dezibot.debugServer.handleClient();
     delay(1);
 }
 

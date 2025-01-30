@@ -4,6 +4,7 @@
 #include <WebServer.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
+#include <SPIFFS.h>
 
 WebServer server;
 
@@ -16,6 +17,10 @@ void DebugServer::setup() {
     const IPAddress local_ip(192,168,1,1);
     const IPAddress gateway(192,168,1,1);
     const IPAddress subnet(255,255,255,0);
+
+    // initalize SPIFFS for file access
+    // changes in html files require "pio run -t uploadfs" or "Upload Filesystem Image" in plugin to take effect
+    SPIFFS.begin();
 
     // setup as wifi accesspoint
     WiFi.softAP(SSID, PSK);
@@ -47,7 +52,7 @@ void DebugServer::setup() {
     server.begin();
 };
 
-void DebugServer::refreshPage() {
+void DebugServer::handleClient() {
     // call periodically to handle client requests
     server.handleClient();
 }

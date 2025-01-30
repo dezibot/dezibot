@@ -15,7 +15,7 @@ private:
 public:
     DebugServer();
     void setup();
-    void refreshPage();
+    void handleClient();
 };
 
 #endif //DEBUGSERVER_H
