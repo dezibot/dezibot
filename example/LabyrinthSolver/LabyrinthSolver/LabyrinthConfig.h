@@ -173,7 +173,7 @@ private:
     uint16_t maxSpeed = 8191;
     uint16_t rotateSpeed = 2500;
     double redScale = 1.00;
-    double greenScale = 1.16;
+    double greenScale = 1.13;
     int rotateDuration = 2000;
     int moveStraightDuration = 1500;
     double whiteTolerance = 0.7;

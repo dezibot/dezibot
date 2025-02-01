@@ -17,6 +17,7 @@ Marker marker;
 int i = 0;
 int markerFOund = 0;
 bool explorationDone = false;
+int iterationSinceTurnCounter = 0;
 
 std::array<Marker, 4> markers = {
 Marker::Crossing,
@@ -62,83 +63,15 @@ void loop() {
     // PredictionData data = config.getSensorData();
     // Marker mark = config.getMarkerFromPrediction(data);
 
-    // delay(1000);
+    // delay(3000);
 
 
 
   if (!explorationDone){
-    if (markerFOund < 3){
-        double percentageRed, percentageGreen, percentageBlue;
-        movement.getColorPercentages(percentageRed, percentageGreen, percentageBlue);     
-    
-        PredictionData data = config.getSensorData();
-        marker = config.getMarkerFromPrediction(data);
-
-        switch (marker) {
-            case Marker::Finish:
-                Serial.println("Finish");
-                markerFOund++;
-                delay(200);
-                break;
-            case Marker::White:
-                Serial.println("White");            
-                markerFOund++;
-                delay(200);
-                break;
-            case Marker::Crossing:
-                Serial.println("Crossing");           
-                markerFOund++;
-                delay(200);
-                break;
-            case Marker::Path:
-                Serial.println("Path");   
-                break;
-            }
-        bool isFirstGreater = movement.compareColors(percentageRed, percentageGreen);
-        movement.controlMotors(isFirstGreater);
+    if (markerFOund < 1){
+        moveUntilMarker();
     }else {
-        movement.stopMotors();
-        
-
-        delay(3000);
-        // Serial.println("delay ended");
-        // Marker marker = markers[i];
-        // Serial.println("marker set");       
-        if (marker == Marker::White){
-            Serial.println("marker is white");
-            labyrinthMap.addCrossing(CrossingType::DEAD_END);
-            // Serial.println("crossing has been added");
-            movement.deadEndRotation();
-
-        }else if (marker == Marker::Finish){
-            foundGoal = true;
-            // Serial.println("goal found");
-        }else {
-            // Serial.println("else path");
-            PredictionData sensorData = getSensorData();
-            // Serial.println("getSensorData");
-            CrossingType crossing = predictCrossing(sensorData);
-            // Serial.println("predictCrossing");
-
-            DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
-            // Serial.println("addCrossing");
-
-            switch (direction){
-                case DirectionLabyrinth::Left :
-                    Serial.println("-------------------Left");
-                    movement.moveLeft();
-                    break;
-                case DirectionLabyrinth::Right :
-                    Serial.println("--------------------Right");
-                    movement.moveRight();
-                    break;
-                case DirectionLabyrinth::Straight :
-                    Serial.println("--------------------Straight");
-                    movement.moveStraight();
-                    break;
-            
-            }
-        }
+        makeDession();        
 
         if(foundGoal == true){
             // Serial.println("for loop ended");
@@ -147,50 +80,22 @@ void loop() {
             delay(5000); 
             // Serial.println("delay Ended");
             explorationDone = true;
-        }
-        
-        markerFOund = 0;        
+        }  
     }
   } else {
      foundGoal = false;
-   
-    // Marker marker = moveUntilMarker(); // TODO methode muss erstellt werden
-    delay(10000);
-    Marker marker = markers2[i];
-    if (marker == Marker::White){
-        labyrinthMap.addCrossing(CrossingType::DEAD_END);
-        movement.deadEndRotation();
-
-    }else if (marker == Marker::Finish){
-        foundGoal = true;
+       if (markerFOund < 1){
+        moveUntilMarker();
     }else {
-        PredictionData sensorData = getSensorData();
-        CrossingType crossing = predictCrossing(sensorData);
-
-        DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
-
-        switch (direction){
-            case DirectionLabyrinth::Left :
-                Serial.println("-------------------Left");
-                movement.moveLeft();
-                break;
-            case DirectionLabyrinth::Right :
-                Serial.println("--------------------Right");
-                movement.moveRight();
-                break;
-            case DirectionLabyrinth::Straight :
-                Serial.println("--------------------Straight");
-                movement.moveStraight();
-                break;
+        makeDession();     
+        if(foundGoal == true){
+            // Serial.println("for loop ended");
+            labyrinthMap.setGoalNode(); 
+            Serial.println("Ziel gefunden##########################");
+            delay(5000); 
         }
     }
-    
-    if(foundGoal == true){
-        // Serial.println("for loop ended");
-        labyrinthMap.setGoalNode(); 
-        Serial.println("Ziel gefunden##########################");
-        delay(5000); 
-    }
+
   }
 }
 
@@ -242,4 +147,90 @@ PredictionData getSensorData() {
 
     // Serial.println("Funktion Ende");
     return sensorData; 
+}
+void moveUntilMarker() {
+        double percentageRed, percentageGreen, percentageBlue;
+        movement.getColorPercentages(percentageRed, percentageGreen, percentageBlue);     
+    
+        PredictionData data = config.getSensorData();
+        marker = config.getMarkerFromPrediction(data);
+
+        switch (marker) {
+            case Marker::Finish:
+                Serial.println("Finish");
+                markerFOund++;
+                delay(200);
+                break;
+            case Marker::White:
+                if (iterationSinceTurnCounter == 0){
+                    Serial.println("White");            
+                    markerFOund++;
+                    delay(200);
+                    break;
+                }
+            case Marker::Crossing:
+                if (iterationSinceTurnCounter == 0){
+                    Serial.println("Crossing");           
+                    markerFOund++;
+                    delay(200);
+                    break;
+                }
+            case Marker::Path:
+                // Serial.println("Path");   
+                break;
+            }
+        bool isFirstGreater = movement.compareColors(percentageRed, percentageGreen);
+        movement.controlMotors(isFirstGreater);
+
+        if (iterationSinceTurnCounter > 0) {
+            iterationSinceTurnCounter--;
+        }
+}
+
+void makeDession(){
+        movement.stopMotors();        
+        iterationSinceTurnCounter = 500;
+        
+
+        delay(3000);
+        // Serial.println("delay ended");
+        // Marker marker = markers[i];
+        // Serial.println("marker set");       
+        if (marker == Marker::White){
+            Serial.println("marker is white");
+            labyrinthMap.addCrossing(CrossingType::DEAD_END);
+            // Serial.println("crossing has been added");
+            movement.deadEndRotation();
+
+        }else if (marker == Marker::Finish){
+            foundGoal = true;
+            // Serial.println("goal found");
+        }else {
+            // Serial.println("else path");
+            PredictionData sensorData = getSensorData();
+            // Serial.println("getSensorData");
+            CrossingType crossing = predictCrossing(sensorData);
+            // Serial.println("predictCrossing");
+
+            DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
+            // Serial.println("addCrossing");
+
+            switch (direction){
+                case DirectionLabyrinth::Left :
+                    Serial.println("-------------------Left");
+                    movement.moveLeft();
+                    break;
+                case DirectionLabyrinth::Right :
+                    Serial.println("--------------------Right");
+                    movement.moveRight();
+                    break;
+                case DirectionLabyrinth::Straight :
+                    Serial.println("--------------------Straight");
+                    movement.moveStraight();
+                    break;
+            
+            }
+        }
+        
+        markerFOund = 0;   
 }

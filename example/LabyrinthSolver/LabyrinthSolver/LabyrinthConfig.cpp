@@ -275,19 +275,20 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
     double greenPercent = data.green * 100 / rgbSum;
     double bluePercent = data.blue * 100 / rgbSum;
 
-    Serial.println("Neue Messung ----------------------------------------------------");
-    printSinglePredictionData(data);
-    Serial.println();
-    Serial.print("Red Percent:   ");
-    Serial.println(redPercent);
-    Serial.print("Green Percent: ");
-    Serial.println(greenPercent);
-    Serial.print("Blue Percent:  ");
-    Serial.println(bluePercent);
+    // Serial.println("Neue Messung ----------------------------------------------------");
+    // printSinglePredictionData(data);
+    // Serial.println();
+    // Serial.print("Red Percent:   ");
+    // Serial.println(redPercent);
+    // Serial.print("Green Percent: ");
+    // Serial.println(greenPercent);
+    // Serial.print("Blue Percent:  ");
+    // Serial.println(bluePercent);
 
     if (redPercent > 30 && redPercent < 35 &&
         greenPercent > 36 &&
-        bluePercent > 25 && bluePercent < 31) {
+        bluePercent > 25 && bluePercent < 31 &&
+        data.white < 5500) {
         Serial.println("Finish gefunden");
         return Marker::Finish;
     }
@@ -301,12 +302,13 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
     }
 
     if ((redPercent > 41.5 &&
-        greenPercent > 31 && greenPercent < 35 &&
-        bluePercent < 27) || data.white < 5500) {
-        Serial.println("Crossing gefunden");
+        greenPercent > 32.5 && greenPercent < 35 &&
+        bluePercent < 27 && data.CCT < 10500 && data.white > 6100) || 
+        (data.white < 5000 && bluePercent > 26)) {
+        Serial.println("Crossing gefunden########################################");
         return Marker::Crossing;
     }
 
-    Serial.println("Path");
+    // Serial.println("Path");
     return Marker::Path;
 }
