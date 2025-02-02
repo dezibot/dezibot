@@ -4,6 +4,7 @@
 #include "Graph.h"
 #include "CrossingModelT.h"
 #include "CrossingModelXT.h"
+#include "PIDController.h"
 
 CrossingPredictorT crossingModelT;
 CrossingPredictorXT crossingModelXT;
@@ -19,25 +20,24 @@ int markerFOund = 0;
 bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
 
-std::array<Marker, 4> markers = {
-Marker::Crossing,
-Marker::White,
-Marker::Crossing,
-Marker::Finish
-};
 
-std::array<Marker, 2> markers2 = {
-Marker::Crossing,
-Marker::Finish
-};
-
+PIDController pid(10, 1, 0.005); 
+VEML_CONFIG ManuelConfig = VEML_CONFIG {
+    .mode = MANUAL,
+    .enabled = true,
+    .exposureTime = MS320, 
+    .triggerEnabeled = true
+    };
 
 Dezibot dezibot = Dezibot();
 
 void setup() {
     Serial.begin(115200);
     dezibot.begin();
-    dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);
+    dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);    
+    // dezibot.colorDetection.beginAutoMode();
+
+    dezibot.colorDetection.configure(ManuelConfig);
 
     Serial.println("start");
     delay(4000);
@@ -59,44 +59,51 @@ void setup() {
 
 void loop() {  
 
+    dezibot.colorDetection.configure(ManuelConfig);
+    delay(350);
+    PredictionData data = getSensorData();
+    MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue);
+    
+    int leftSpeed = static_cast<int>(config.getMaxSpeed() * motors.leftMotor / 100.0);
+    int rightSpeed = static_cast<int>(config.getMaxSpeed() * motors.rightMotor / 100.0);
+
+    movement.setMotorSpeeds(leftSpeed, rightSpeed);
+
     // delay(2000);
     // PredictionData data = config.getSensorData();
     // Marker mark = config.getMarkerFromPrediction(data);
 
     // delay(3000);
 
+//   if (!explorationDone){
+//     if (markerFOund < 1){
+//         moveUntilMarker();
+//     }else {
+//         makeDession();        
 
-
-  if (!explorationDone){
-    if (markerFOund < 1){
-        moveUntilMarker();
-    }else {
-        makeDession();        
-
-        if(foundGoal == true){
-            // Serial.println("for loop ended");
-            labyrinthMap.setGoalNode(); 
-            Serial.println("Ziel gefunden##########################;");
-            delay(5000); 
-            // Serial.println("delay Ended");
-            explorationDone = true;
-        }  
-    }
-  } else {
-     foundGoal = false;
-       if (markerFOund < 1){
-        moveUntilMarker();
-    }else {
-        makeDession();     
-        if(foundGoal == true){
-            // Serial.println("for loop ended");
-            labyrinthMap.setGoalNode(); 
-            Serial.println("Ziel gefunden##########################");
-            delay(5000); 
-        }
-    }
-
-  }
+//         if(foundGoal == true){
+//             // Serial.println("for loop ended");
+//             labyrinthMap.setGoalNode(); 
+//             Serial.println("Ziel gefunden##########################;");
+//             delay(5000); 
+//             // Serial.println("delay Ended");
+//             explorationDone = true;
+//         }  
+//     }
+//   } else {
+//      foundGoal = false;
+//        if (markerFOund < 1){
+//         moveUntilMarker();
+//     }else {
+//         makeDession();     
+//         if(foundGoal == true){
+//             // Serial.println("for loop ended");
+//             labyrinthMap.setGoalNode(); 
+//             Serial.println("Ziel gefunden##########################");
+//             delay(5000); 
+//         }
+//     }
+//   }
 }
 
 

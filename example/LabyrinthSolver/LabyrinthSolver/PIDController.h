@@ -1,11 +1,9 @@
 #ifndef PIDCONTROLLER_H
 #define PIDCONTROLLER_H
 
-struct MotorStrength {
-    int leftMotor;
-    int rightMotor;
-    double error;
-};
+
+#include "CommonDefinitions.h"
+
 
 class PIDController {
 private:

@@ -1,6 +1,12 @@
 #ifndef COMMON_DEFINITIONS_H
 #define COMMON_DEFINITIONS_H
 
+struct MotorStrength {
+    int leftMotor;
+    int rightMotor;
+    double error;
+};
+
 struct PredictionData {
     float red; 
     float green;

@@ -43,6 +43,8 @@ struct VEML_CONFIG {
     
     // integration time
     duration exposureTime;
+
+    bool triggerEnabeled;
 };
 
 enum color {
