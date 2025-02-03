@@ -292,7 +292,7 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         data.white < 5500) {
         Serial.println("Finish gefunden");
         dezibot.display.clear();
-        dezibot.display.print("Finish");
+        dezibot.display.println("Finish");
         return Marker::Finish;
     }
 
@@ -302,22 +302,35 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         data.white > 9000) {
         Serial.println("White gefunden");
         dezibot.display.clear();
-        dezibot.display.print("White");
+        dezibot.display.println("White");
         return Marker::White;
     }
 
-    if ((redPercent > 41.5 &&
+    if ((redPercent > 41.5 && 
         greenPercent > 32.5 && greenPercent < 35 &&
         bluePercent < 27 && data.CCT < 10500 && data.white > 6100) || 
+        
+        (redPercent < 41.5  && redPercent > 38.5 && 
+        data.red < 4500 && data.red > 4000 &&
+
+        greenPercent > 34 && greenPercent < 35 &&
+        data.green < 3800 && data.green > 3500 &&
+
+        bluePercent < 27.5 && bluePercent > 26.5 && 
+        data.blue < 3100 && data.blue > 2600 &&
+
+        data.CCT < 10500 && data.CCT > 10500 &&  
+        data.white > 6200 && data.white < 7000) || 
+
         (data.white < 5000 && bluePercent > 26)) {
         Serial.println("Crossing gefunden########################################");
         dezibot.display.clear();
-        dezibot.display.print("Crossing");
+        dezibot.display.println("Crossing");
         return Marker::Crossing;
     }
 
     // Serial.println("Path");
     dezibot.display.clear();
-    dezibot.display.print("Path");
+    dezibot.display.println("Path");
     return Marker::Path;
 }

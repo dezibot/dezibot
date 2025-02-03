@@ -65,7 +65,7 @@ void loop() {
     // movement.setMotorSpeeds(leftSpeed, rightSpeed);
 
     // delay(2000);
-    // PredictionData data = config.getSensorData(ManuelConfig320);
+    // PredictionData data = getSensorData(ManuelConfig320);
     // Marker mark = config.getMarkerFromPrediction(data);
 
     // delay(3000);
@@ -167,8 +167,8 @@ void moveUntilMarker() {
         PredictionData data = getSensorData(ManuelConfig320);
         MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, colorMode);
         
-        int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
-        int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
+        int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 120.0);
+        int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 120.0);
 
         movement.setMotorSpeeds(leftSpeed, rightSpeed);   
     
@@ -236,15 +236,18 @@ void makeDession(){
 
             switch (direction){
                 case DirectionLabyrinth::Left :
-                    Serial.println("-------------------Left");
+                    Serial.println("-------------------Left");                    
+                    dezibot.display.println("Left");
                     movement.moveLeft();
                     break;
                 case DirectionLabyrinth::Right :
-                    Serial.println("--------------------Right");
+                    Serial.println("--------------------Right");                 
+                    dezibot.display.println("Right");
                     movement.moveRight();
                     break;
                 case DirectionLabyrinth::Straight :
-                    Serial.println("--------------------Straight");
+                    Serial.println("--------------------Straight");                 
+                    dezibot.display.println("Straight");
                     movement.moveStraight();
                     break;
             
