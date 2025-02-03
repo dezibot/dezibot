@@ -22,10 +22,13 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
     // }
     // error = error * error;
 
+    if (bluePercentage < 26.5){
+        return {80, 100, 0};
+    }
     double ratio = static_cast<double>(red) / (red + green);
 
     int G = 100;
-    double error = (ratio - 0.53) * G;  // G is a gain so that error ~ ±1 at the extremes.
+    double error = (ratio - 0.53) * (-G);  // G is a gain so that error ~ ±1 at the extremes.
 
 
     // Update integral and derivative
@@ -39,13 +42,13 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
     previousError = error;
 
     // Calculate motor strengths
-    int baseSpeed = 100; // Base speed for motors
+    int baseSpeed = 100; // Base speed in % for motors
     int leftMotor = static_cast<int>(baseSpeed - correction);
     int rightMotor = static_cast<int>(baseSpeed + correction);
 
     // Clamp motor strengths to valid range (0 to 100)
-    leftMotor = std::max(0, std::min(100, leftMotor));
-    rightMotor = std::max(0, std::min(100, rightMotor));
+    leftMotor = std::max(0, std::min(baseSpeed, leftMotor));
+    rightMotor = std::max(0, std::min(baseSpeed, rightMotor));
 
     Serial.print("R G B: ");
     Serial.print(redPercentage);

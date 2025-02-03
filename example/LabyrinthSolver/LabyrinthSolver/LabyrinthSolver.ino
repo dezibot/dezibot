@@ -21,8 +21,16 @@ bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
 
 
-PIDController pid(10, 1, 0.005); 
-VEML_CONFIG ManuelConfig = VEML_CONFIG {
+// PIDController pid(10, 1, 0.005); 
+PIDController pid(20, 1, 6); 
+VEML_CONFIG ManuelConfig80 = VEML_CONFIG {
+    .mode = MANUAL,
+    .enabled = true,
+    .exposureTime = MS80, 
+    .triggerEnabeled = true
+    };
+
+VEML_CONFIG ManuelConfig320 = VEML_CONFIG {
     .mode = MANUAL,
     .enabled = true,
     .exposureTime = MS320, 
@@ -37,7 +45,7 @@ void setup() {
     dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);    
     // dezibot.colorDetection.beginAutoMode();
 
-    dezibot.colorDetection.configure(ManuelConfig);
+    dezibot.colorDetection.configure(ManuelConfig80);
 
     Serial.println("start");
     delay(4000);
@@ -59,13 +67,14 @@ void setup() {
 
 void loop() {  
 
-    dezibot.colorDetection.configure(ManuelConfig);
-    delay(350);
+    dezibot.colorDetection.configure(ManuelConfig80);
+    delay(90);
+    // delay(2000);
     PredictionData data = getSensorData();
     MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue);
     
-    int leftSpeed = static_cast<int>(config.getMaxSpeed() * motors.leftMotor / 100.0);
-    int rightSpeed = static_cast<int>(config.getMaxSpeed() * motors.rightMotor / 100.0);
+    int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
+    int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
 
     movement.setMotorSpeeds(leftSpeed, rightSpeed);
 
