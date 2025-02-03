@@ -7,7 +7,7 @@ extern Dezibot dezibot;
 PIDController::PIDController(double p, double i, double d)
     : kp(p), ki(i), kd(d), previousError(0), integral(0) {}
 
-MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue) {
+MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue, ColorMode colorMode) {
     // Calculate the percentage of each color
     double total = red + green + blue;
     double redPercentage = (red / total) * 100.0;
@@ -43,12 +43,22 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
 
     // Calculate motor strengths
     int baseSpeed = 100; // Base speed in % for motors
-    int leftMotor = static_cast<int>(baseSpeed - correction);
-    int rightMotor = static_cast<int>(baseSpeed + correction);
 
-    // Clamp motor strengths to valid range (0 to 100)
+
+    int leftMotor = 0;
+    int rightMotor = 0;
+    
+    if (colorMode == RED_LEFT){
+        int leftMotor = static_cast<int>(baseSpeed - correction);
+        int rightMotor = static_cast<int>(baseSpeed + correction);
+    } else {
+        int leftMotor = static_cast<int>(baseSpeed + correction);
+        int rightMotor = static_cast<int>(baseSpeed - correction);
+    }
+
     leftMotor = std::max(0, std::min(baseSpeed, leftMotor));
     rightMotor = std::max(0, std::min(baseSpeed, rightMotor));
+
 
     Serial.print("R G B: ");
     Serial.print(redPercentage);
@@ -80,4 +90,9 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
     Serial.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
     return {leftMotor, rightMotor, error};
+}
+
+void PIDController::reset() {
+    previousError = 0;
+    integral = 0;
 }

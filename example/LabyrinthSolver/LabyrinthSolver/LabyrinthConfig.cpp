@@ -191,7 +191,8 @@ void LabyrinthConfig::setUpSpeed() {
     // TODO: Implement the function
 }
 
-PredictionData LabyrinthConfig::getSensorData() {
+PredictionData LabyrinthConfig::getSensorData() {    
+
     uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) ;
     uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
     uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);

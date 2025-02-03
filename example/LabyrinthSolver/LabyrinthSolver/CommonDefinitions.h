@@ -7,6 +7,11 @@ struct MotorStrength {
     double error;
 };
 
+enum ColorMode {
+    GREEN_LEFT,
+    RED_LEFT
+};
+
 struct PredictionData {
     float red; 
     float green;

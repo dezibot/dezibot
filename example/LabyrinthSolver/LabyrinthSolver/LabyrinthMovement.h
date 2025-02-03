@@ -14,11 +14,7 @@
 
 #include <cstdint>
 #include "LabyrinthConfig.h"
-
-enum ColorMode {
-    GREEN_LEFT,
-    RED_LEFT
-};
+#include "CommonDefinitions.h"
 
 class LabyrinthMovement {
 public:

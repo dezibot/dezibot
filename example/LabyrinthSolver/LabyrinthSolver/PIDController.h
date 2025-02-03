@@ -13,7 +13,8 @@ private:
 
 public:
     PIDController(double p, double i, double d);
-    MotorStrength calculateMotorStrength(int red, int green, int blue);
+    MotorStrength calculateMotorStrength(int red, int green, int blue, ColorMode colorMode);
+    void reset();
 };
 
 #endif // PIDCONTROLLER_H
