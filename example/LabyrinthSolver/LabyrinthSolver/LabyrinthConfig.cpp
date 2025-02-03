@@ -291,6 +291,8 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         bluePercent > 25 && bluePercent < 31 &&
         data.white < 5500) {
         Serial.println("Finish gefunden");
+        dezibot.display.clear();
+        dezibot.display.print("Finish");
         return Marker::Finish;
     }
 
@@ -299,6 +301,8 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         bluePercent > 30 && bluePercent < 33 &&
         data.white > 9000) {
         Serial.println("White gefunden");
+        dezibot.display.clear();
+        dezibot.display.print("White");
         return Marker::White;
     }
 
@@ -307,9 +311,13 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         bluePercent < 27 && data.CCT < 10500 && data.white > 6100) || 
         (data.white < 5000 && bluePercent > 26)) {
         Serial.println("Crossing gefunden########################################");
+        dezibot.display.clear();
+        dezibot.display.print("Crossing");
         return Marker::Crossing;
     }
 
     // Serial.println("Path");
+    dezibot.display.clear();
+    dezibot.display.print("Path");
     return Marker::Path;
 }

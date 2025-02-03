@@ -31,10 +31,10 @@ void LabyrinthMovement::deadEndRotation() {
     toggleColorMode();
 
     setMotorSpeeds(0, config.getMaxSpeed());
-    delay(3000);
+    delay(1000);
 
     setMotorSpeeds(config.getMaxSpeed(), 0);
-    delay(5000);
+    delay(4000);
 
     double initialRed, initialGreen, initialBlue;
     getColorPercentages(initialRed, initialGreen, initialBlue);
@@ -49,7 +49,7 @@ void LabyrinthMovement::deadEndRotation() {
     }
 
     setMotorSpeeds(config.getBaseSpeed(), config.getBaseSpeed());
-    delay(1000);
+    delay(1500);
 
     stopMotors();
 }
@@ -80,6 +80,10 @@ void LabyrinthMovement::stopMotors() {
 }
 
 void LabyrinthMovement::getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) const {
+    
+    dezibot.colorDetection.configure(ManuelConfig80);
+    delay(90);
+
     uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) * config.getRedScale();
     uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN) * config.getGreenScale();
     uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);

@@ -23,19 +23,7 @@ int iterationSinceTurnCounter = 0;
 
 // PIDController pid(10, 1, 0.005); 
 PIDController pid(20, 1, 6); 
-VEML_CONFIG ManuelConfig80 = VEML_CONFIG {
-    .mode = MANUAL,
-    .enabled = true,
-    .exposureTime = MS80, 
-    .triggerEnabeled = true
-    };
 
-VEML_CONFIG ManuelConfig320 = VEML_CONFIG {
-    .mode = MANUAL,
-    .enabled = true,
-    .exposureTime = MS320, 
-    .triggerEnabeled = true
-    };
 
 Dezibot dezibot = Dezibot();
 
@@ -45,7 +33,7 @@ void setup() {
     dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);    
     // dezibot.colorDetection.beginAutoMode();
 
-    dezibot.colorDetection.configure(ManuelConfig80);
+    dezibot.colorDetection.configure(ManuelConfig320);
 
     Serial.println("start");
     delay(4000);
@@ -67,10 +55,9 @@ void setup() {
 
 void loop() {  
 
-    // dezibot.colorDetection.configure(ManuelConfig80);
-    // delay(90);
+
     // PredictionData data = getSensorData(ManuelConfig80);
-    // MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue);
+    // MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, RED_LEFT);
     
     // int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
     // int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
@@ -100,6 +87,7 @@ void loop() {
     }
   } else {
      foundGoal = false;
+     iterationSinceTurnCounter = 0;
        if (markerFOund < 1){
         moveUntilMarker();
     }else {
@@ -136,7 +124,7 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
 
     if (vemlConfig.exposureTime == MS80){  
         delay(90);
-    }else {
+    }else if(vemlConfig.exposureTime == MS320) {
         delay(330);
     }
     
@@ -176,7 +164,7 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
 void moveUntilMarker() {
         ColorMode colorMode = movement.getColorMode();
 
-        PredictionData data = getSensorData(ManuelConfig80);
+        PredictionData data = getSensorData(ManuelConfig320);
         MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, colorMode);
         
         int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
@@ -220,7 +208,7 @@ void moveUntilMarker() {
 
 void makeDession(){
         movement.stopMotors();        
-        iterationSinceTurnCounter = 500;
+        iterationSinceTurnCounter = 9;
         
 
         delay(3000);

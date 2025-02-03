@@ -1,6 +1,7 @@
 #ifndef COMMON_DEFINITIONS_H
 #define COMMON_DEFINITIONS_H
 
+#include <Dezibot.h>
 struct MotorStrength {
     int leftMotor;
     int rightMotor;
@@ -12,6 +13,8 @@ enum ColorMode {
     RED_LEFT
 };
 
+extern VEML_CONFIG ManuelConfig80;
+extern VEML_CONFIG ManuelConfig320;
 struct PredictionData {
     float red; 
     float green;

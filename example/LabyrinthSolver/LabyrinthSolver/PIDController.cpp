@@ -1,6 +1,7 @@
 #include "PIDController.h"
 #include <algorithm> 
 #include <Dezibot.h>
+#include <cmath> 
 
 extern Dezibot dezibot;
 
@@ -14,17 +15,20 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
     double greenPercentage = (green / total) * 100.0;
     double bluePercentage = (blue / total) * 100.0;
 
-    // Calculate error: Target is equal contribution from red and green (50% each)
-    // WHite könnte faktor sein je mehr man sieht desto mehr wird der error faktor größer gemcaht
-    // double error = redPercentage - greenPercentage - 5.5;
-    // if (error < 0){
-    //     error = error * 3;
-    // }
-    // error = error * error;
+     double redAdjusted = std::pow(red, 1.1);
 
     if (bluePercentage < 26.5){
-        return {80, 100, 0};
+        dezibot.display.print("blauProzent: ");
+        dezibot.display.println(bluePercentage);
+        return {60, 70, 0};
     }
+
+    if (greenPercentage > 35){
+        dezibot.display.print("greenPercen: ");
+        dezibot.display.println(greenPercentage);
+        return {70, 80, 0};
+    }
+    // double ratio = static_cast<double>(redAdjusted) / (redAdjusted + green);
     double ratio = static_cast<double>(red) / (red + green);
 
     int G = 100;
@@ -47,47 +51,47 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
 
     int leftMotor = 0;
     int rightMotor = 0;
-    
+
     if (colorMode == RED_LEFT){
-        int leftMotor = static_cast<int>(baseSpeed - correction);
-        int rightMotor = static_cast<int>(baseSpeed + correction);
+        leftMotor = static_cast<int>(baseSpeed - correction);
+        rightMotor = static_cast<int>(baseSpeed + correction);
     } else {
-        int leftMotor = static_cast<int>(baseSpeed + correction);
-        int rightMotor = static_cast<int>(baseSpeed - correction);
+        leftMotor = static_cast<int>(baseSpeed + correction);
+        rightMotor = static_cast<int>(baseSpeed - correction);
     }
 
     leftMotor = std::max(0, std::min(baseSpeed, leftMotor));
     rightMotor = std::max(0, std::min(baseSpeed, rightMotor));
 
 
-    Serial.print("R G B: ");
-    Serial.print(redPercentage);
-    Serial.print("  ");
-    Serial.print(greenPercentage);
-    Serial.print("  ");
-    Serial.println(bluePercentage);
+    // Serial.print("R G B: ");
+    // Serial.print(redPercentage);
+    // Serial.print("  ");
+    // Serial.print(greenPercentage);
+    // Serial.print("  ");
+    // Serial.println(bluePercentage);
     
-    Serial.print("Error: ");
-    Serial.println(error);
+    // Serial.print("Error: ");
+    // Serial.println(error);
 
-    Serial.print("derivative: ");
-    Serial.println(derivative);
+    // Serial.print("derivative: ");
+    // Serial.println(derivative);
 
-    Serial.print("integral: ");
-    Serial.println(integral);
+    // Serial.print("integral: ");
+    // Serial.println(integral);
     
-    Serial.print("correction: ");
-    Serial.println(correction);
+    // Serial.print("correction: ");
+    // Serial.println(correction);
 
-    Serial.print("ratio: ");
-    Serial.println(ratio);
+    // Serial.print("ratio: ");
+    // Serial.println(ratio);
 
-    Serial.print("Lmotot Rmotor: ");
-    Serial.print(leftMotor);
-    Serial.print("  ");
-    Serial.println(rightMotor);
+    // Serial.print("Lmotot Rmotor: ");
+    // Serial.print(leftMotor);
+    // Serial.print("  ");
+    // Serial.println(rightMotor);
 
-    Serial.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    // Serial.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
     return {leftMotor, rightMotor, error};
 }
