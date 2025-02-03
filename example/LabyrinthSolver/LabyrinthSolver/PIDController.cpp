@@ -15,7 +15,7 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
     double greenPercentage = (green / total) * 100.0;
     double bluePercentage = (blue / total) * 100.0;
 
-     double redAdjusted = std::pow(red, 1.1);
+    //  double redAdjusted = std::pow(red, 1.1);
 
     if (bluePercentage < 26.5){
         dezibot.display.print("blauProzent: ");
