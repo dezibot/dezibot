@@ -19,6 +19,7 @@ int i = 0;
 int markerFOund = 0;
 bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
+ColorMode startColorMode = RED_LEFT;
 
 
 // PIDController pid(10, 1, 0.005); 
@@ -41,7 +42,7 @@ void setup() {
     // Serial.println("setUpDone");
 
 
-    movement.setColorMode(RED_LEFT);
+    movement.setColorMode(startColorMode);
     // movement.calibrateWhite();
 
     crossingModelXT.initialize();    
@@ -86,18 +87,19 @@ void loop() {
         }  
     }
   } else {
-     foundGoal = false;
-     iterationSinceTurnCounter = 0;
-       if (markerFOund < 1){
-        moveUntilMarker();
-    }else {
-        makeDession();     
-        if(foundGoal == true){
-            // Serial.println("for loop ended");
-            labyrinthMap.setGoalNode(); 
-            Serial.println("Ziel gefunden##########################");
-            delay(5000); 
-        }
+        foundGoal = false;
+        iterationSinceTurnCounter = 0;
+        movement.setColorMode(startColorMode);
+        if (markerFOund < 1){
+            moveUntilMarker();
+        }else {
+            makeDession();     
+            if(foundGoal == true){
+                // Serial.println("for loop ended");
+                labyrinthMap.setGoalNode(); 
+                Serial.println("Ziel gefunden##########################");
+                delay(5000); 
+            }
     }
   }
 }
@@ -220,6 +222,8 @@ void makeDession(){
             labyrinthMap.addCrossing(CrossingType::DEAD_END);
             // Serial.println("crossing has been added");
             movement.deadEndRotation();
+            
+            iterationSinceTurnCounter = 6;
 
         }else if (marker == Marker::Finish){
             foundGoal = true;
