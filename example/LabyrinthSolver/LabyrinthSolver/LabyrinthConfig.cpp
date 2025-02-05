@@ -277,15 +277,15 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
     double bluePercent = data.blue * 100 / rgbSum;
 
     
-    Serial.println("Neue Messung ----------------------------------------------------");
-    printSinglePredictionData(data);
-    Serial.println();
-    Serial.print("Red Percent:   ");
-    Serial.println(redPercent);
-    Serial.print("Green Percent: ");
-    Serial.println(greenPercent);
-    Serial.print("Blue Percent:  ");
-    Serial.println(bluePercent);
+    // Serial.println("Neue Messung ----------------------------------------------------");
+    // printSinglePredictionData(data);
+    // Serial.println();
+    // Serial.print("Red Percent:   ");
+    // Serial.println(redPercent);
+    // Serial.print("Green Percent: ");
+    // Serial.println(greenPercent);
+    // Serial.print("Blue Percent:  ");
+    // Serial.println(bluePercent);
 
     if (
         data.white < 1500 &&
@@ -319,7 +319,7 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         data.CCT < 11000   
     ) || (    
         // T1
-        redPercent > 40 && redPercent < 42 &&
+        redPercent > 39.5 && redPercent < 42 &&
         bluePercent < 28 && bluePercent > 24 &&
         greenPercent > 34 && greenPercent < 35 && 
         data.white < 1900 && data.white > 1500 &&

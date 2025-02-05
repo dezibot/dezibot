@@ -49,7 +49,7 @@ void LabyrinthMovement::deadEndRotation() {
     }
 
     setMotorSpeeds(config.getBaseSpeed(), config.getBaseSpeed());
-    delay(1500);
+    delay(700);
 
     stopMotors();
 }

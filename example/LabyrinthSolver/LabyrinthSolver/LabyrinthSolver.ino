@@ -214,7 +214,7 @@ void moveUntilMarker() {
 
 void makeDession(){
         movement.stopMotors();        
-        iterationSinceTurnCounter = 6*4; // * 4 wegen 80ms zu 320 ms
+        iterationSinceTurnCounter = 5*4; // * 4 wegen 80ms zu 320 ms
         
 
         delay(1000);
@@ -227,7 +227,7 @@ void makeDession(){
             // Serial.println("crossing has been added");
             movement.deadEndRotation();
             
-            // iterationSinceTurnCounter = 6;
+            iterationSinceTurnCounter = 3*4; 
 
         }else if (marker == Marker::Finish){
             foundGoal = true;
