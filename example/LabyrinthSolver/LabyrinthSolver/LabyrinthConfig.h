@@ -169,8 +169,8 @@ public:
     void setWhiteTolerance(double tolerance);
 
 private:
-    uint16_t baseSpeed = 3900;
-    // uint16_t baseSpeed = 4200;
+    // uint16_t baseSpeed = 3900;
+    uint16_t baseSpeed = 4500;
     // uint16_t baseSpeed = 3400;
     uint16_t maxSpeed = 8191;
     // uint16_t rotateSpeed = 2500;

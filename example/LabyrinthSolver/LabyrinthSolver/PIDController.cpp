@@ -17,17 +17,17 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
 
     //  double redAdjusted = std::pow(red, 1.1);
 
-    if (bluePercentage < 26.5){
-        dezibot.display.print("blauProzent: ");
-        dezibot.display.println(bluePercentage);
-        return {55, 65, 0};
-    }
+    // if (bluePercentage < 27){
+    //     dezibot.display.print("blauProzent: ");
+    //     dezibot.display.println(bluePercentage);
+    //     return {55, 65, 0}; // TODO einstellen, damit es schwächer in die richtung ist, abhänig von colorMode
+    // }
 
-    if (greenPercentage > 35){
-        dezibot.display.print("greenPercen: ");
-        dezibot.display.println(greenPercentage);
-        return {70, 80, 0};
-    }
+    // if (greenPercentage > 35){
+    //     dezibot.display.print("greenPercen: ");
+    //     dezibot.display.println(greenPercentage);
+    //     return {70, 80, 0};
+    // }
     // double ratio = static_cast<double>(redAdjusted) / (redAdjusted + green);
     double ratio = static_cast<double>(red) / (red + green);
 

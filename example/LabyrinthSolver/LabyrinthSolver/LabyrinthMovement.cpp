@@ -31,7 +31,7 @@ void LabyrinthMovement::deadEndRotation() {
     toggleColorMode();
 
     setMotorSpeeds(0, config.getMaxSpeed());
-    delay(2000);
+    delay(500);
 
     setMotorSpeeds(config.getMaxSpeed(), 0);
     delay(4000);

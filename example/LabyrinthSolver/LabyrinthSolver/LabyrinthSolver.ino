@@ -57,17 +57,17 @@ void setup() {
 void loop() {  
 
 
-    // PredictionData data = getSensorData(ManuelConfig80);
-    // MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, RED_LEFT);
-    
-    // int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
-    // int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
-
-    // movement.setMotorSpeeds(leftSpeed, rightSpeed);
-
-    delay(2000);
     PredictionData data = getSensorData(ManuelConfig80);
-    Marker mark = config.getMarkerFromPrediction(data);
+    MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, RED_LEFT);
+    
+    int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
+    int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
+
+    movement.setMotorSpeeds(leftSpeed, rightSpeed);
+
+    // delay(2000);
+    // PredictionData data = getSensorData(ManuelConfig80);
+    // Marker mark = config.getMarkerFromPrediction(data);
 
     // delay(3000);
 

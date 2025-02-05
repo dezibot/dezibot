@@ -276,53 +276,56 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
     double greenPercent = data.green * 100 / rgbSum;
     double bluePercent = data.blue * 100 / rgbSum;
 
-    // Serial.println("Neue Messung ----------------------------------------------------");
-    // printSinglePredictionData(data);
-    // Serial.println();
-    // Serial.print("Red Percent:   ");
-    // Serial.println(redPercent);
-    // Serial.print("Green Percent: ");
-    // Serial.println(greenPercent);
-    // Serial.print("Blue Percent:  ");
-    // Serial.println(bluePercent);
+    
+    Serial.println("Neue Messung ----------------------------------------------------");
+    printSinglePredictionData(data);
+    Serial.println();
+    Serial.print("Red Percent:   ");
+    Serial.println(redPercent);
+    Serial.print("Green Percent: ");
+    Serial.println(greenPercent);
+    Serial.print("Blue Percent:  ");
+    Serial.println(bluePercent);
 
-    if (redPercent > 30 && redPercent < 35 &&
-        greenPercent > 36 &&
-        bluePercent > 25 && bluePercent < 31 &&
-        data.white < 5500) {
+    if (
+        data.white < 1500 &&
+        greenPercent > 38 &&
+        data.green < 900 
+
+    ) {
         Serial.println("Finish gefunden");
         dezibot.display.clear();
         dezibot.display.println("Finish");
         return Marker::Finish;
     }
 
-    if (redPercent > 33 && redPercent < 36 &&
-        greenPercent > 33 && greenPercent < 36 &&
-        bluePercent > 30 && bluePercent < 33 &&
-        data.white > 9000) {
+    if (
+        // redPercent > 33 && redPercent < 36 &&
+        // greenPercent > 33 && greenPercent < 36 &&
+        // bluePercent > 30 && bluePercent < 33 &&
+        data.white > 2500) {
         Serial.println("White gefunden");
         dezibot.display.clear();
         dezibot.display.println("White");
         return Marker::White;
     }
 
-    if ((redPercent > 41.5 && 
-        greenPercent > 32.5 && greenPercent < 35 &&
-        bluePercent < 27 && data.CCT < 10500 && data.white > 6100) || 
-        
-        // (redPercent < 41.5  && redPercent > 38.5 && 
-        // data.red < 4500 && data.red > 4000 &&
-
-        // greenPercent > 34 && greenPercent < 35 &&
-        // data.green < 3800 && data.green > 3500 &&
-
-        // bluePercent < 27.5 && bluePercent > 26.5 && 
-        // data.blue < 3100 && data.blue > 2600 &&
-
-        // data.CCT < 10500 && data.CCT > 10500 &&  
-        // data.white > 6200 && data.white < 7000) || 
-
-        (data.white < 5000 && bluePercent > 26)) {
+    if ((
+        // T3
+        redPercent > 42 &&
+        bluePercent < 25 &&
+        greenPercent < 34 && greenPercent > 33 && 
+        data.white < 1700 && data.white > 1500 &&
+        data.CCT < 11000   
+    ) || (    
+        // T1
+        redPercent > 40 && redPercent < 42 &&
+        bluePercent < 28 && bluePercent > 24 &&
+        greenPercent > 34 && greenPercent < 35 && 
+        data.white < 1900 && data.white > 1500 &&
+        // data.CCT > 11000 &&
+        data.blue > 650  
+    )) {
         Serial.println("Crossing gefunden########################################");
         dezibot.display.clear();
         dezibot.display.println("Crossing");
