@@ -278,7 +278,9 @@ void Graph::findShortestPath() {
     
     for (int currentId = goalNode->id; currentId != -1; currentId = parent[currentId]) {
         Serial.print("CurrentID of Node Beeing Pushed: ");
-        Serial.println(currentId);
+        Serial.println(currentId);        
+        dezibot.display.print("; ");
+        dezibot.display.println(currentId);
         solutionStack.push(currentId);
     }
 
@@ -300,6 +302,8 @@ DirectionLabyrinth Graph::getDirection() {
         if (neighbor && neighbor->id == nextNodeId) {
             Serial.print("CurrentNodeType ");
             Serial.println(static_cast<int>(currentNode->crossingType));
+            dezibot.display.print("; ");
+            dezibot.display.println(static_cast<int>(currentNode->crossingType));
             currentNode = neighbor;
             return static_cast<DirectionLabyrinth>(dir);
         }
