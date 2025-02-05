@@ -34,7 +34,7 @@ void setup() {
     dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);    
     // dezibot.colorDetection.beginAutoMode();
 
-    dezibot.colorDetection.configure(ManuelConfig320);
+    dezibot.colorDetection.configure(ManuelConfig80);
 
     Serial.println("start");
     delay(4000);
@@ -57,13 +57,13 @@ void setup() {
 void loop() {  
 
 
-    PredictionData data = getSensorData(ManuelConfig80);
-    MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, RED_LEFT);
+    // PredictionData data = getSensorData(ManuelConfig80);
+    // MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, RED_LEFT);
     
-    int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
-    int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
+    // int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
+    // int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
 
-    movement.setMotorSpeeds(leftSpeed, rightSpeed);
+    // movement.setMotorSpeeds(leftSpeed, rightSpeed);
 
     // delay(2000);
     // PredictionData data = getSensorData(ManuelConfig80);
@@ -71,37 +71,37 @@ void loop() {
 
     // delay(3000);
 
-//   if (!explorationDone){
-//     if (markerFOund < 1){
-//         moveUntilMarker();
-//     }else {
-//         makeDession();        
+  if (!explorationDone){
+    if (markerFOund < 1){
+        moveUntilMarker();
+    }else {
+        makeDession();        
 
-//         if(foundGoal == true){
-//             // Serial.println("for loop ended");
-//             labyrinthMap.setGoalNode(); 
-//             Serial.println("Ziel gefunden##########################;");
-//             delay(5000); 
-//             // Serial.println("delay Ended");
-//             explorationDone = true;
-//         }  
-//     }
-//   } else {
-//         foundGoal = false;
-//         iterationSinceTurnCounter = 0;
-//         movement.setColorMode(startColorMode);
-//         if (markerFOund < 1){
-//             moveUntilMarker();
-//         }else {
-//             makeDession();     
-//             if(foundGoal == true){
-//                 // Serial.println("for loop ended");
-//                 labyrinthMap.setGoalNode(); 
-//                 Serial.println("Ziel gefunden##########################");
-//                 delay(5000); 
-//             }
-//     }
-//   }
+        if(foundGoal == true){
+            // Serial.println("for loop ended");
+            labyrinthMap.setGoalNode(); 
+            Serial.println("Ziel gefunden##########################;");
+            delay(5000); 
+            // Serial.println("delay Ended");
+            explorationDone = true;
+        }  
+    }
+  } else {
+        foundGoal = false;
+        iterationSinceTurnCounter = 0;
+        movement.setColorMode(startColorMode);
+        if (markerFOund < 1){
+            moveUntilMarker();
+        }else {
+            makeDession();     
+            if(foundGoal == true){
+                // Serial.println("for loop ended");
+                labyrinthMap.setGoalNode(); 
+                Serial.println("Ziel gefunden##########################");
+                delay(5000); 
+            }
+    }
+  }
 }
 
 
@@ -166,7 +166,7 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
 void moveUntilMarker() {
         ColorMode colorMode = movement.getColorMode();
 
-        PredictionData data = getSensorData(ManuelConfig320);
+        PredictionData data = getSensorData(ManuelConfig80);
         MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, colorMode);
         
         Serial.print(motors.leftMotor);
@@ -214,10 +214,10 @@ void moveUntilMarker() {
 
 void makeDession(){
         movement.stopMotors();        
-        iterationSinceTurnCounter = 9;
+        iterationSinceTurnCounter = 6*4; // * 4 wegen 80ms zu 320 ms
         
 
-        delay(3000);
+        delay(1000);
         // Serial.println("delay ended");
         // Marker marker = markers[i];
         // Serial.println("marker set");       
@@ -234,7 +234,7 @@ void makeDession(){
             // Serial.println("goal found");
         }else {
             // Serial.println("else path");
-            PredictionData sensorData = getSensorData(ManuelConfig320);
+            PredictionData sensorData = getSensorData(ManuelConfig80);
             // Serial.println("getSensorData");
             CrossingType crossing = predictCrossing(sensorData);
             // Serial.println("predictCrossing");
