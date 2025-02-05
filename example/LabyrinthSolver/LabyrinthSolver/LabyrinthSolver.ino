@@ -65,43 +65,43 @@ void loop() {
 
     // movement.setMotorSpeeds(leftSpeed, rightSpeed);
 
-    // delay(2000);
-    // PredictionData data = getSensorData(ManuelConfig320);
-    // Marker mark = config.getMarkerFromPrediction(data);
+    delay(2000);
+    PredictionData data = getSensorData(ManuelConfig80);
+    Marker mark = config.getMarkerFromPrediction(data);
 
     // delay(3000);
 
-  if (!explorationDone){
-    if (markerFOund < 1){
-        moveUntilMarker();
-    }else {
-        makeDession();        
+//   if (!explorationDone){
+//     if (markerFOund < 1){
+//         moveUntilMarker();
+//     }else {
+//         makeDession();        
 
-        if(foundGoal == true){
-            // Serial.println("for loop ended");
-            labyrinthMap.setGoalNode(); 
-            Serial.println("Ziel gefunden##########################;");
-            delay(5000); 
-            // Serial.println("delay Ended");
-            explorationDone = true;
-        }  
-    }
-  } else {
-        foundGoal = false;
-        iterationSinceTurnCounter = 0;
-        movement.setColorMode(startColorMode);
-        if (markerFOund < 1){
-            moveUntilMarker();
-        }else {
-            makeDession();     
-            if(foundGoal == true){
-                // Serial.println("for loop ended");
-                labyrinthMap.setGoalNode(); 
-                Serial.println("Ziel gefunden##########################");
-                delay(5000); 
-            }
-    }
-  }
+//         if(foundGoal == true){
+//             // Serial.println("for loop ended");
+//             labyrinthMap.setGoalNode(); 
+//             Serial.println("Ziel gefunden##########################;");
+//             delay(5000); 
+//             // Serial.println("delay Ended");
+//             explorationDone = true;
+//         }  
+//     }
+//   } else {
+//         foundGoal = false;
+//         iterationSinceTurnCounter = 0;
+//         movement.setColorMode(startColorMode);
+//         if (markerFOund < 1){
+//             moveUntilMarker();
+//         }else {
+//             makeDession();     
+//             if(foundGoal == true){
+//                 // Serial.println("for loop ended");
+//                 labyrinthMap.setGoalNode(); 
+//                 Serial.println("Ziel gefunden##########################");
+//                 delay(5000); 
+//             }
+//     }
+//   }
 }
 
 
