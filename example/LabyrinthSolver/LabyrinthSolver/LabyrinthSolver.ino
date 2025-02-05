@@ -98,7 +98,9 @@ void loop() {
                 // Serial.println("for loop ended");
                 labyrinthMap.setGoalNode(); 
                 Serial.println("Ziel gefunden##########################");
-                delay(5000); 
+                dezibot.display.clear();
+                dezibot.display.println("Ziel Gefunden Programm beendet");
+                delay(50000); 
             }
     }
   }
@@ -237,6 +239,7 @@ void makeDession(){
             PredictionData sensorData = getSensorData(ManuelConfig80);
             // Serial.println("getSensorData");
             CrossingType crossing = predictCrossing(sensorData);
+            printCrossingType(crossing);
             // Serial.println("predictCrossing");
 
             DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
@@ -266,3 +269,24 @@ void makeDession(){
         pid.reset();  
 }
 
+void printCrossingType(CrossingType type) {
+    String typeStr;
+
+    switch (type) {
+        case CrossingType::X:        typeStr = "X"; break;
+        case CrossingType::T1:       typeStr = "T1"; break;
+        case CrossingType::T2:       typeStr = "T2"; break;
+        case CrossingType::T3:       typeStr = "T3"; break;
+        case CrossingType::T:        typeStr = "T"; break;
+        case CrossingType::DEAD_END: typeStr = "DEAD_END"; break;
+        default:                     typeStr = "UNKNOWN"; break;
+    }
+
+    // Print to Serial Monitor
+    Serial.print("Crossing Type: ");
+    Serial.println(typeStr);
+
+    // Print to Display
+    dezibot.display.print("Crossing Type: ");
+    dezibot.display.println(typeStr);
+}
