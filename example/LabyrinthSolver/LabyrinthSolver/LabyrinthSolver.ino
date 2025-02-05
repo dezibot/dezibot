@@ -227,7 +227,7 @@ void makeDession(){
             // Serial.println("crossing has been added");
             movement.deadEndRotation();
             
-            iterationSinceTurnCounter = 6;
+            // iterationSinceTurnCounter = 6;
 
         }else if (marker == Marker::Finish){
             foundGoal = true;
