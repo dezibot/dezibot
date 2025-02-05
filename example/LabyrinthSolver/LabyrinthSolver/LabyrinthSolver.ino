@@ -236,7 +236,7 @@ void makeDession(){
             // Serial.println("goal found");
         }else {
             // Serial.println("else path");
-            PredictionData sensorData = getSensorData(ManuelConfig80);
+            PredictionData sensorData = getSensorData(ManuelConfig320);
             // Serial.println("getSensorData");
             CrossingType crossing = predictCrossing(sensorData);
             printCrossingType(crossing);

@@ -20,9 +20,9 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
         dezibot.display.print("blauProzent: ");
         dezibot.display.println(bluePercentage);
         if(colorMode == RED_LEFT){
-            return {95, 100, 0};
+            return {55, 65, 0};
         }else {
-            return {100, 95, 0};
+            return {65, 55, 0};
         }
     }
 
