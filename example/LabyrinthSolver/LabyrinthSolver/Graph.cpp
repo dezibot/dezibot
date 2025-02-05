@@ -1,5 +1,8 @@
 #include "Graph.h"
 #include <stdexcept>
+#include <Dezibot.h>
+
+extern Dezibot dezibot;
 
 
 Graph::Graph() : nextNodeId(1), currentMode(Mode::EXPLORER) {
@@ -271,7 +274,11 @@ void Graph::findShortestPath() {
         }
     }
 
+
+    
     for (int currentId = goalNode->id; currentId != -1; currentId = parent[currentId]) {
+        Serial.print("CurrentID of Node Beeing Pushed: ");
+        Serial.println(currentId);
         solutionStack.push(currentId);
     }
 
@@ -291,6 +298,8 @@ DirectionLabyrinth Graph::getDirection() {
     for (int dir = 0; dir < currentNode->neighbors.size(); ++dir) {
         auto neighbor = currentNode->neighbors[dir];
         if (neighbor && neighbor->id == nextNodeId) {
+            Serial.print("CurrentNodeType ");
+            Serial.println(static_cast<int>(currentNode->crossingType));
             currentNode = neighbor;
             return static_cast<DirectionLabyrinth>(dir);
         }
