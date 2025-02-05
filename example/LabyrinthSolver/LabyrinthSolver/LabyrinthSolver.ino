@@ -169,8 +169,12 @@ void moveUntilMarker() {
         PredictionData data = getSensorData(ManuelConfig320);
         MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, colorMode);
         
+        Serial.print(motors.leftMotor);
+        Serial.print("    ");
+        Serial.println(motors.rightMotor);
         int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
         int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
+
 
         movement.setMotorSpeeds(leftSpeed, rightSpeed);   
     
