@@ -178,7 +178,7 @@ private:
     int moveStraightDuration = 1500;
     double whiteTolerance = 0.7;
 
-    PredictionData GoalFiled = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    PredictionData GoalFilled = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     PredictionData White = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     PredictionData PathMiddle = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     PredictionData PathRed = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};

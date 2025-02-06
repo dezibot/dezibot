@@ -105,7 +105,7 @@ void LabyrinthConfig::setUpGoal() {
 
     dezibot.display.println("Dont Move");
 
-    GoalFiled = getAverageSensor();
+    GoalFilled = getAverageSensor();
 
     delay(1000);  
     dezibot.display.clear();  
@@ -220,8 +220,8 @@ PredictionData LabyrinthConfig::getAverageSensor() {
 void LabyrinthConfig::printPredictionData() const {
     Serial.println("Prediction Data:");
 
-    Serial.println("GoalFiled:");
-    printSinglePredictionData(GoalFiled);
+    Serial.println("GoalFilled:");
+    printSinglePredictionData(GoalFilled);
 
     Serial.println("White:");
     printSinglePredictionData(White);
