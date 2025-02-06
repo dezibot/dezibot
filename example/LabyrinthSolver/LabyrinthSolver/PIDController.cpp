@@ -55,7 +55,6 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
     // Calculate motor strengths
     int baseSpeed = 100; // Base speed in % for motors
 
-
     int leftMotor = 0;
     int rightMotor = 0;
 
@@ -69,36 +68,6 @@ MotorStrength PIDController::calculateMotorStrength(int red, int green, int blue
 
     leftMotor = std::max(0, std::min(baseSpeed, leftMotor));
     rightMotor = std::max(0, std::min(baseSpeed, rightMotor));
-
-
-    // Serial.print("R G B: ");
-    // Serial.print(redPercentage);
-    // Serial.print("  ");
-    // Serial.print(greenPercentage);
-    // Serial.print("  ");
-    // Serial.println(bluePercentage);
-    
-    // Serial.print("Error: ");
-    // Serial.println(error);
-
-    // Serial.print("derivative: ");
-    // Serial.println(derivative);
-
-    // Serial.print("integral: ");
-    // Serial.println(integral);
-    
-    // Serial.print("correction: ");
-    // Serial.println(correction);
-
-    // Serial.print("ratio: ");
-    // Serial.println(ratio);
-
-    // Serial.print("Lmotot Rmotor: ");
-    // Serial.print(leftMotor);
-    // Serial.print("  ");
-    // Serial.println(rightMotor);
-
-    // Serial.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
     return {leftMotor, rightMotor, error};
 }
