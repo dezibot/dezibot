@@ -20,9 +20,6 @@ int markerFOund = 0;
 bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
 ColorMode startColorMode = RED_LEFT;
-
-
-// PIDController pid(10, 1, 0.005); 
 PIDController pid(20, 1, 6); 
 
 
@@ -31,46 +28,22 @@ Dezibot dezibot = Dezibot();
 void setup() {
     Serial.begin(115200);
     dezibot.begin();
-    dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);    
-    // dezibot.colorDetection.beginAutoMode();
+    dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);
 
     dezibot.colorDetection.configure(ManualConfig80);
 
     Serial.println("start");
     delay(4000);
-    // config.runSetUp();    
-    // Serial.println("setUpDone");
-
 
     movement.setColorMode(startColorMode);
-    // movement.calibrateWhite();
 
     crossingModelXT.initialize();    
     Serial.println("crossingModelXT.initialize();");
     crossingModelT.initialize();
     Serial.println("crossingModelT.initialize();");
-
-
-    
 }
 
 void loop() {  
-
-
-    // PredictionData data = getSensorData(ManuelConfig80);
-    // MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, RED_LEFT);
-    
-    // int leftSpeed = static_cast<int>(config.getBaseSpeed() * motors.leftMotor / 100.0);
-    // int rightSpeed = static_cast<int>(config.getBaseSpeed() * motors.rightMotor / 100.0);
-
-    // movement.setMotorSpeeds(leftSpeed, rightSpeed);
-
-    // delay(2000);
-    // PredictionData data = getSensorData(ManuelConfig80);
-    // Marker mark = config.getMarkerFromPrediction(data);
-
-    // delay(3000);
-
   if (!explorationDone){
     if (markerFOund < 1){
         moveUntilMarker();
@@ -78,11 +51,9 @@ void loop() {
         makeDession();        
 
         if(foundGoal == true){
-            // Serial.println("for loop ended");
             labyrinthMap.setGoalNode(); 
             Serial.println("Ziel gefunden##########################;");
-            delay(5000); 
-            // Serial.println("delay Ended");
+            delay(5000);
             explorationDone = true;
             foundGoal = false;
             iterationSinceTurnCounter = 0;
@@ -95,7 +66,6 @@ void loop() {
         }else {
             makeDession();     
             if(foundGoal == true){
-                // Serial.println("for loop ended");
                 labyrinthMap.setGoalNode(); 
                 Serial.println("Ziel gefunden##########################");
                 dezibot.display.clear();
@@ -106,20 +76,16 @@ void loop() {
   }
 }
 
-
-CrossingType predictCrossing(PredictionData data) {   
-    // Serial.println("predictionFunction"); 
+CrossingType predictCrossing(PredictionData data) {
     CrossingType xtPrediction = crossingModelXT.predictCrossingXT(data);
-    // Serial.println("predictCrossingXT"); 
 
     if(xtPrediction == CrossingType::X){
         Serial.println("if xtPrediction == X"); 
         return xtPrediction;
     }
-    // Serial.println("xtPrediction is not X"); 
 
     CrossingType tPrediction = crossingModelT.predictCrossingT(data);
-    // Serial.println("predictCrossingT"); 
+
     return tPrediction; 
 }
 
@@ -132,25 +98,13 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
         delay(330);
     }
     
-
-
-    // Serial.println("getSensor Anfang");
     uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) ;
-    // Serial.println("VEML_RED");
     uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN);
-    // Serial.println("VEML_GREEN");
     uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);
-    // Serial.println("VEML_BLUE");
     uint16_t white = dezibot.colorDetection.getColorValue(VEML_WHITE);
-    // Serial.println("VEML_WHITE");
     float ambient = dezibot.colorDetection.getAmbientLight();
-    // Serial.println("getAmbientLight");
     uint16_t cct = dezibot.colorDetection.gettCCT(0.0);
-    // Serial.println("gettCCT");
     uint16_t daylight = dezibot.lightDetection.getValue(DL_BOTTOM);
-    // Serial.println("lightDetection");
-
-    // Serial.println("Werte Aufgabenommen");
     
     PredictionData sensorData = {
         .red = red,
@@ -162,7 +116,6 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
         .daylight = daylight    
     };
 
-    // Serial.println("Funktion Ende");
     return sensorData; 
 }
 void moveUntilMarker() {
@@ -203,11 +156,8 @@ void moveUntilMarker() {
                     break;
                 }
             case Marker::Path:
-                // Serial.println("Path");   
                 break;
             }
-        // bool isFirstGreater = movement.compareColors(percentageRed, percentageGreen);
-        // movement.controlMotors(isFirstGreater);
 
         if (iterationSinceTurnCounter > 0) {
             iterationSinceTurnCounter--;
@@ -219,31 +169,22 @@ void makeDession(){
         iterationSinceTurnCounter = 5*4; // * 4 wegen 80ms zu 320 ms
         
 
-        delay(1000);
-        // Serial.println("delay ended");
-        // Marker marker = markers[i];
-        // Serial.println("marker set");       
+        delay(1000);  
         if (marker == Marker::White){
             Serial.println("marker is white");
             labyrinthMap.addCrossing(CrossingType::DEAD_END);
-            // Serial.println("crossing has been added");
             movement.deadEndRotation();
             
             iterationSinceTurnCounter = 3*4; 
 
         }else if (marker == Marker::Finish){
             foundGoal = true;
-            // Serial.println("goal found");
         }else {
-            // Serial.println("else path");
             PredictionData sensorData = getSensorData(ManualConfig320);
-            // Serial.println("getSensorData");
             CrossingType crossing = predictCrossing(sensorData);
             printCrossingType(crossing);
-            // Serial.println("predictCrossing");
 
             DirectionLabyrinth direction = labyrinthMap.addCrossing(crossing);
-            // Serial.println("addCrossing");
 
             switch (direction){
                 case DirectionLabyrinth::Left :
@@ -261,7 +202,6 @@ void makeDession(){
                     dezibot.display.println("Straight");
                     movement.moveStraight();
                     break;
-            
             }
         }
         
@@ -282,11 +222,8 @@ void printCrossingType(CrossingType type) {
         default:                     typeStr = "UNKNOWN"; break;
     }
 
-    // Print to Serial Monitor
     Serial.print("Crossing Type: ");
     Serial.println(typeStr);
-
-    // Print to Display
     dezibot.display.print("Crossing Type: ");
     dezibot.display.println(typeStr);
 }
