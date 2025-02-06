@@ -7,7 +7,7 @@ VEML_CONFIG ManuelConfig80 = {
     .triggerEnabeled = true
 };
 
-VEML_CONFIG ManuelConfig320 = {
+VEML_CONFIG ManualConfig320 = {
     .mode = MANUAL,
     .enabled = true,
     .exposureTime = MS320, 
