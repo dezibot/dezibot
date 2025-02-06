@@ -67,6 +67,20 @@ void LabyrinthConfig::setWhiteTolerance(double tolerance) {
     whiteTolerance = tolerance;
 }
 
+void displayCountdown(const String& firstMessage) {
+    dezibot.display.println(firstMessage);  
+    delay(2000); 
+    dezibot.display.println("measuring in 4..");
+    delay(1000);
+    dezibot.display.println("3");
+    delay(1000);
+    dezibot.display.println("2");
+    delay(1000);
+    dezibot.display.println("1");
+    delay(1000);
+    dezibot.display.clear(); 
+}
+
 void LabyrinthConfig::runSetUp() {
     
     dezibot.display.println("Starting SetUpMode:");
@@ -87,17 +101,7 @@ void LabyrinthConfig::runSetUp() {
 }
 
 void LabyrinthConfig::setUpGoal() {    
-    dezibot.display.println("goal field");  
-    delay(2000); 
-    dezibot.display.println("measuring in 4..");
-    delay(1000);
-    dezibot.display.println("3");
-    delay(1000);
-    dezibot.display.println("2");
-    delay(1000);
-    dezibot.display.println("1");
-    delay(1000);
-    dezibot.display.clear();   
+    displayCountdown("goal field");
 
     dezibot.display.println("Dont Move");
 
@@ -108,17 +112,7 @@ void LabyrinthConfig::setUpGoal() {
 }
 
 void LabyrinthConfig::setUpWhite() {
-    dezibot.display.println("White");  
-    delay(2000);  
-    dezibot.display.println("measuring in 4..");
-    delay(1000);
-    dezibot.display.println("3");
-    delay(1000);
-    dezibot.display.println("2");
-    delay(1000);
-    dezibot.display.println("1");
-    delay(1000);
-    dezibot.display.clear();   
+    displayCountdown("White");
 
     dezibot.display.println("Dont Move");
 
@@ -129,17 +123,7 @@ void LabyrinthConfig::setUpWhite() {
 }
 
 void LabyrinthConfig::setUpLine() {
-    dezibot.display.println("middle of the Path"); 
-    delay(2000);   
-    dezibot.display.println("measuring in 4..");
-    delay(1000);
-    dezibot.display.println("3");
-    delay(1000);
-    dezibot.display.println("2");
-    delay(1000);
-    dezibot.display.println("1");
-    delay(1000);
-    dezibot.display.clear();   
+    displayCountdown("middle of the Path");
 
     dezibot.display.println("Dont Move");
 
@@ -185,10 +169,6 @@ void LabyrinthConfig::setUpLine() {
 
     delay(1000); 
     dezibot.display.clear(); 
-}
-
-void LabyrinthConfig::setUpSpeed() {
-    // TODO: Implement the function
 }
 
 PredictionData LabyrinthConfig::getSensorData() {    
@@ -276,17 +256,6 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
     double greenPercent = data.green * 100 / rgbSum;
     double bluePercent = data.blue * 100 / rgbSum;
 
-    
-    // Serial.println("Neue Messung ----------------------------------------------------");
-    // printSinglePredictionData(data);
-    // Serial.println();
-    // Serial.print("Red Percent:   ");
-    // Serial.println(redPercent);
-    // Serial.print("Green Percent: ");
-    // Serial.println(greenPercent);
-    // Serial.print("Blue Percent:  ");
-    // Serial.println(bluePercent);
-
     if (
         data.white < 1500 &&
         greenPercent > 38 &&
@@ -300,9 +269,6 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
     }
 
     if (
-        // redPercent > 33 && redPercent < 36 &&
-        // greenPercent > 33 && greenPercent < 36 &&
-        // bluePercent > 30 && bluePercent < 33 &&
         data.white > 2500) {
         Serial.println("White gefunden");
         dezibot.display.clear();
@@ -323,7 +289,6 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         bluePercent < 28 && bluePercent > 24 &&
         greenPercent > 34 && greenPercent < 35 && 
         data.white < 1900 && data.white > 1500 &&
-        // data.CCT > 11000 &&
         data.blue > 650  
     )) {
         Serial.println("Crossing gefunden########################################");
@@ -332,7 +297,6 @@ Marker LabyrinthConfig::getMarkerFromPrediction(const PredictionData& data) cons
         return Marker::Crossing;
     }
 
-    // Serial.println("Path");
     dezibot.display.clear();
     dezibot.display.println("Path");
     return Marker::Path;

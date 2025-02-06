@@ -4,7 +4,7 @@
  * @version 0.1
  * @date 2024-12-30
  * 
- * @author Vladislav Antonov
+ * @author Vladislav Antonov, Max Mager
  * 
  * This file contains the declaration of the LabyrinthMovement class, which handles the movement logic for the labyrinth solver.
  */
