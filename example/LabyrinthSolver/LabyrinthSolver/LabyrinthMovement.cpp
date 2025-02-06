@@ -72,6 +72,12 @@ void LabyrinthMovement::moveLeft() {
 }
 
 void LabyrinthMovement::moveRight() {
+    uint16_t duration = config.getRotateDuration();
+
+    if (currentColorMode == RED_LEFT){
+        duration = duration - 1000;
+    }
+    
     moveMotor(config.getBaseSpeed(), config.getRotateSpeed(), config.getRotateDuration());
 }
 
