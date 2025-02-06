@@ -15,7 +15,6 @@ LabyrinthMovement movement(config);
 
 bool foundGoal = false;
 Marker marker;
-int i = 0;
 int markerFound = 0;
 bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
