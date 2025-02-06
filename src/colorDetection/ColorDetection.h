@@ -44,6 +44,7 @@ struct VEML_CONFIG {
     // integration time
     duration exposureTime;
 
+    // trigger for manual mode
     bool triggerEnabled;
 };
 
