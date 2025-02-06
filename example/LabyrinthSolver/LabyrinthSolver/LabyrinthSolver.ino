@@ -34,7 +34,7 @@ void setup() {
     dezibot.multiColorLight.setLed(BOTTOM, 88, 100, 58);    
     // dezibot.colorDetection.beginAutoMode();
 
-    dezibot.colorDetection.configure(ManuelConfig80);
+    dezibot.colorDetection.configure(ManualConfig80);
 
     Serial.println("start");
     delay(4000);
@@ -168,7 +168,7 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
 void moveUntilMarker() {
         ColorMode colorMode = movement.getColorMode();
 
-        PredictionData data = getSensorData(ManuelConfig80);
+        PredictionData data = getSensorData(ManualConfig80);
         MotorStrength motors = pid.calculateMotorStrength(data.red, data.green, data.blue, colorMode);
         
         Serial.print(motors.leftMotor);

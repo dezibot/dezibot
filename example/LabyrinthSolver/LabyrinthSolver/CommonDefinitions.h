@@ -13,7 +13,7 @@ enum ColorMode {
     RED_LEFT
 };
 
-extern VEML_CONFIG ManuelConfig80;
+extern VEML_CONFIG ManualConfig80;
 extern VEML_CONFIG ManualConfig320;
 struct PredictionData {
     float red; 

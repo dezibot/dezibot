@@ -87,7 +87,7 @@ void LabyrinthMovement::stopMotors() {
 
 void LabyrinthMovement::getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) const {
     
-    dezibot.colorDetection.configure(ManuelConfig80);
+    dezibot.colorDetection.configure(ManualConfig80);
     delay(90);
 
     uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) * config.getRedScale();

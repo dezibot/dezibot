@@ -1,6 +1,6 @@
 #include "CommonDefinitions.h"
 
-VEML_CONFIG ManuelConfig80 = {
+VEML_CONFIG ManualConfig80 = {
     .mode = MANUAL,
     .enabled = true,
     .exposureTime = MS80, 
