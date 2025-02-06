@@ -84,11 +84,11 @@ void loop() {
             delay(5000); 
             // Serial.println("delay Ended");
             explorationDone = true;
+            foundGoal = false;
+            iterationSinceTurnCounter = 0;
         }  
     }
   } else {
-        foundGoal = false;
-        iterationSinceTurnCounter = 0;
         movement.setColorMode(startColorMode);
         if (markerFOund < 1){
             moveUntilMarker();
