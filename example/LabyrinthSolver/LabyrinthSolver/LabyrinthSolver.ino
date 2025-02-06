@@ -16,7 +16,7 @@ LabyrinthMovement movement(config);
 bool foundGoal = false;
 Marker marker;
 int i = 0;
-int markerFOund = 0;
+int markerFound = 0;
 bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
 ColorMode startColorMode = RED_LEFT;
@@ -45,7 +45,7 @@ void setup() {
 
 void loop() {  
   if (!explorationDone){
-    if (markerFOund < 1){
+    if (markerFound < 1){
         moveUntilMarker();
     }else {
         makeDession();        
@@ -61,7 +61,7 @@ void loop() {
     }
   } else {
         movement.setColorMode(startColorMode);
-        if (markerFOund < 1){
+        if (markerFound < 1){
             moveUntilMarker();
         }else {
             makeDession();     
@@ -138,20 +138,20 @@ void moveUntilMarker() {
         switch (marker) {
             case Marker::Finish:
                 Serial.println("Finish");
-                markerFOund++;
+                markerFound++;
                 delay(200);
                 break;
             case Marker::White:
                 if (iterationSinceTurnCounter == 0){
                     Serial.println("White");            
-                    markerFOund++;
+                    markerFound++;
                     delay(200);
                     break;
                 }
             case Marker::Crossing:
                 if (iterationSinceTurnCounter == 0){
                     Serial.println("Crossing");           
-                    markerFOund++;
+                    markerFound++;
                     delay(200);
                     break;
                 }
@@ -205,7 +205,7 @@ void makeDession(){
             }
         }
         
-        markerFOund = 0; 
+        markerFound = 0; 
         pid.reset();  
 }
 
