@@ -18,8 +18,12 @@ Marker marker;
 int markerFound = 0;
 bool explorationDone = false;
 int iterationSinceTurnCounter = 0;
+// Left COlor at the start of the Labyrinth
 ColorMode startColorMode = RED_LEFT;
 PIDController pid(20, 1, 6); 
+
+int coolDownDefault = 5 * 4; // * 4 wegen 80ms zu 320 ms
+int coolDownWhite = 3 * 4;
 
 
 Dezibot dezibot = Dezibot();
@@ -75,6 +79,14 @@ void loop() {
   }
 }
 
+/**
+ * @brief Predicts the crossing type based on the given sensor data.  
+ * Uses two models to determine if the crossing is of type X or T.  
+ * If the X model predicts an X crossing, it is returned immediately;  
+ * otherwise, the T model's prediction is returned.  
+ * @param data The sensor data used for prediction.  
+ * @return The predicted crossing type.  
+ */
 CrossingType predictCrossing(PredictionData data) {
     CrossingType xtPrediction = crossingModelXT.predictCrossingXT(data);
 
@@ -88,6 +100,13 @@ CrossingType predictCrossing(PredictionData data) {
     return tPrediction; 
 }
 
+/**
+ * @brief Retrieves sensor data using the specified VEML sensor configuration.  
+ * Configures the color detection sensor, waits for the appropriate exposure time,  
+ * then collects color, ambient light, and daylight sensor values.  
+ * @param vemlConfig The VEML sensor configuration to be used.  
+ * @return A PredictionData structure containing the collected sensor values.  
+ */
 PredictionData getSensorData(VEML_CONFIG vemlConfig) {    
     dezibot.colorDetection.configure(vemlConfig);
 
@@ -117,6 +136,12 @@ PredictionData getSensorData(VEML_CONFIG vemlConfig) {
 
     return sensorData; 
 }
+
+/**
+ * @brief Moves the robot until a marker is detected.  
+ * Adjusts motor speeds based on sensor data and PID calculations, then checks for markers  
+ * to determine if an action needs to be taken.  
+ */
 void moveUntilMarker() {
         ColorMode colorMode = movement.getColorMode();
 
@@ -163,9 +188,14 @@ void moveUntilMarker() {
         }
 }
 
+
+/**
+ * @brief Makes a decision based on the detected marker and sensor data, then executes the appropriate movement.  
+ * Stops the motors, processes the marker, predicts the crossing type, and determines the next direction.  
+ */
 void makeDession(){
         movement.stopMotors();        
-        iterationSinceTurnCounter = 5*4; // * 4 wegen 80ms zu 320 ms
+        iterationSinceTurnCounter = coolDownDefault; 
         
 
         delay(1000);  
@@ -174,7 +204,7 @@ void makeDession(){
             labyrinthMap.addCrossing(CrossingType::DEAD_END);
             movement.deadEndRotation();
             
-            iterationSinceTurnCounter = 3*4; 
+            iterationSinceTurnCounter = coolDownWhite; 
 
         }else if (marker == Marker::Finish){
             foundGoal = true;
@@ -208,6 +238,10 @@ void makeDession(){
         pid.reset();  
 }
 
+/**
+ * @brief Prints the specified crossing type to the serial monitor and display.
+ * @param type The crossing type to be printed.
+ */
 void printCrossingType(CrossingType type) {
     String typeStr;
 
