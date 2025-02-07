@@ -6,7 +6,7 @@
 #include <Wire.h>
 
 
-Dezibot::Dezibot():multiColorLight();
+Dezibot::Dezibot():multiColorLight(){};
 
 void Dezibot::begin(void) {
     Wire.begin(SDA_PIN,SCL_PIN);
