@@ -36,7 +36,6 @@ bool CrossingPredictorXT::initialize() {
 }
 
 CrossingType CrossingPredictorXT::predictCrossingXT(const PredictionData& SensorData){
-    // Normalize and scale inputs
     float total_rgb = SensorData.red + SensorData.green + SensorData.blue;
     float red_ratio = SensorData.red / total_rgb;
     float green_ratio = SensorData.green / total_rgb;
@@ -50,7 +49,7 @@ CrossingType CrossingPredictorXT::predictCrossingXT(const PredictionData& Sensor
     // Perform inference
     if (interpreter->Invoke() != kTfLiteOk) {
         TF_LITE_REPORT_ERROR(error_reporter, "Inference failed");
-        return CrossingType::X; // Default fallback
+        return CrossingType::X; 
     }
 
     // Interpret output

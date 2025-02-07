@@ -1,4 +1,16 @@
-#ifndef COMMON_DEFINITIONS_H
+/**
+ * @file CommonDefinitions.h
+ * @author Vladislav Antonov, Max Mager
+ * @brief Header file with commonly used structs and enums.
+ * 
+ * @version 1.0.0
+ * @date 2025-02-07
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+
+ #ifndef COMMON_DEFINITIONS_H
 #define COMMON_DEFINITIONS_H
 
 #include <Dezibot.h>

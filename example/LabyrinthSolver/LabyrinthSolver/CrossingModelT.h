@@ -1,3 +1,15 @@
+/**
+ * @file CrossingModelT.h
+ * @author Vladislav Antonov, Max Mager
+ * @brief Header file for the CrossingModelT class, that uses the model to Predict the type of T-Crossing.
+ * 
+ * @version 1.0.0
+ * @date 2025-02-07
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+
 #ifndef CrossingModelT_h
 #define CrossingModelT_h
 

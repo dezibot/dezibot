@@ -92,7 +92,6 @@ void LabyrinthConfig::runSetUp() {
     setUpWhite();
     dezibot.display.println("SetUp Path Color");
     setUpLine();
-    // setUpSpeed();
 
     printPredictionData();
     dezibot.display.println("SetUp Complete");
