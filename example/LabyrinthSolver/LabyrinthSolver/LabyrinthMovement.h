@@ -4,7 +4,7 @@
  * @version 0.1
  * @date 2024-12-30
  * 
- * @author Vladislav Antonov
+ * @author Vladislav Antonov, Max Mager
  * 
  * This file contains the declaration of the LabyrinthMovement class, which handles the movement logic for the labyrinth solver.
  */
@@ -14,11 +14,7 @@
 
 #include <cstdint>
 #include "LabyrinthConfig.h"
-
-enum ColorMode {
-    GREEN_LEFT,
-    RED_LEFT
-};
+#include "CommonDefinitions.h"
 
 class LabyrinthMovement {
 public:
@@ -65,7 +61,7 @@ public:
      * @param rightSpeed The speed of the right motor.
      * @param duration The duration to move the motor.
      */
-    void moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration);
+    void moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration, bool toggleColorModeFlag = true);
 
     /**
      * @brief Moves the robot straight.

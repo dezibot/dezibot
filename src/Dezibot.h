@@ -9,8 +9,6 @@
 #include "infraredLight/InfraredLight.h"
 #include "communication/Communication.h"
 #include "display/Display.h"
-#include "labyrinthSolver/movement/LabyrinthConfig.h"
-#include "labyrinthSolver/movement/LabyrinthMovement.h"
 
 class Dezibot {
 protected:
@@ -24,8 +22,6 @@ public:
     InfraredLight infraredLight;
     Communication communication;
     Display display;
-    LabyrinthConfig labyrinthConfig;
-    LabyrinthMovement labyrinthMovement;
     void begin(void);
 };
 

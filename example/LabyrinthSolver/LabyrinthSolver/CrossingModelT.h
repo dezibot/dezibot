@@ -1,3 +1,15 @@
+/**
+ * @file CrossingModelT.h
+ * @author Vladislav Antonov, Max Mager
+ * @brief Header file for the CrossingModelT class, that uses the model to Predict the type of T-Crossing.
+ * 
+ * @version 1.0.0
+ * @date 2025-02-07
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+
 #ifndef CrossingModelT_h
 #define CrossingModelT_h
 
@@ -37,13 +49,17 @@ private:
     static constexpr int kTensorArenaSize = 4096;
     uint8_t tensor_arena[kTensorArenaSize];
 
-    static constexpr float redR_mean = 0.4121600777315959;
-    static constexpr float greenR_mean = 0.33503194216464915;
-    static constexpr float blueR_mean = 0.252807980103755;
+    static constexpr float redR_mean = 0.4121598114305729;
+    static constexpr float greenR_mean = 0.3350287522948503;
+    static constexpr float blueR_mean = 0.2528114362745768;
+    static constexpr float white_mean = 7322.775669097432;
+    static constexpr float ambient_mean = 117.2486820671236;
 
-    static constexpr float redR_std = 0.019807951965642525;
-    static constexpr float greenR_std = 0.009203467330839838;
-    static constexpr float blueR_std = 0.012957511195991415;
+    static constexpr float redR_std = 0.019711992059990153;
+    static constexpr float greenR_std = 0.009098673314281382;
+    static constexpr float blueR_std = 0.01281710559531455;
+    static constexpr float white_std = 561.5219636243661;
+    static constexpr float ambient_std = 7.097175923362954;
  
 };
 

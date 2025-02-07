@@ -1,6 +1,6 @@
 // SensorPredictor.cpp
 #include "CrossingModelT.h"
-#include "modelXT.h"
+#include "modelT.h"
 
 CrossingPredictorT::CrossingPredictorT()
     : error_reporter(nullptr), model(nullptr), interpreter(nullptr), input(nullptr), output(nullptr) {}
@@ -36,7 +36,6 @@ bool CrossingPredictorT::initialize() {
 }
 
 CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorData){
-    // Normalize and scale inputs
     float total_rgb = SensorData.red + SensorData.green + SensorData.blue;
     float red_ratio = SensorData.red / total_rgb;
     float green_ratio = SensorData.green / total_rgb;
@@ -44,12 +43,14 @@ CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorDa
 
     input->data.f[0] = (red_ratio - redR_mean) / redR_std;
     input->data.f[1] = (green_ratio - greenR_mean) / greenR_std;
-    input->data.f[2] = (blue_ratio - blueR_mean) / blueR_std;
+    input->data.f[2] = (blue_ratio - blueR_mean) / blueR_std;    
+    input->data.f[3] = (SensorData.white - white_mean) / white_std;
+    input->data.f[4] = (SensorData.ambient - ambient_mean) / ambient_std;
 
     // Perform inference
     if (interpreter->Invoke() != kTfLiteOk) {
         TF_LITE_REPORT_ERROR(error_reporter, "Inference failed");
-        return CROSSING_T1; // Default fallback
+        return CrossingType::T1; 
     }
 
     float t1_score = output->data.f[0];
@@ -57,10 +58,10 @@ CrossingType CrossingPredictorT::predictCrossingT(const PredictionData& SensorDa
     float t3_score = output->data.f[2];
 
     if (t1_score > t2_score && t1_score > t3_score) {
-        return CROSSING_T1;
+        return CrossingType::T1;
     } else if (t2_score > t1_score && t2_score > t3_score) {
-        return CROSSING_T2;
+        return CrossingType::T2;
     } else {
-        return CROSSING_T3;
+        return CrossingType::T3;
     }
 }

@@ -1,5 +1,8 @@
 #include "Graph.h"
 #include <stdexcept>
+#include <Dezibot.h>
+
+extern Dezibot dezibot;
 
 
 Graph::Graph() : nextNodeId(1), currentMode(Mode::EXPLORER) {
@@ -8,7 +11,7 @@ Graph::Graph() : nextNodeId(1), currentMode(Mode::EXPLORER) {
     startNode->explored = true;
     auto firstNode = std::make_shared<Node>(nextNodeId++, CrossingType::DEAD_END);
     
-    addEdge(startNode, firstNode, Direction::Straight);
+    addEdge(startNode, firstNode,DirectionLabyrinth::Straight);
     nodes[startNode->id] = startNode;
     nodes[firstNode->id] = firstNode;
     currentNode = firstNode;
@@ -53,9 +56,9 @@ void Graph::createNeighbours(std::shared_ptr<Node> node, CrossingType type) {
             nodes[leftNode->id] = leftNode;
             nodes[straightNode->id] = straightNode;
 
-            addEdge(node, rightNode, Direction::Right);
-            addEdge(node, leftNode, Direction::Left);
-            addEdge(node, straightNode, Direction::Straight);
+            addEdge(node, rightNode,DirectionLabyrinth::Right);
+            addEdge(node, leftNode,DirectionLabyrinth::Left);
+            addEdge(node, straightNode,DirectionLabyrinth::Straight);
             break;
         }
         case CrossingType::T1: {
@@ -65,8 +68,8 @@ void Graph::createNeighbours(std::shared_ptr<Node> node, CrossingType type) {
             nodes[rightNode->id] = rightNode;
             nodes[straightNode->id] = straightNode;
 
-            addEdge(node, rightNode, Direction::Right);
-            addEdge(node, straightNode, Direction::Straight);
+            addEdge(node, rightNode,DirectionLabyrinth::Right);
+            addEdge(node, straightNode,DirectionLabyrinth::Straight);
             break;
         }
         case CrossingType::T2: {
@@ -76,8 +79,8 @@ void Graph::createNeighbours(std::shared_ptr<Node> node, CrossingType type) {
             nodes[leftNode->id] = leftNode;
             nodes[straightNode->id] = straightNode;
 
-            addEdge(node, leftNode, Direction::Left);
-            addEdge(node, straightNode, Direction::Straight);
+            addEdge(node, leftNode,DirectionLabyrinth::Left);
+            addEdge(node, straightNode,DirectionLabyrinth::Straight);
             break;
         }
         case CrossingType::T3: {
@@ -87,8 +90,8 @@ void Graph::createNeighbours(std::shared_ptr<Node> node, CrossingType type) {
             nodes[leftNode->id] = leftNode;
             nodes[rightNode->id] = rightNode;
 
-            addEdge(node, rightNode, Direction::Right);
-            addEdge(node, leftNode, Direction::Left);
+            addEdge(node, rightNode,DirectionLabyrinth::Right);
+            addEdge(node, leftNode,DirectionLabyrinth::Left);
             break;
         }
         case CrossingType::DEAD_END:
@@ -96,7 +99,7 @@ void Graph::createNeighbours(std::shared_ptr<Node> node, CrossingType type) {
     }
 }
 
-void Graph::setNeighbor(std::shared_ptr<Node> node, std::shared_ptr<Node> neighbor, Direction direction) {
+void Graph::setNeighbor(std::shared_ptr<Node> node, std::shared_ptr<Node> neighbor, DirectionLabyrinth direction) {
     if (!node) {
         throw std::invalid_argument("Node cannot be null.");
     }
@@ -104,17 +107,17 @@ void Graph::setNeighbor(std::shared_ptr<Node> node, std::shared_ptr<Node> neighb
 }
 
 
-void Graph::addEdge(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> nextNode, Direction direction) {
+void Graph::addEdge(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> nextNode, DirectionLabyrinth direction) {
     if (!fromNode || !nextNode) {
         throw std::invalid_argument("Nodes cannot be null.");
     }
 
     setNeighbor(fromNode, nextNode, direction);
 
-    setNeighbor(nextNode, fromNode, Direction::Back);
+    setNeighbor(nextNode, fromNode,DirectionLabyrinth::Back);
 }
 
-Direction Graph::addCrossing(CrossingType crossingType) {
+DirectionLabyrinth Graph::addCrossing(CrossingType crossingType) {
     if (currentMode == Mode::EXPLORER)
     {
         return addCrossingExploring(crossingType);
@@ -123,7 +126,7 @@ Direction Graph::addCrossing(CrossingType crossingType) {
     }    
 }
 
-Direction Graph::addCrossingExploring(CrossingType crossingType) {
+DirectionLabyrinth Graph::addCrossingExploring(CrossingType crossingType) {
     if (!currentNode) {
         throw std::invalid_argument("Current node cannot be null.");
     }
@@ -146,11 +149,11 @@ Direction Graph::addCrossingExploring(CrossingType crossingType) {
     currentNode = leftmostNeighbor;
 
     if (crossingType == CrossingType::DEAD_END){
-        return Direction::Back;
+        return DirectionLabyrinth::Back;
     }else if(crossingType == CrossingType::T1){
-        return Direction::Straight;
+        return DirectionLabyrinth::Straight;
     }else {
-        return Direction::Left;
+        return DirectionLabyrinth::Left;
     }
 }
 
@@ -160,63 +163,63 @@ std::shared_ptr<Node> Graph::getLeftMostNeighborPrev(const std::shared_ptr<Node>
         throw std::invalid_argument("Nodes cannot be null.");
     }
 
-    Direction comingFrom = Direction::Back;
+    DirectionLabyrinth comingFrom =DirectionLabyrinth::Back;
     for (int dir = 0; dir < currentNode->neighbors.size(); ++dir) {
         if (currentNode->neighbors[dir] == previousNode) {
-            comingFrom = static_cast<Direction>(dir);
+            comingFrom = static_cast<DirectionLabyrinth>(dir);
             break;
         }
     }
 
     switch (comingFrom) {
-        case Direction::Left:
-            if (currentNode->neighbors[static_cast<int>(Direction::Straight)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Straight)];
+        case DirectionLabyrinth::Left:
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Right)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Right)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Back)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Back)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)];
             }
-            return currentNode->neighbors[static_cast<int>(Direction::Left)];
+            return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)];
 
-        case Direction::Straight:
-            if (currentNode->neighbors[static_cast<int>(Direction::Right)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Right)];
+        case DirectionLabyrinth::Straight:
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Back)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Back)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Left)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Left)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)];
             }
-            return currentNode->neighbors[static_cast<int>(Direction::Straight)];
+            return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)];
 
-        case Direction::Right:
-            if (currentNode->neighbors[static_cast<int>(Direction::Back)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Back)];
+        case DirectionLabyrinth::Right:
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Left)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Left)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Straight)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Straight)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)];
             }
-            return currentNode->neighbors[static_cast<int>(Direction::Right)];
+            return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)];
 
-        case Direction::Back:
+        case DirectionLabyrinth::Back:
         default:
-            if (currentNode->neighbors[static_cast<int>(Direction::Left)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Left)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Left)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Straight)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Straight)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Straight)];
             }
-            if (currentNode->neighbors[static_cast<int>(Direction::Right)]) {
-                return currentNode->neighbors[static_cast<int>(Direction::Right)];
+            if (currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)]) {
+                return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Right)];
             }
-            return currentNode->neighbors[static_cast<int>(Direction::Back)];
+            return currentNode->neighbors[static_cast<int>(DirectionLabyrinth::Back)];
     }
 }
 
@@ -271,7 +274,13 @@ void Graph::findShortestPath() {
         }
     }
 
+
+    
     for (int currentId = goalNode->id; currentId != -1; currentId = parent[currentId]) {
+        Serial.print("CurrentID of Node Beeing Pushed: ");
+        Serial.println(currentId);        
+        dezibot.display.print("; ");
+        dezibot.display.println(currentId);
         solutionStack.push(currentId);
     }
 
@@ -280,7 +289,7 @@ void Graph::findShortestPath() {
     }
 }
 
-Direction Graph::getDirection() {
+DirectionLabyrinth Graph::getDirection() {
     if (solutionStack.empty()) {
         throw std::runtime_error("Solution stack is empty. No further directions available.");
     }
@@ -291,8 +300,12 @@ Direction Graph::getDirection() {
     for (int dir = 0; dir < currentNode->neighbors.size(); ++dir) {
         auto neighbor = currentNode->neighbors[dir];
         if (neighbor && neighbor->id == nextNodeId) {
+            Serial.print("CurrentNodeType ");
+            Serial.println(static_cast<int>(currentNode->crossingType));
+            dezibot.display.print("; ");
+            dezibot.display.println(static_cast<int>(currentNode->crossingType));
             currentNode = neighbor;
-            return static_cast<Direction>(dir);
+            return static_cast<DirectionLabyrinth>(dir);
         }
     }
 

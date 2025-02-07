@@ -1,11 +1,11 @@
 /**
  * @file ColorDetecion.h
- * @author Nico Schramm, Ines Rohrbach, Hans Haupt, Max Mager
+ * @author Nico Schramm, Ines Rohrbach, Hans Haupt, Max Mager, Vladislav Antonov
  * @brief Class that controls the color sensor (VEML6040) of the dezibot.
  * 
  * This module uses the VEML6040 library (version 0.3.2) by thewknd (MIT license).
  * 
- * @version 0.3
+ * @version 0.4
  * @date 2024-12-29
  * 
  * @copyright Copyright (c) 2024
@@ -43,6 +43,9 @@ struct VEML_CONFIG {
     
     // integration time
     duration exposureTime;
+
+    // trigger for manual mode
+    bool triggerEnabled;
 };
 
 enum color {

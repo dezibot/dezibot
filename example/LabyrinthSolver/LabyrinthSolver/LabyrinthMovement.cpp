@@ -1,5 +1,5 @@
 #include "LabyrinthMovement.h"
-#include "../Dezibot.h"
+#include <Dezibot.h>
 
 extern Dezibot dezibot;
 
@@ -24,16 +24,17 @@ void LabyrinthMovement::calibrateWhite() {
     getColorPercentages(calibratedRed, calibratedGreen, calibratedBlue);
     dezibot.display.println("Put On Field");
     delay(3000);
+    dezibot.display.clear();
 }
 
 void LabyrinthMovement::deadEndRotation() {
     toggleColorMode();
 
     setMotorSpeeds(0, config.getMaxSpeed());
-    delay(3000);
+    delay(500);
 
     setMotorSpeeds(config.getMaxSpeed(), 0);
-    delay(5000);
+    delay(4000);
 
     double initialRed, initialGreen, initialBlue;
     getColorPercentages(initialRed, initialGreen, initialBlue);
@@ -48,14 +49,16 @@ void LabyrinthMovement::deadEndRotation() {
     }
 
     setMotorSpeeds(config.getBaseSpeed(), config.getBaseSpeed());
-    delay(1000);
+    delay(700);
 
     stopMotors();
 }
 
-void LabyrinthMovement::moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration) {
+void LabyrinthMovement::moveMotor(uint16_t leftSpeed, uint16_t rightSpeed, int duration, bool toggleColorModeFlag) {
     setMotorSpeeds(leftSpeed, rightSpeed);
-    toggleColorMode();
+    if (toggleColorModeFlag) {        
+        toggleColorMode();
+    }
     delay(duration);
     stopMotors();
 }
@@ -69,6 +72,12 @@ void LabyrinthMovement::moveLeft() {
 }
 
 void LabyrinthMovement::moveRight() {
+    uint16_t duration = config.getRotateDuration();
+
+    if (currentColorMode == RED_LEFT){
+        duration = duration - 1000;
+    }
+    
     moveMotor(config.getBaseSpeed(), config.getRotateSpeed(), config.getRotateDuration());
 }
 
@@ -77,6 +86,10 @@ void LabyrinthMovement::stopMotors() {
 }
 
 void LabyrinthMovement::getColorPercentages(double &percentageRed, double &percentageGreen, double &percentageBlue) const {
+    
+    dezibot.colorDetection.configure(ManualConfig80);
+    delay(90);
+
     uint16_t red = dezibot.colorDetection.getColorValue(VEML_RED) * config.getRedScale();
     uint16_t green = dezibot.colorDetection.getColorValue(VEML_GREEN) * config.getGreenScale();
     uint16_t blue = dezibot.colorDetection.getColorValue(VEML_BLUE);

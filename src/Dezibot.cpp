@@ -4,7 +4,7 @@
 #include "Dezibot.h"
 #include <Wire.h>
 
-Dezibot::Dezibot() : multiColorLight(), labyrinthConfig(), labyrinthMovement(labyrinthConfig) {}
+Dezibot::Dezibot() : multiColorLight(){}
 
 void Dezibot::begin(void) {
     Wire.begin(SDA_PIN, SCL_PIN);
