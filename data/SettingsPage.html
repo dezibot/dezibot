@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .sensor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .sensor-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        label {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+    </style>
+    <script>
+        async function toggleSensor(sensorName, isEnabled) {
+            try {
+                const response = await fetch('/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sensor: sensorName,
+                        enabled: isEnabled
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error(`Failed to update sensor ${sensorName}:`, await response.text());
+                }
+            } catch (error) {
+                console.error(`Error updating sensor ${sensorName}:`, error);
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Sensor Settings</h1>
+<div class="sensor-container">
+    <h2>ColorDetection</h2>
+    <div class="sensor-item">
+        <label for="cd_getAmbientLight">getAmbientLight()</label>
+        <label class="switch">
+            <input type="checkbox" id="cd_getAmbientLight"
+                   onchange="toggleSensor('cd_getAmbientLight', this.checked)"
+                   {{cd_getAmbientLight}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="cd_getColorValue">getColorValue()</label>
+        <label class="switch">
+            <input type="checkbox" id="cd_getColorValue"
+                   onchange="toggleSensor('cd_getColorValue', this.checked)"
+                   {{cd_getColorValue}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <h2>LightDetection</h2>
+    <div class="sensor-item">
+        <label for="ld_getValueIrfront">getValue(IR_FRONT)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getValueIrfront"
+                   onchange="toggleSensor('ld_getValueIrfront', this.checked)"
+                   {{ld_getValueIrfront}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getValueIrleft">getValue(IR_LEFT)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getValueIrleft"
+                   onchange="toggleSensor('ld_getValueIrleft', this.checked)"
+                   {{ld_getValueIrleft}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getValueIrright">getValue(IR_RIGHT)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getValueIrright"
+                   onchange="toggleSensor('ld_getValueIrright', this.checked)"
+                   {{ld_getValueIrright}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getValueIrback">getValue(IR_BACK)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getValueIrback"
+                   onchange="toggleSensor('ld_getValueIrback', this.checked)"
+                   {{ld_getValueIrback}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getValueDlbottom">getValue(DL_BOTTOM)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getValueDlbottom"
+                   onchange="toggleSensor('ld_getValueDlbottom', this.checked)"
+                   {{ld_getValueDlbottom}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getValueDlfront">getValue(DL_FRONT)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getValueDlfront"
+                   onchange="toggleSensor('ld_getValueDlfront', this.checked)"
+                   {{ld_getValueDlfront}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getBrightestDl">getBrightest(IR)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getBrightestIr"
+                   onchange="toggleSensor('ld_getBrightestIr', this.checked)"
+                   {{ld_getBrightestIr}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="ld_getBrightestDl">getBrightest(DAYLIGHT)</label>
+        <label class="switch">
+            <input type="checkbox" id="ld_getBrightestDl"
+                   onchange="toggleSensor('ld_getBrightestDl', this.checked)"
+                   {{ld_getBrightestDl}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <h2>MotionDetection</h2>
+    <div class="sensor-item">
+        <label for="md_getAcceleration">getAcceleration()</label>
+        <label class="switch">
+            <input type="checkbox" id="md_getAcceleration"
+                   onchange="toggleSensor('md_getAcceleration', this.checked)"
+                   {{md_getAcceleration}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="md_getRotation">getRotation()</label>
+        <label class="switch">
+            <input type="checkbox" id="md_getRotation"
+                   onchange="toggleSensor('md_getRotation', this.checked)"
+                   {{md_getRotation}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="md_getTemperature">getTemperature()</label>
+        <label class="switch">
+            <input type="checkbox" id="md_getTemperature"
+                   onchange="toggleSensor('md_getTemperature', this.checked)"
+                   {{md_getTemperature}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="md_getWhoAmI">getWhoAmI()</label>
+        <label class="switch">
+            <input type="checkbox" id="md_getWhoAmI"
+                   onchange="toggleSensor('md_getWhoAmI', this.checked)"
+                   {{md_getWhoAmI}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="md_getTilt">getTilt()</label>
+        <label class="switch">
+            <input type="checkbox" id="md_getTilt"
+                   onchange="toggleSensor('md_getTilt', this.checked)"
+                   {{md_getTilt}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="md_getTiltDirection">getTiltDirection()</label>
+        <label class="switch">
+            <input type="checkbox" id="md_getTiltDirection"
+                   onchange="toggleSensor('md_getTiltDirection', this.checked)"
+                   {{md_getTiltDirection}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <h2>Motor</h2>
+    <div class="sensor-item">
+        <label for="m_getSpeed">getSpeed()</label>
+        <label class="switch">
+            <input type="checkbox" id="m_getSpeed"
+                   onchange="toggleSensor('m_getSpeed', this.checked)"
+                   {{m_getSpeed}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+</div>
+</body>
+</html>

@@ -2,12 +2,13 @@
 #define LIVEDATAPAGE_H
 
 #include "PageProvider.h"
+#include "SettingsPage.h"
 
 class LiveDataPage: public PageProvider {
 private:
     WebServer* serverPointer;
 public:
-    explicit LiveDataPage(WebServer* server);
+    LiveDataPage(WebServer* server);
     void handler() override;
 };
 

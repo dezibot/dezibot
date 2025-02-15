@@ -8,7 +8,31 @@
 
 WebServer server;
 
-DebugServer::DebugServer():server(80){}
+DebugServer::DebugServer():server(80)
+{
+    mainPage = nullptr;
+    loggingPage = nullptr;
+    liveDataPage = nullptr;
+    settingsPage = nullptr;
+    // TODO: Maybe move this to SettingsPage or create separate class for sensor settings
+    sensorStates["cd_getAmbientLight"] = true;
+    sensorStates["cd_getColorValue"] = true;
+    sensorStates["ld_getValueIrfront"] = true;
+    sensorStates["ld_getValueIrleft"] = true;
+    sensorStates["ld_getValueIrright"] = true;
+    sensorStates["ld_getValueIrback"] = true;
+    sensorStates["ld_getValueDlbottom"] = true;
+    sensorStates["ld_getValueDlfront"] = true;
+    sensorStates["ld_getBrightestIr"] = true;
+    sensorStates["ld_getBrightestDl"] = true;
+    sensorStates["md_getAcceleration"] = true;
+    sensorStates["md_getRotation"] = true;
+    sensorStates["md_getTemperature"] = true;
+    sensorStates["md_getWhoAmI"] = true;
+    sensorStates["md_getTilt"] = true;
+    sensorStates["md_getTiltDirection"] = true;
+    sensorStates["m_getSpeed"] = true;
+}
 
 void DebugServer::setup() {
     const char* SSID = "Debug-Server";
@@ -29,8 +53,8 @@ void DebugServer::setup() {
     // Initiate page objects
     mainPage = new MainPage(&server);
     loggingPage = new LoggingPage(&server);
-    liveDataPage = new LiveDataPage(&server);
     settingsPage = new SettingsPage(&server);
+    liveDataPage = new LiveDataPage(&server);
 
     // set uri and handler for each page
     server.on("/", [this]() {
@@ -57,3 +81,14 @@ void DebugServer::handleClient() {
     server.handleClient();
 }
 
+bool DebugServer::getSensorState(const String& sensor) {
+    return sensorStates[sensor];
+}
+
+void DebugServer::setSensorState(const String& sensor, bool state) {
+    sensorStates[sensor] = state;
+}
+
+std::map<String, bool>& DebugServer::getSensorStates() {
+    return sensorStates;
+}

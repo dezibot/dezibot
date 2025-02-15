@@ -1,4 +1,7 @@
 #include "PageProvider.h"
+
+#include <Dezibot.h>
+
 #include "SPIFFS.h"
 
 String PageProvider::readHtmlFromFile(const char* filename) {
