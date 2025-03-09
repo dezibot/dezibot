@@ -46,11 +46,13 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
     };
 
     sensorValueFunctions["ld_getBrightestIr"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getBrightest(IR);
+        photoTransistors result = dezibot.lightDetection.getBrightest(IR);
+        sensorObject["value"] = Utility::sensorToString(result);
     };
 
     sensorValueFunctions["ld_getBrightestDl"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getBrightest(DAYLIGHT);
+        photoTransistors result = dezibot.lightDetection.getBrightest(DAYLIGHT);
+        sensorObject["value"] = Utility::sensorToString(result);
     };
 
     sensorValueFunctions["md_getAcceleration"] = [this](const JsonObject& sensorObject) {
@@ -110,10 +112,7 @@ void LiveDataPage::getEnabledSensorValues() {
                 JsonObject sensorObject = sensorArray.createNestedObject();
 
                 // format string to match function name
-                int underscoreIndex = sensor.indexOf("_");
-                String name = sensor.substring(underscoreIndex + 1);
-                name += "()";
-                sensorObject["name"] = name;
+                sensorObject["name"] = Utility::sensorToFunction(sensor);
 
                 // call function to get value
                 sensorValueFunctions[sensor](sensorObject);
