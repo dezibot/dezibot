@@ -116,11 +116,41 @@
     </div>
 
     <div class="sensor-item">
-        <label for="cd_getColorValue">getColorValue()</label>
+        <label for="cd_getColorValueRed">getColorValue(VEML_RED)</label>
         <label class="switch">
-            <input type="checkbox" id="cd_getColorValue"
-                   onchange="toggleSensor('cd_getColorValue', this.checked)"
-                   {{cd_getColorValue}}>
+            <input type="checkbox" id="cd_getColorValueRed"
+                   onchange="toggleSensor('cd_getColorValueRed', this.checked)"
+                   {{cd_getColorValueRed}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="cd_getColorValueGreen">getColorValue(VEML_GREEN)</label>
+        <label class="switch">
+            <input type="checkbox" id="cd_getColorValueGreen"
+                   onchange="toggleSensor('cd_getColorValueGreen', this.checked)"
+                   {{cd_getColorValueGreen}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="cd_getColorValueBlue">getColorValue(VEML_BLUE)</label>
+        <label class="switch">
+            <input type="checkbox" id="cd_getColorValueBlue"
+                   onchange="toggleSensor('cd_getColorValueBlue', this.checked)"
+                   {{cd_getColorValueBlue}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="cd_getColorValueWhite">getColorValue(VEML_WHITE)</label>
+        <label class="switch">
+            <input type="checkbox" id="cd_getColorValueWhite"
+                   onchange="toggleSensor('cd_getColorValueWhite', this.checked)"
+                   {{cd_getColorValueWhite}}>
             <span class="slider"></span>
         </label>
     </div>

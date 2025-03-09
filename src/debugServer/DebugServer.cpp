@@ -16,7 +16,10 @@ DebugServer::DebugServer():server(80)
     settingsPage = nullptr;
     // TODO: Maybe move this to SettingsPage or create separate class for sensor settings
     sensorStates["cd_getAmbientLight"] = true;
-    sensorStates["cd_getColorValue"] = true;
+    sensorStates["cd_getColorValueRed"] = true;
+    sensorStates["cd_getColorValueGreen"] = true;
+    sensorStates["cd_getColorValueBlue"] = true;
+    sensorStates["cd_getColorValueWhite"] = true;
     sensorStates["ld_getValueIrfront"] = true;
     sensorStates["ld_getValueIrleft"] = true;
     sensorStates["ld_getValueIrright"] = true;

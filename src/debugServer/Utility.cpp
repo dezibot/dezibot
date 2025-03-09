@@ -3,7 +3,10 @@
 
 std::map<String, String> Utility::sensorFunctionNames = {
     {"cd_getAmbientLight", "ColorDetection.getAmbientLight()"},
-    {"cd_getColorValue", "ColorDetection.getColorValue()"},
+    {"cd_getColorValueRed", "ColorDetection.getColorValue(VEML_RED)"},
+    {"cd_getColorValueGreen", "ColorDetection.getColorValue(VEML_GREEN)"},
+    {"cd_getColorValueBlue", "ColorDetection.getColorValue(VEML_BLUE)"},
+    {"cd_getColorValueWhite", "ColorDetection.getColorValue(VEML_WHITE)"},
     {"ld_getValueIrfront", "LightDetection.getValue(IR_FRONT)"},
     {"ld_getValueIrleft", "LightDetection.getValue(IR_LEFT)"},
     {"ld_getValueIrright", "LightDetection.getValue(IR_RIGHT)"},

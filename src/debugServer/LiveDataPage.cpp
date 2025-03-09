@@ -17,8 +17,20 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
     };
 
     // TODO: add functions for other colors
-    sensorValueFunctions["cd_getColorValue"] = [this](const JsonObject& sensorObject) {
+    sensorValueFunctions["cd_getColorValueRed"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_RED);
+    };
+
+    sensorValueFunctions["cd_getColorValueGreen"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_GREEN);
+    };
+
+    sensorValueFunctions["cd_getColorValueBlue"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_BLUE);
+    };
+
+    sensorValueFunctions["cd_getColorValueWhite"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_WHITE);
     };
 
     sensorValueFunctions["ld_getValueIrfront"] = [this](const JsonObject& sensorObject) {
