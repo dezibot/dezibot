@@ -18,18 +18,19 @@
 
 
 void Motion::begin(void) {
-    Logger::getInstance().logInfo("");
     ledc_timer_config_t motor_timer = {
         .speed_mode       = LEDC_MODE,
         .duty_resolution  = DUTY_RES,
         .timer_num        = TIMER,
         .freq_hz          = FREQUENCY,  
         .clk_cfg          = LEDC_AUTO_CLK
-    }; 
+    };
     ledc_timer_config(&motor_timer);
     Motion::left.begin();
     Motion::right.begin();
     detection.begin();
+
+    Logger::getInstance().logDebug("Successfully started Motion module");
 };
 void Motion::moveTask(void * args) {
     uint32_t runtime = (uint32_t)args;
@@ -87,7 +88,9 @@ void Motion::moveTask(void * args) {
 };
 
 // Move forward for a certain amount of time.
-void Motion::move(uint32_t moveForMs, uint baseValue) {    
+void Motion::move(uint32_t moveForMs, uint baseValue) {
+    Logger::getInstance().logInfo("Move for " + std::to_string(moveForMs));
+
        if(xMoveTaskHandle){
             vTaskDelete(xMoveTaskHandle);
             xMoveTaskHandle = NULL;
@@ -135,6 +138,8 @@ void Motion::leftMotorTask(void * args) {
 
 // Rotate clockwise for a certain amount of time.
 void Motion::rotateClockwise(uint32_t rotateForMs,uint baseValue) {
+    Logger::getInstance().logInfo("Rotate Clockwise for " + std::to_string(rotateForMs));
+
     LEFT_MOTOR_DUTY = baseValue;
     RIGHT_MOTOR_DUTY = baseValue;
     if (rotateForMs > 0){
@@ -174,6 +179,8 @@ void Motion::rightMotorTask(void * args) {
 
 // Rotate anticlockwise for a certain amount of time.
 void Motion::rotateAntiClockwise(uint32_t rotateForMs,uint baseValue) {
+    Logger::getInstance().logInfo("Rotate AntiClockwise for " + std::to_string(rotateForMs));
+
     LEFT_MOTOR_DUTY = baseValue;
     RIGHT_MOTOR_DUTY = baseValue;
     if(rotateForMs > 0){
@@ -188,6 +195,8 @@ void Motion::rotateAntiClockwise(uint32_t rotateForMs,uint baseValue) {
 };
 
 void Motion::stop(void){
+    Logger::getInstance().logInfo("Motion stopped");
+
     if(xMoveTaskHandle){
         vTaskDelete(xMoveTaskHandle);
         xMoveTaskHandle = NULL;

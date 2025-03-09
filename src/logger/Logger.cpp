@@ -4,7 +4,6 @@
 
 #include "Logger.h"
 #include "LogDatabase.h"
-#include <iostream>
 #include <chrono>
 #include <sstream>
 #include <iomanip>
@@ -16,33 +15,37 @@ Logger& Logger::getInstance() {
 }
 
 // Log a message with a given level
-void Logger::log(const std::string& level, const std::string& message) {
-    LogEntry entry = {getCurrentTimestamp(), message, level};
+void Logger::log(const LogEntry::Level level, const std::string& message) const {
+    // const Logging::LogEntry newEntry = {level, getCurrentTimestamp(), message};
+    const LogEntry::Entry entry = {
+        .level = level,
+        .timestamp = getCurrentTimestamp(),
+        .message = message
+    };
     LogDatabase::getInstance().addLog(entry);
-
-    // Print to console (optional)
-    // std::cout << "[" << level << "] " << entry.timestamp << ": " << message << std::endl;
 }
 
-// Log an informational message
-void Logger::logInfo(const std::string& message) {
-    log("INFO", message);
+void Logger::logInfo(const std::string& message) const {
+    log(LogEntry::INFO, message);
 }
 
-// Log a warning message
-void Logger::logWarning(const std::string& message) {
-    log("WARNING", message);
+void Logger::logDebug(const std::string& message) const {
+    log(LogEntry::DEBUG, message);
 }
 
-// Log an error message
-void Logger::logError(const std::string& message) {
-    log("ERROR", message);
+void Logger::logWarning(const std::string& message) const {
+    log(LogEntry::WARNING, message);
+}
+
+void Logger::logError(const std::string& message) const {
+    log(LogEntry::ERROR, message);
 }
 
 // Generate a placeholder timestamp (to be replaced with actual implementation)
 std::string Logger::getCurrentTimestamp() const {
     using namespace std::chrono;
 
+    // TODO: move this towards the actual boot, not in the first timestamp
     static const auto startTime = steady_clock::now(); // Capture app start time
     auto now = steady_clock::now();
     auto elapsed = duration_cast<milliseconds>(now - startTime);

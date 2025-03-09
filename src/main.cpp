@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include <Dezibot.h>
 #include <cstdlib>
-#include <ctime>
-#include <iostream>
 #include <vector>
 #include <logger/LogDatabase.h>
 #include <logger/Logger.h>
@@ -22,27 +20,24 @@ void generateRandomLog() {
         "Configuration loaded."
     };
 
-    // Seed random number generator (only needed once per program)
-    static bool seeded = []() { std::srand(std::time(nullptr)); return true; }();
-
     // Generate a random level, message, and timestamp
-    std::string level = levels[std::rand() % levels.size()];
-    std::string message = messages[std::rand() % messages.size()];
-    std::string timestamp = "2025-01-27 12:" + std::to_string(std::rand() % 60) + ":" + std::to_string(std::rand() % 60);
+    const std::string& message = messages[std::rand() % messages.size()];
 
     // Log the random entry
-    Logger::getInstance().log(level, message);
+    Logger::getInstance().logInfo(message);
 }
 
 void processAllLogs() {
     const auto& logs = LogDatabase::getInstance().getLogs();
 
     for (const auto& log : logs) {
-        // Construct a string representation of the log entry
-        std::string logEntry = "[" + log.level + "] " + log.timestamp + ": " + log.message;
+        if (log.level != LogEntry::Level::DEBUG) {
+            // Construct a string representation of the log entry
+            std::string logEntry = "[" + std::to_string(log.level) + "] " + log.timestamp + ": " + log.message;
 
-        // Call the placeholder function with the constructed log string
-        dezibot.display.println(logEntry.c_str());
+            // Call the placeholder function with the constructed log string
+            dezibot.display.println(logEntry.c_str());
+        }
     }
 }
 

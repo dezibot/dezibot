@@ -11,12 +11,12 @@ LogDatabase& LogDatabase::getInstance() {
 }
 
 // Add a log entry to the database
-void LogDatabase::addLog(const LogEntry& entry) {
+void LogDatabase::addLog(const LogEntry::Entry& entry) {
     std::lock_guard<std::mutex> lock(mutex_);
     logEntries_.emplace_back(entry);
 }
 
 // Retrieve all log entries
-const std::vector<LogEntry>& LogDatabase::getLogs() const {
+const std::vector<LogEntry::Entry>& LogDatabase::getLogs() const {
     return logEntries_;
 }

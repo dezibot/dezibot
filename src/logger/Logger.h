@@ -7,18 +7,21 @@
 
 #include <string>
 
+#include "LogEntry.h"
+
 class Logger {
 public:
     static Logger& getInstance();
-
-    void log(const std::string& level, const std::string& message);
-    void logInfo(const std::string& message);
-    void logWarning(const std::string& message);
-    void logError(const std::string& message);
+    void logInfo(const std::string& message) const;
+    void logDebug(const std::string &message) const;
+    void logWarning(const std::string& message) const;
+    void logError(const std::string& message) const;
 
 private:
     Logger() = default;
     ~Logger() = default;
+
+    void log(LogEntry::Level level, const std::string &message) const;
 
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;

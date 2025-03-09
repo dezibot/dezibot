@@ -1,3 +1,5 @@
+#include <logger/Logger.h>
+
 #include "InfraredLight.h"
 
 #define pwmSpeedMode LEDC_LOW_SPEED_MODE
@@ -33,10 +35,18 @@ void InfraredLED::begin(void){
 
 void InfraredLED::turnOn(void){
     InfraredLED::setState(true);
+
+    Logger::getInstance().logInfo(
+        "Turned on InfraredLED"
+    );
 };
 
 void InfraredLED::turnOff(void){
     InfraredLED::setState(false);
+
+    Logger::getInstance().logInfo(
+        "Turned off InfraredLED"
+    );
 };
 
 void InfraredLED::setState(bool state){
@@ -47,11 +57,20 @@ void InfraredLED::setState(bool state){
         ledc_set_duty(pwmSpeedMode,channel,0);
     }
     ledc_update_duty(pwmSpeedMode,channel);
-    
+
+    Logger::getInstance().logInfo(
+        "Set state of InfraredLED to state: "
+        + state
+    );
 };
 
 void InfraredLED::sendFrequency(uint16_t frequency){
     ledc_set_freq(pwmSpeedMode,timer,frequency);
     ledc_set_duty(pwmSpeedMode,channel,512);
     ledc_update_duty(pwmSpeedMode,channel);
+
+    Logger::getInstance().logInfo(
+    "Sending Frequency to InfraredLED with value: "
+        + std::to_string(frequency)
+    );
 };

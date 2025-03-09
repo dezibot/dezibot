@@ -13,8 +13,8 @@ class LogDatabase {
 public:
     static LogDatabase& getInstance();
 
-    void addLog(const LogEntry& entry);
-    const std::vector<LogEntry>& getLogs() const;
+    void addLog(const LogEntry::Entry& entry);
+    const std::vector<LogEntry::Entry>& getLogs() const;
 
 private:
     LogDatabase() = default;
@@ -23,7 +23,7 @@ private:
     LogDatabase(const LogDatabase&) = delete;
     LogDatabase& operator=(const LogDatabase&) = delete;
 
-    std::vector<LogEntry> logEntries_;
+    std::vector<LogEntry::Entry> logEntries_;
     mutable std::mutex mutex_;
 };
 

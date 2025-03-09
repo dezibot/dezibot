@@ -7,11 +7,19 @@
 
 #include <string>
 
-// Represents a single log entry in the database
-struct LogEntry {
-    std::string level;      // Log level (e.g., INFO, WARNING, ERROR)
-    std::string timestamp;  // Log timestamp
-    std::string message;    // Log message
-};
+namespace LogEntry {
+    enum Level {
+        DEBUG,
+        INFO,
+        WARNING,
+        ERROR
+    };
+
+    struct Entry {
+        Level level;
+        std::string timestamp;
+        std::string message;
+    };
+}
 
 #endif //LOGENTRY_H

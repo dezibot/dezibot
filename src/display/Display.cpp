@@ -9,6 +9,9 @@
  */
 
 #include "Display.h"
+
+#include <logger/Logger.h>
+
 #include "CharTable.h"
 #include "Wire.h"
 
@@ -31,6 +34,9 @@ void Display::begin(void){
     sendDisplayCMD(0x14);
     sendDisplayCMD(activateDisplay);
     this->clear();
+
+    Logger::getInstance().logDebug("Successfully initialized display module");
+
     return;
 };
 
@@ -60,6 +66,9 @@ void Display::clear(void){
     }
     this -> charsOnCurrLine = 0;
     this -> currLine = 0;
+
+    // Logger::getInstance().logInfo("Cleared display");
+
     return;
 };
 
@@ -74,6 +83,8 @@ void Display::updateLine(uint charAmount)
     {
         this->charsOnCurrLine = charAmount+this->charsOnCurrLine;
     }
+
+    // Logger::getInstance().logInfo("Updated display line(s) with value: " + std::to_string(this->charsOnCurrLine));
 };
 
 void Display::print(char *value){
@@ -113,45 +124,70 @@ void Display::print(char *value){
 };
 
 char Display::stringToCharArray(String value) {
-  const int len = value.length() + 1;  // +1 for the null terminator
-  char msgBuffer[len];               // Create a buffer of the appropriate length
+    const int len = value.length() + 1;  // +1 for the null terminator
+    char msgBuffer[len];               // Create a buffer of the appropriate length
 
-  value.toCharArray(msgBuffer, len);  // Copy the string into the buffer, including the null terminator
+    value.toCharArray(msgBuffer, len);  // Copy the string into the buffer, including the null terminator
 
-  return *msgBuffer;
+    return *msgBuffer;
 }
 
 void Display::print(String value){
     const int len = value.length() + 1;  // +1 for the null terminator
-  char msgBuffer[len];               // Create a buffer of the appropriate length
-  value.toCharArray(msgBuffer, len);
+    char msgBuffer[len];               // Create a buffer of the appropriate length
+    value.toCharArray(msgBuffer, len);
 
-  this->print(msgBuffer);
+    this->print(msgBuffer);
+
+    // Logger::getInstance().logInfo(
+    //     "Printed to display with value: "
+    //     + std::string(value.c_str())
+    // );
 };
 
 void Display::println(String value){
-  const int len = value.length() + 1;  // +1 for the null terminator
-  char msgBuffer[len];               // Create a buffer of the appropriate length
-  value.toCharArray(msgBuffer, len);
+    const int len = value.length() + 1;  // +1 for the null terminator
+    char msgBuffer[len];               // Create a buffer of the appropriate length
+    value.toCharArray(msgBuffer, len);
 
-  this->println(msgBuffer);
+    this->println(msgBuffer);
+
+    // Logger::getInstance().logInfo(
+    //     "Printed line to display with value: "
+    //     + std::string(value.c_str())
+    // );
 };
 
 void Display::print(int value){
-  char cstr[16];
+    char cstr[16];
 
-  this->print(itoa(value, cstr, 10));
+    this->print(itoa(value, cstr, 10));
+
+    // Logger::getInstance().logInfo(
+    //     "Printed integer to display with value: "
+    //     + std::to_string(value)
+    // );
 };
 
 void Display::println(int value){
-  char cstr[16];
+    char cstr[16];
 
-  this->println(itoa(value, cstr, 10));
+    this->println(itoa(value, cstr, 10));
+
+    // Logger::getInstance().logInfo(
+    //     "Printed integer line to display with value: "
+    //     + std::to_string(value)
+    // );
 };
 
 void Display::println(char *value){
-    this ->print(value);
-    this->print("\n");
+    this -> print(value);
+    this -> print("\n");
+
+    // Logger::getInstance().logInfo(
+    //     "Printed character to display with value: "
+    //     + std::string(value)
+    // );
 };
 
 void Display::flipOrientation(void){
@@ -163,6 +199,10 @@ void Display::flipOrientation(void){
         sendDisplayCMD(setSegmentReMap);
     }
     this->orientationFlipped = !this->orientationFlipped;
+
+    // Logger::getInstance().logInfo(
+    //     "Flipped display orientation"
+    // );
 };
 
 void Display::invertColor(void){
@@ -172,4 +212,8 @@ void Display::invertColor(void){
         sendDisplayCMD(setInverseMode);
     }
     this->colorInverted = !this->colorInverted;
+
+    // Logger::getInstance().logInfo(
+    //     "Inverted display color"
+    // );
 };
