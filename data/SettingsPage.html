@@ -206,6 +206,27 @@
         </label>
     </div>
 
+    <h2>Motor</h2>
+    <div class="sensor-item">
+        <label for="m_getSpeedLeft">left.getSpeed()</label>
+        <label class="switch">
+            <input type="checkbox" id="m_getSpeedLeft"
+                   onchange="toggleSensor('m_getSpeedLeft', this.checked)"
+                   {{m_getSpeedLeft}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="sensor-item">
+        <label for="m_getSpeedRight">right.getSpeed()</label>
+        <label class="switch">
+            <input type="checkbox" id="m_getSpeedRight"
+                   onchange="toggleSensor('m_getSpeedRight', this.checked)"
+                   {{m_getSpeedRight}}>
+            <span class="slider"></span>
+        </label>
+    </div>
+
     <h2>MotionDetection</h2>
     <div class="sensor-item">
         <label for="md_getAcceleration">getAcceleration()</label>
@@ -263,17 +284,6 @@
             <input type="checkbox" id="md_getTiltDirection"
                    onchange="toggleSensor('md_getTiltDirection', this.checked)"
                    {{md_getTiltDirection}}>
-            <span class="slider"></span>
-        </label>
-    </div>
-
-    <h2>Motor</h2>
-    <div class="sensor-item">
-        <label for="m_getSpeed">getSpeed()</label>
-        <label class="switch">
-            <input type="checkbox" id="m_getSpeed"
-                   onchange="toggleSensor('m_getSpeed', this.checked)"
-                   {{m_getSpeed}}>
             <span class="slider"></span>
         </label>
     </div>

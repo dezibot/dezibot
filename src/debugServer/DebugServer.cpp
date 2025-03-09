@@ -15,23 +15,24 @@ DebugServer::DebugServer():server(80)
     liveDataPage = nullptr;
     settingsPage = nullptr;
     // TODO: Maybe move this to SettingsPage or create separate class for sensor settings
-    sensorStates["cd_getAmbientLight"] = false;
-    sensorStates["cd_getColorValue"] = false;
-    sensorStates["ld_getValueIrfront"] = false;
-    sensorStates["ld_getValueIrleft"] = false;
-    sensorStates["ld_getValueIrright"] = false;
-    sensorStates["ld_getValueIrback"] = false;
-    sensorStates["ld_getValueDlbottom"] = false;
-    sensorStates["ld_getValueDlfront"] = false;
-    sensorStates["ld_getBrightestIr"] = false;
-    sensorStates["ld_getBrightestDl"] = false;
-    sensorStates["md_getAcceleration"] = false;
-    sensorStates["md_getRotation"] = false;
-    sensorStates["md_getTemperature"] = false;
-    sensorStates["md_getWhoAmI"] = false;
-    sensorStates["md_getTilt"] = false;
-    sensorStates["md_getTiltDirection"] = false;
-    sensorStates["m_getSpeed"] = false;
+    sensorStates["cd_getAmbientLight"] = true;
+    sensorStates["cd_getColorValue"] = true;
+    sensorStates["ld_getValueIrfront"] = true;
+    sensorStates["ld_getValueIrleft"] = true;
+    sensorStates["ld_getValueIrright"] = true;
+    sensorStates["ld_getValueIrback"] = true;
+    sensorStates["ld_getValueDlbottom"] = true;
+    sensorStates["ld_getValueDlfront"] = true;
+    sensorStates["ld_getBrightestIr"] = true;
+    sensorStates["ld_getBrightestDl"] = true;
+    sensorStates["m_getSpeedLeft"] = true;
+    sensorStates["m_getSpeedRight"] = true;
+    sensorStates["md_getAcceleration"] = true;
+    sensorStates["md_getRotation"] = true;
+    sensorStates["md_getTemperature"] = true;
+    sensorStates["md_getWhoAmI"] = true;
+    sensorStates["md_getTilt"] = true;
+    sensorStates["md_getTiltDirection"] = true;
 }
 
 void DebugServer::setup() {

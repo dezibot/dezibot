@@ -1,6 +1,7 @@
 #include "LiveDataPage.h"
 #include <Dezibot.h>
 #include <ArduinoJson.h>
+#include "Utility.h"
 
 extern Dezibot dezibot;
 
@@ -11,14 +12,85 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
     });
 
     // add functions to map for faster access
-    sensorValueFunctions["cd_getAmbientLight"] = [this](JsonObject& sensorObject) {
+    sensorValueFunctions["cd_getAmbientLight"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.colorDetection.getAmbientLight();
     };
 
-    sensorValueFunctions["ld_getValueDlbottom"] = [this](JsonObject& sensorObject) {
+    // TODO: add functions for other colors
+    sensorValueFunctions["cd_getColorValue"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_RED);
+    };
+
+    sensorValueFunctions["ld_getValueIrfront"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getValue(IR_FRONT);
+    };
+
+    sensorValueFunctions["ld_getValueIrleft"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getValue(IR_LEFT);
+    };
+
+    sensorValueFunctions["ld_getValueIrright"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getValue(IR_RIGHT);
+    };
+
+    sensorValueFunctions["ld_getValueIrback"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getValue(IR_BACK);
+    };
+
+    sensorValueFunctions["ld_getValueDlbottom"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.lightDetection.getValue(DL_BOTTOM);
     };
-    // TODO: add all sensor functions
+
+    sensorValueFunctions["ld_getValueDlfront"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getValue(DL_FRONT);
+    };
+
+    sensorValueFunctions["ld_getBrightestIr"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getBrightest(IR);
+    };
+
+    sensorValueFunctions["ld_getBrightestDl"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.lightDetection.getBrightest(DAYLIGHT);
+    };
+
+    sensorValueFunctions["md_getAcceleration"] = [this](const JsonObject& sensorObject) {
+        IMUResult result = dezibot.motion.detection.getAcceleration();
+        String resultString = "x: " + String(result.x) + ", y: " + String(result.y) + ", z: " + String(result.z);
+        sensorObject["value"] = resultString;
+    };
+
+    sensorValueFunctions["md_getRotation"] = [this](const JsonObject& sensorObject) {
+        IMUResult result = dezibot.motion.detection.getRotation();
+        String resultString = "x: " + String(result.x) + ", y: " + String(result.y) + ", z: " + String(result.z);
+        sensorObject["value"] = resultString;
+    };
+
+    sensorValueFunctions["md_getTemperature"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.motion.detection.getTemperature();
+    };
+
+    sensorValueFunctions["md_getWhoAmI"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.motion.detection.getWhoAmI();
+    };
+
+    sensorValueFunctions["md_getTilt"] = [this](const JsonObject& sensorObject) {
+        Orientation result = dezibot.motion.detection.getTilt();
+        String resultString = "x: " + String(result.xRotation) + ", y: " + String(result.yRotation);
+        sensorObject["value"] = resultString;
+    };
+
+    sensorValueFunctions["md_getTiltDirection"] = [this](const JsonObject& sensorObject) {
+        auto result = dezibot.motion.detection.getTiltDirection();
+        sensorObject["value"] = Utility::directionToString(result);
+    };
+
+    sensorValueFunctions["m_getSpeedLeft"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.motion.left.getSpeed();
+    };
+
+    sensorValueFunctions["m_getSpeedRight"] = [this](const JsonObject& sensorObject) {
+        sensorObject["value"] = dezibot.motion.right.getSpeed();
+    };
 }
 
 void LiveDataPage::handler() {
@@ -26,12 +98,12 @@ void LiveDataPage::handler() {
     serverPointer->send(200, "text/html", htmlContent);
 };
 
-void LiveDataPage::getEnabledSensorValues()
-{
+void LiveDataPage::getEnabledSensorValues() {
     DynamicJsonDocument jsonDoc(1024);
     JsonArray sensorArray = jsonDoc.to<JsonArray>();
     auto& sensorStates = dezibot.debugServer.getSensorStates();
 
+    // TODO: set flag to disable logging while fetching sensor values
     for (const auto& [sensor, status] : sensorStates) {
         if (status) {
             if (sensorValueFunctions.find(sensor) != sensorValueFunctions.end()) {
