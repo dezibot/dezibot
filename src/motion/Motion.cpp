@@ -11,6 +11,8 @@
 
 #include "Motion.h"
 
+#include <Logger/Logger.h>
+
 
 // Initialize the movement component.
 

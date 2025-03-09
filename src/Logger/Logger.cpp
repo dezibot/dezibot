@@ -18,7 +18,7 @@ void Logger::log(const std::string& level, const std::string& message) {
     LogDatabase::getInstance().addLog(entry);
 
     // Print to console (optional)
-    std::cout << "[" << level << "] " << entry.timestamp << ": " << message << std::endl;
+    // std::cout << "[" << level << "] " << entry.timestamp << ": " << message << std::endl;
 }
 
 // Log an informational message

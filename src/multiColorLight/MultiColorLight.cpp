@@ -1,5 +1,7 @@
 #include "MultiColorLight.h"
 
+#include <Logger/Logger.h>
+
 MultiColorLight::MultiColorLight():rgbLeds(ledAmount,ledPin){
 
 };
@@ -11,7 +13,7 @@ void MultiColorLight::begin(void){
 
 void MultiColorLight::setLed(uint8_t index , uint32_t color){
     if (index > ledAmount-1){
-        //TODO: logging
+        Logger::getInstance().logError("MultiColorLight index out of range");
     }
     rgbLeds.setPixelColor(index, normalizeColor(color));
     rgbLeds.show();
@@ -35,7 +37,7 @@ void MultiColorLight::setLed(leds leds, uint32_t color){
                 MultiColorLight::setLed(index,color);
             }break;
         default:
-            //TODO logging
+            Logger::getInstance().logError("MultiColorLight.setLed() invalid leds");
             break;
     }
 
@@ -80,7 +82,7 @@ void MultiColorLight::turnOffLed(leds leds){
                 MultiColorLight::setLed(index,0);
             }break;
         default:
-            //TODO logging
+            Logger::getInstance().logError("MultiColorLight.turnOffLed() invalid leds");
             break;
     }
 };
