@@ -5,6 +5,9 @@
 #include "Logger.h"
 #include "LogDatabase.h"
 #include <iostream>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
 
 // Get the singleton instance of Logger
 Logger& Logger::getInstance() {
@@ -38,5 +41,23 @@ void Logger::logError(const std::string& message) {
 
 // Generate a placeholder timestamp (to be replaced with actual implementation)
 std::string Logger::getCurrentTimestamp() const {
-    return "2025-01-27 12:00:00"; // Placeholder
+    using namespace std::chrono;
+
+    static const auto startTime = steady_clock::now(); // Capture app start time
+    auto now = steady_clock::now();
+    auto elapsed = duration_cast<milliseconds>(now - startTime);
+
+    // Convert to HH:MM:SS.mmm format
+    int hours = static_cast<int>(elapsed.count() / (1000 * 60 * 60));
+    int minutes = static_cast<int>((elapsed.count() / (1000 * 60)) % 60);
+    int seconds = static_cast<int>((elapsed.count() / 1000) % 60);
+    int milliseconds = static_cast<int>(elapsed.count() % 1000);
+
+    std::ostringstream timestamp;
+    timestamp << std::setfill('0') << std::setw(2) << hours << ":"
+              << std::setfill('0') << std::setw(2) << minutes << ":"
+              << std::setfill('0') << std::setw(2) << seconds << "."
+              << std::setfill('0') << std::setw(3) << milliseconds;
+
+    return timestamp.str();
 }
