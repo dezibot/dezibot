@@ -4,8 +4,8 @@
 #include <ctime>
 #include <iostream>
 #include <vector>
-#include <Logger/LogDatabase.h>
-#include <Logger/Logger.h>
+#include <logger/LogDatabase.h>
+#include <logger/Logger.h>
 
 Dezibot dezibot;
 
@@ -33,7 +33,6 @@ void generateRandomLog() {
     // Log the random entry
     Logger::getInstance().log(level, message);
 }
-
 
 void processAllLogs() {
     const auto& logs = LogDatabase::getInstance().getLogs();

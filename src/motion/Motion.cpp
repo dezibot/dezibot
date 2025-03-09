@@ -11,13 +11,14 @@
 
 #include "Motion.h"
 
-#include <Logger/Logger.h>
+#include <logger/Logger.h>
 
 
 // Initialize the movement component.
 
 
 void Motion::begin(void) {
+    Logger::getInstance().logInfo("");
     ledc_timer_config_t motor_timer = {
         .speed_mode       = LEDC_MODE,
         .duty_resolution  = DUTY_RES,

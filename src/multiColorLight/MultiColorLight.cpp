@@ -1,6 +1,6 @@
 #include "MultiColorLight.h"
 
-#include <Logger/Logger.h>
+#include <logger/Logger.h>
 
 MultiColorLight::MultiColorLight():rgbLeds(ledAmount,ledPin){
 
