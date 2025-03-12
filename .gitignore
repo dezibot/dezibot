@@ -41,4 +41,5 @@
 .idea
 
 #PlatformIO
+.pio/*
 .pio

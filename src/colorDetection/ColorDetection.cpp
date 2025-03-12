@@ -1,11 +1,15 @@
 #include  "ColorDetection.h"
 
+#include <logger/Logger.h>
+
 void ColorDetection::beginAutoMode(void) {
     const VEML_CONFIG DEFAULT_CONFIG = VEML_CONFIG {
         .mode = AUTO,
         .enabled = true,
         .exposureTime = MS320 };
     ColorDetection::configure(DEFAULT_CONFIG);
+
+    Logger::getInstance().logTrace("Successfully started ColorDetection module");
 };
 
 void ColorDetection::configure(VEML_CONFIG config) {
@@ -41,21 +45,44 @@ void ColorDetection::configure(VEML_CONFIG config) {
 };
 
 uint16_t ColorDetection::getColorValue(color color){
+    uint16_t value;
+
     switch(color) {
         case VEML_RED:
-            return rgbwSensor.getRed();
+            value = rgbwSensor.getRed();
+            break;
         case VEML_GREEN:
-            return rgbwSensor.getGreen();
+            value = rgbwSensor.getGreen();
+            break;
         case VEML_BLUE: 
-            return rgbwSensor.getBlue();
+            value = rgbwSensor.getBlue();
+            break;
         case VEML_WHITE:
-            return rgbwSensor.getWhite();
+            value = rgbwSensor.getWhite();
+            break;
         default:
             Serial.println("Color is not supported by the sensor");
-            return 0;
-    } 
+            value =  0;
+            break;
+    }
+
+    Logger::getInstance().logInfo(
+        "Getting color value for color Sensor "
+        + std::to_string(color)
+        + " with value: "
+        + std::to_string(value)
+    );
+
+    return value;
 };
 
 float ColorDetection::getAmbientLight() {
-    return rgbwSensor.getAmbientLight();
+    float value = rgbwSensor.getAmbientLight();
+
+    Logger::getInstance().logInfo(
+        "Getting ambient light with value: "
+        + std::to_string(value)
+    );
+
+    return value;
 };

@@ -4,12 +4,15 @@
 
 #include "Dezibot.h"
 #include <Wire.h>
+#include <logger/Logger.h>
 
 
-Dezibot::Dezibot():multiColorLight(){};
+Dezibot::Dezibot(){};
 
 void Dezibot::begin(void) {
     Wire.begin(SDA_PIN,SCL_PIN);
+    // Start the timer for logging purposes
+    Logger::getInstance().startTimer();
     infraredLight.begin();
     lightDetection.begin();    
     motion.begin();

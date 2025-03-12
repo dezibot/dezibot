@@ -1,26 +1,41 @@
 #include "LightDetection.h"
 #include <limits.h>
+#include <logger/Logger.h>
 
 void LightDetection::begin(void){
     LightDetection::beginInfrared();
     LightDetection::beginDaylight();
+
+    Logger::getInstance().logTrace("Successfully started LightDetection module");
 };
 
 uint16_t LightDetection::getValue(photoTransistors sensor){
+    uint16_t value;
     switch(sensor){
         //Fall Through intended
         case IR_FRONT:
         case IR_LEFT:
         case IR_RIGHT:
         case IR_BACK:
-            return readIRPT(sensor);
+            value = readIRPT(sensor);
+            break;
         case DL_BOTTOM:
         case DL_FRONT:
-            return readDLPT(sensor);
+            value = readDLPT(sensor);
+            break;
         default:
             //currently not reachable, just if enum will be extended in the future
-            return UINT16_MAX;
- }
+            value = UINT16_MAX;
+            break;
+    }
+
+    Logger::getInstance().logInfo(
+        "Getting LightDetection Value for sensor: "
+        + std::to_string(sensor)
+        + "with value: " + std::to_string(value)
+    );
+
+    return value;
 };
 
 photoTransistors LightDetection::getBrightest(ptType type){
@@ -47,12 +62,17 @@ photoTransistors LightDetection::getBrightest(ptType type){
             }
         }
     }
-    
+    Logger::getInstance().logInfo(
+        "Getting brightest sensor for type: "
+        + std::to_string(type)
+        + " with result: "
+        + std::to_string(maxReading)
+    );
+
     return maxSensor;
 };
 
 uint32_t LightDetection::getAverageValue(photoTransistors sensor, uint32_t measurments, uint32_t timeBetween){
-    
     TickType_t xLastWakeTime = xTaskGetTickCount();
     TickType_t frequency = timeBetween / portTICK_PERIOD_MS;
     uint64_t cumulatedResult = 0; 
@@ -60,6 +80,18 @@ uint32_t LightDetection::getAverageValue(photoTransistors sensor, uint32_t measu
         cumulatedResult += LightDetection::getValue(sensor);
         xTaskDelayUntil(&xLastWakeTime,frequency);
     }
+
+    Logger::getInstance().logInfo(
+        "Getting average value for sensor: "
+        + std::to_string(sensor)
+        + "with measurements: "
+        + std::to_string(measurments)
+        + "with timeBetween: "
+        + std::to_string(timeBetween)
+        + " with result: "
+        + std::to_string(cumulatedResult)
+    );
+
     return cumulatedResult/measurments;
 };
 

@@ -18,12 +18,14 @@ Package LoggingProject {
     }
 
     LoggingPage -up-|> PageProvider : implements
-    MeasurementPage -up-|> PageProvider : implements
-    InfoPage -up-|> PageProvider : implements
+    LiveDataPage -up-|> PageProvider : implements
+    MainPage -up-|> PageProvider : implements
+    SettingsPage -up-|> PageProvider : implements
 
     class LoggingPage {}
-    class MeasurementPage {}
-    class InfoPage {}
+    class LiveDataPage {}
+    class MainPage {}
+    class SettingsPage {}
 
     Note right of PageProvider : Provides complete HTML Pages\n with JS,CSS and required libraries
 

@@ -1,94 +1,60 @@
 #include <Arduino.h>
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <WebServer.h>
 #include <Dezibot.h>
+#include <cstdlib>
+#include <vector>
+#include <logger/LogDatabase.h>
+#include <logger/Logger.h>
 
-Dezibot dezibot = Dezibot();
+Dezibot dezibot;
 
-// Set webserver access
-const char* SSID = "Debug-Server";
-const char* PSK = "PW4studProj";
+void generateRandomLog() {
+    static const std::vector<std::string> levels = {"INFO", "WARNING", "ERROR"};
+    static const std::vector<std::string> messages = {
+        "System initialized successfully.",
+        "Low memory warning.",
+        "Failed to connect to the server.",
+        "File not found.",
+        "User login successful.",
+        "Disk space is critically low.",
+        "Unhandled exception occurred.",
+        "Configuration loaded."
+    };
 
-WebServer server(80);
+    // Generate a random level, message, and timestamp
+    const std::string& message = messages[std::rand() % messages.size()];
 
-IPAddress local_ip(192,168,1,1);
-IPAddress gateway(192,168,1,1);
-IPAddress subnet(255,255,255,0);
-
-//index.h
-const char MAIN_page[] PROGMEM = R"=====(
-<!DOCTYPE html>
-<html>
-<style>
-.card{
-    max-width: 400px;
-     min-height: 250px;
-     background: #02b875;
-     padding: 30px;
-     box-sizing: border-box;
-     color: #FFF;
-     margin:20px;
-     box-shadow: 0px 2px 18px -4px rgba(0,0,0,0.75);
+    // Log the random entry
+    Logger::getInstance().logInfo(message);
 }
-</style>
-<body>
 
-<div class="card">
-  <h4>The ESP32 Update web page without refresh</h4><br>
-  <h1>Sensor Value:<span id="ADCValue">0</span></h1><br>
-  <h1>My Number:<span id="NumberValue">0</span></h1><br>
-</div>
-<script>
-function getData() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
-      document.getElementById("ADCValue").innerHTML = xhttp.responseText;
+void processAllLogs() {
+    const auto& logs = LogDatabase::getInstance().getLogs();
+
+    for (const auto& log : logs) {
+        if (log.level != LogEntry::Level::DEBUG) {
+            // Construct a string representation of the log entry
+            std::string logEntry = "[" + std::to_string(log.level) + "] " + log.timestamp + ": " + log.message;
+
+            // Call the placeholder function with the constructed log string
+            dezibot.display.println(logEntry.c_str());
+        }
     }
-  };
-  xhttp.open("GET", "readADC", true);
-  xhttp.send();
-}
-
-  var mynumber = 0;
-  setInterval(function() {
-    mynumber++;
-    document.getElementById("NumberValue").innerHTML = mynumber;
-    getData();
-  }, 2000);
-</script>
-</body>
-</html>
-)=====";
-
-
-void handleRoot() {
-    String s = MAIN_page;
-    server.send(200, "text/html", s);
-}
-int a = 10;
-void handleADC() {
-    a++;
-    String adcValue = String(a);
-    Serial.println(adcValue);
-    server.send(200, "text/plane", adcValue);
 }
 
 void setup() {
-
-    Serial.begin(115200);
-    WiFi.softAP(SSID, PSK);
-    WiFi.softAPConfig(local_ip, gateway, subnet);
-
-    server.on("/", handleRoot);
-    server.on("/readADC", handleADC);
-    server.begin();
-    Serial.println("Setup complete!");
+    dezibot.begin();
 }
 
 void loop() {
-    server.handleClient();
-    delay(1);
+    dezibot.colorDetection.getAmbientLight();
+
+    dezibot.motion.move(100);
+    dezibot.motion.stop();
+    // generateRandomLog();
+    processAllLogs();
+
+    // const String test = "Hello World!";
+    // dezibot.display.println(test);
+    delay(5000);
 }
 
