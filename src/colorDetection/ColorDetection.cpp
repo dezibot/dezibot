@@ -9,7 +9,7 @@ void ColorDetection::beginAutoMode(void) {
         .exposureTime = MS320 };
     ColorDetection::configure(DEFAULT_CONFIG);
 
-    Logger::getInstance().logDebug("Successfully started ColorDetection module");
+    Logger::getInstance().logTrace("Successfully started ColorDetection module");
 };
 
 void ColorDetection::configure(VEML_CONFIG config) {

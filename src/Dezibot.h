@@ -11,6 +11,8 @@
 #ifndef Dezibot_h
 #define Dezibot_h
 
+#include <logger/Logger.h>
+
 #include "motion/Motion.h"
 #include "lightDetection/LightDetection.h"
 #include "colorDetection/ColorDetection.h"

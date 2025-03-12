@@ -6,7 +6,7 @@ void LightDetection::begin(void){
     LightDetection::beginInfrared();
     LightDetection::beginDaylight();
 
-    Logger::getInstance().logDebug("Successfully started LightDetection module");
+    Logger::getInstance().logTrace("Successfully started LightDetection module");
 };
 
 uint16_t LightDetection::getValue(photoTransistors sensor){

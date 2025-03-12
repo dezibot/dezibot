@@ -30,7 +30,7 @@ void Motion::begin(void) {
     Motion::right.begin();
     detection.begin();
 
-    Logger::getInstance().logDebug("Successfully started Motion module");
+    Logger::getInstance().logTrace("Successfully started Motion module");
 };
 void Motion::moveTask(void * args) {
     uint32_t runtime = (uint32_t)args;
@@ -179,7 +179,8 @@ void Motion::rightMotorTask(void * args) {
 
 // Rotate anticlockwise for a certain amount of time.
 void Motion::rotateAntiClockwise(uint32_t rotateForMs,uint baseValue) {
-    Logger::getInstance().logInfo("Rotate AntiClockwise for " + std::to_string(rotateForMs));
+    // I took the liberty to rename this in the logs
+    Logger::getInstance().logInfo("Rotate CounterClockwise for " + std::to_string(rotateForMs));
 
     LEFT_MOTOR_DUTY = baseValue;
     RIGHT_MOTOR_DUTY = baseValue;

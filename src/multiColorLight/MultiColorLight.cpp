@@ -9,6 +9,8 @@ MultiColorLight::MultiColorLight():rgbLeds(ledAmount,ledPin){
 void MultiColorLight::begin(void){
     rgbLeds.begin();
     this->turnOffLed();
+
+    Logger::getInstance().logTrace("Successfully started MultiColorLight module");
 };
 
 void MultiColorLight::setLed(uint8_t index , uint32_t color){
@@ -37,26 +39,60 @@ void MultiColorLight::setLed(leds leds, uint32_t color){
                 MultiColorLight::setLed(index,color);
             }break;
         default:
-            Logger::getInstance().logError("MultiColorLight.setLed() invalid leds");
+            Logger::getInstance().logWarning(
+                "MultiColorLight.setLed() could not set color to LED as the provided LED is unknown"
+            );
             break;
     }
 
 };
 
 void MultiColorLight::setLed(leds leds, uint8_t red, uint8_t green, uint8_t blue){
+    Logger::getInstance().logInfo(
+        "Setting LED "
+        + std::to_string(leds)
+        + "to RGB value: ("
+        + std::to_string(red)
+        + ", "
+        + std::to_string(green)
+        + ", "
+        + std::to_string(blue)
+    );
     MultiColorLight::setLed(leds, MultiColorLight::color(red,green,blue));
 };
 
 
 void MultiColorLight::setTopLeds(uint32_t color){
+    Logger::getInstance().logInfo(
+        "Setting Top LED to color value: "
+        + std::to_string(color)
+    );
     MultiColorLight::setLed(TOP,color);
 }; 
 
 void MultiColorLight::setTopLeds(uint8_t red, uint8_t green, uint8_t blue){
+    Logger::getInstance().logInfo(
+        "Setting Top LED to RGB value: ("
+        + std::to_string(red)
+        + ", "
+        + std::to_string(green)
+        + ", "
+        + std::to_string(blue)
+    );
     MultiColorLight::setTopLeds(MultiColorLight::color(red,green,blue));
 }; 
 
 void MultiColorLight::blink(uint16_t amount,uint32_t color, leds leds, uint32_t interval){
+    Logger::getInstance().logInfo(
+        "Set blinking with values: Amount: "
+        + std::to_string(amount)
+        + " Color: "
+        + std::to_string(color)
+        + " LED: "
+        + std::to_string(leds)
+        + " Interval: "
+        + std::to_string(interval)
+    );
     for(uint16_t index = 0; index < amount;index++){
         MultiColorLight::setLed(leds, color);
         vTaskDelay(interval);

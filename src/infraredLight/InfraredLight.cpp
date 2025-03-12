@@ -6,5 +6,5 @@ void InfraredLight::begin(void){
     bottom.begin();
     front.begin();
 
-    Logger::getInstance().logDebug("Successfully initialized InfraredLight module");
+    Logger::getInstance().logTrace("Successfully initialized InfraredLight module");
 }

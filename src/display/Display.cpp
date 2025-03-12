@@ -35,7 +35,7 @@ void Display::begin(void){
     sendDisplayCMD(activateDisplay);
     this->clear();
 
-    Logger::getInstance().logDebug("Successfully initialized display module");
+    Logger::getInstance().logTradeSuccessfully initialized display module");
 
     return;
 };

@@ -9,10 +9,11 @@
 
 namespace LogEntry {
     enum Level {
-        DEBUG,
         INFO,
         WARNING,
-        ERROR
+        ERROR,
+        DEBUG,
+        TRACE
     };
 
     struct Entry {

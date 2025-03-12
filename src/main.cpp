@@ -47,8 +47,11 @@ void setup() {
 }
 
 void loop() {
+    dezibot.colorDetection.getAmbientLight();
 
-    generateRandomLog();
+    dezibot.motion.move(100);
+    dezibot.motion.stop();
+    // generateRandomLog();
     processAllLogs();
 
     // const String test = "Hello World!";

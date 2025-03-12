@@ -88,5 +88,5 @@ void Communication::begin(void)
     xTaskCreate(vTaskUpdate, "vTaskMeshUpdate", 4096, &ucParameterToPass, tskIDLE_PRIORITY, &xHandle);
     configASSERT(xHandle);
 
-    Logger::getInstance().logDebug("Successfully started Communication module");
+    Logger::getInstance().logTrace("Successfully started Communication module");
 };
