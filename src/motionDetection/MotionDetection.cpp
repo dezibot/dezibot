@@ -1,5 +1,6 @@
 #include "MotionDetection.h"
 #include <math.h>
+#include <logger/Logger.h>
 
 MotionDetection::MotionDetection(){
     handler = new SPIClass(FSPI);
@@ -21,6 +22,8 @@ void MotionDetection::begin(void){
     this->writeRegister(0x23,0x37);
     //Enable Gyro and Acceldata in FIFO
     this->initFIFO();
+
+    Logger::getInstance().logTrace("Successfully started MotionDetection module");
 };
 void MotionDetection::end(void){
     this->writeRegister(PWR_MGMT0,0x00);
@@ -113,43 +116,60 @@ Orientation MotionDetection::getTilt(){
         }
         //yAngle = -1*yAngle-90;
     }
-          
 
-    return Orientation{xAngle,yAngle};
+    Orientation result = Orientation{xAngle,yAngle};
+
+    Logger::getInstance().logInfo(
+        "Getting tilt with values: x= "
+        + std::to_string(result.xRotation)
+        + " y= "
+        + std::to_string(result.yRotation)
+    );
+
+    return result;
 
 };
 
 Direction MotionDetection::getTiltDirection(uint tolerance){
+    Direction result;
     if (this->getAcceleration().z > 0){
-        return Flipped;
+        result = Flipped;
     }
     Orientation Rot = this->getTilt();
     Serial.println(Rot.xRotation);
     Serial.println(Rot.xRotation == INT_MAX);
     if ((Rot.xRotation == INT_MAX)){
-        return Error;
+        result = Error;
     }
     if(abs(abs(Rot.xRotation)-abs(Rot.yRotation))>tolerance){
         //determine which axis is more tiltet
         if (abs(Rot.xRotation)>abs(Rot.yRotation)){
             //test if dezibot is tilted left or right
             if (Rot.xRotation > 0){
-                return Right;
+                result = Right;
             } else {
-                return Left;
+                result = Left;
             }
         } else {
             //test if robot is tilted front or back
             if (Rot.yRotation > 0){
-                return Front;
+                result = Front;
             } else {
-                return Back;
+                result = Back;
             }
         }
     } else {
         //dezibot is (with tolerance) leveled
-        return Neutral;
+        result = Neutral;
     }
+
+    // TODO: convert result enum to string
+    Logger::getInstance().logInfo(
+        "Getting tilt direction with value "
+        + result
+    );
+
+    return result;
 };
 
 uint8_t MotionDetection::cmdRead(uint8_t reg){

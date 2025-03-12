@@ -1,5 +1,7 @@
 #include "Communication.h"
 
+#include <logger/Logger.h>
+
 Scheduler userScheduler; // to control your personal task
 painlessMesh mesh;
 uint32_t Communication::groupNumber = 0;
@@ -71,6 +73,7 @@ void Communication::begin(void)
     Serial.begin(115200);
 
     // mesh.setDebugMsgTypes( ERROR | MESH_STATUS | CONNECTION | SYNC | COMMUNICATION | GENERAL | MSG_TYPES | REMOTE ); // all types on
+    // TODO: FIX AMBIGUOUS PROBLEM WITH EXISTING LOG LEVEL ENUM
     mesh.setDebugMsgTypes(ERROR | STARTUP); // set before init() so that you can see startup messages
 
     mesh.init(MESH_PREFIX, MESH_PASSWORD, &userScheduler, MESH_PORT);
@@ -84,4 +87,6 @@ void Communication::begin(void)
 
     xTaskCreate(vTaskUpdate, "vTaskMeshUpdate", 4096, &ucParameterToPass, tskIDLE_PRIORITY, &xHandle);
     configASSERT(xHandle);
+
+    Logger::getInstance().logTrace("Successfully started Communication module");
 };
