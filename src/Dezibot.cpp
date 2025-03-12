@@ -4,6 +4,7 @@
 
 #include "Dezibot.h"
 #include <Wire.h>
+#include <logger/Logger.h>
 
 
 Dezibot::Dezibot(){};

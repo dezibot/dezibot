@@ -43,7 +43,6 @@ void processAllLogs() {
 
 void setup() {
     dezibot.begin();
-    dezibot.debugServer.setup();
 }
 
 void loop() {
@@ -56,7 +55,6 @@ void loop() {
 
     // const String test = "Hello World!";
     // dezibot.display.println(test);
-    dezibot.debugServer.refreshPage();
     delay(5000);
 }
 

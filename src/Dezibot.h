@@ -11,8 +11,6 @@
 #ifndef Dezibot_h
 #define Dezibot_h
 
-#include <logger/Logger.h>
-
 #include "motion/Motion.h"
 #include "lightDetection/LightDetection.h"
 #include "colorDetection/ColorDetection.h"
@@ -21,7 +19,6 @@
 #include "infraredLight/InfraredLight.h"
 #include "communication/Communication.h"
 #include "display/Display.h"
-#include "debugServer/DebugServer.h"
 
 
 class Dezibot {
@@ -36,7 +33,6 @@ public:
     InfraredLight infraredLight;
     Communication communication;
     Display display;
-    DebugServer debugServer;
     void begin(void);
 };
 
