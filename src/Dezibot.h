@@ -11,6 +11,8 @@
 #ifndef Dezibot_h
 #define Dezibot_h
 
+#include <debugServer/DebugServer.h>
+
 #include "motion/Motion.h"
 #include "lightDetection/LightDetection.h"
 #include "colorDetection/ColorDetection.h"
@@ -33,6 +35,7 @@ public:
     InfraredLight infraredLight;
     Communication communication;
     Display display;
+    DebugServer debugServer;
     void begin(void);
 };
 
