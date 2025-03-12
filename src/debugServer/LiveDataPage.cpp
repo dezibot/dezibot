@@ -1,6 +1,8 @@
 #include "LiveDataPage.h"
 #include <Dezibot.h>
 #include <ArduinoJson.h>
+#include <logger/Logger.h>
+
 #include "Utility.h"
 
 extern Dezibot dezibot;
@@ -16,7 +18,6 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
         sensorObject["value"] = dezibot.colorDetection.getAmbientLight();
     };
 
-    // TODO: add functions for other colors
     sensorValueFunctions["cd_getColorValueRed"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_RED);
     };
@@ -117,7 +118,7 @@ void LiveDataPage::getEnabledSensorValues() {
     JsonArray sensorArray = jsonDoc.to<JsonArray>();
     auto& sensorStates = dezibot.debugServer.getSensorStates();
 
-    // TODO: set flag to disable logging while fetching sensor values
+    Logger::getInstance().setLoggingEnabled(false);
     for (const auto& [sensor, status] : sensorStates) {
         if (status) {
             if (sensorValueFunctions.find(sensor) != sensorValueFunctions.end()) {
@@ -131,6 +132,7 @@ void LiveDataPage::getEnabledSensorValues() {
             }
         }
     }
+    Logger::getInstance().setLoggingEnabled(true);
 
     String jsonResponse;
     serializeJson(jsonDoc, jsonResponse);

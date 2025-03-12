@@ -25,6 +25,9 @@ Logger& Logger::getInstance() {
 
 // Log a message with a given level
 void Logger::log(const LogEntry::Level level, const std::string& message) const {
+    if (!loggingEnabled) {
+        return;
+    }
     const LogEntry::Entry entry = {
         .level = level,
         .timestamp = getCurrentTimestamp(),
@@ -73,4 +76,8 @@ std::string Logger::getCurrentTimestamp() const {
               << std::setfill('0') << std::setw(2) << milliseconds;
 
     return timestamp.str();
+}
+
+void Logger::setLoggingEnabled(bool enabled) {
+    loggingEnabled = enabled;
 }

@@ -31,7 +31,7 @@ void processAllLogs() {
     const auto& logs = LogDatabase::getInstance().getLogs();
 
     for (const auto& log : logs) {
-        if (log.level != LogEntry::Level::DEBUG) {
+        if (log.level != LogEntry::Level::TRACE) {
             // Construct a string representation of the log entry
             std::string logEntry = "[" + std::to_string(log.level) + "] " + log.timestamp + ": " + log.message;
 
