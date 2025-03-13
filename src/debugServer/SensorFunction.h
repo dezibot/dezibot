@@ -14,6 +14,7 @@ public:
     void setSensorState(bool state);
     bool getSensorState();
     std::string& getFunctionName();
+    std::string& getStringValue();
 };
 
 

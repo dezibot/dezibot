@@ -15,3 +15,7 @@ bool SensorFunction::getSensorState() {
 std::string& SensorFunction::getFunctionName() {
     return name;
 }
+
+std::string& SensorFunction::getStringValue() {
+    return name;
+}

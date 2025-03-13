@@ -80,16 +80,59 @@ void DebugServer::setup() {
         settingsPage->handler();
     });
 
-    // testing refactor
-    Sensor colorSensor("colorSensor", "ColorDetection");
+    // initialize color sensor
+    Sensor colorSensor("Color Sensor", "ColorDetection");
     SensorFunction getAmbientLight("getAmbientLight()", [&]() { dezibot.colorDetection.getAmbientLight(); });
+    SensorFunction getColorValueRed("getColorValue(RED)", [&]() { dezibot.colorDetection.getColorValue(VEML_RED); });
+    SensorFunction getColorValueGreen("getColorValue(GREEN)", [&]() { dezibot.colorDetection.getColorValue(VEML_GREEN); });
+    SensorFunction getColorValueBlue("getColorValue(BLUE)", [&]() { dezibot.colorDetection.getColorValue(VEML_BLUE); });
+    SensorFunction getColorValueWhite("getColorValue(WHITE)", [&]() { dezibot.colorDetection.getColorValue(VEML_WHITE); });
     colorSensor.addFunction(getAmbientLight);
-    SensorFunction getAmbientLight2("getAmbientLight()", [&]() { dezibot.colorDetection.getAmbientLight(); });
-    colorSensor.addFunction(getAmbientLight2);
+    colorSensor.addFunction(getColorValueRed);
+    colorSensor.addFunction(getColorValueGreen);
+    colorSensor.addFunction(getColorValueBlue);
+    colorSensor.addFunction(getColorValueWhite);
     addSensor(colorSensor);
 
-    Sensor Motor("Motor", "Motor");
-    addSensor(Motor);
+    // initialize light sensor
+    Sensor lightSensor("Light Sensor", "LightDetection");
+    SensorFunction getValueIrFront("getValue(IR_FRONT)", [&]() { LightDetection::getValue(IR_FRONT); });
+    SensorFunction getValueIrLeft("getValue(IR_LEFT)", [&]() { LightDetection::getValue(IR_LEFT); });
+    SensorFunction getValueIrRight("getValue(IR_RIGHT)", [&]() { LightDetection::getValue(IR_RIGHT); });
+    SensorFunction getValueIrBack("getValue(IR_BACK)", [&]() { LightDetection::getValue(IR_BACK); });
+    SensorFunction getValueDlBottom("getValue(DL_BOTTOM)", [&]() { LightDetection::getValue(DL_BOTTOM); });
+    SensorFunction getValueDlFront("getValue(DL_FRONT)", [&]() { LightDetection::getValue(DL_FRONT); });
+    lightSensor.addFunction(getValueIrFront);
+    lightSensor.addFunction(getValueIrLeft);
+    lightSensor.addFunction(getValueIrRight);
+    lightSensor.addFunction(getValueIrBack);
+    lightSensor.addFunction(getValueDlBottom);
+    lightSensor.addFunction(getValueDlFront);
+    addSensor(lightSensor);
+
+    // initialize motor
+    Sensor motor("Motor", "Motion");
+    SensorFunction getSpeedLeft("left.getSpeed()", [&]() { Motion::left.getSpeed(); });
+    SensorFunction getSpeedRight("right.getSpeed()", [&]() { Motion::left.getSpeed(); });
+    motor.addFunction(getSpeedLeft);
+    motor.addFunction(getSpeedRight);
+    addSensor(motor);
+
+    // initialize motion sensor
+    Sensor motionSensor("Motion Sensor", "MotionDetection");
+    SensorFunction getAcceleration("getAcceleration()", [&]() { Motion::detection.getAcceleration(); });
+    SensorFunction getRotation("getRotation()", [&]() { Motion::detection.getRotation(); });
+    SensorFunction getTemperature("getTemperature()", [&]() { Motion::detection.getTemperature(); });
+    SensorFunction getWhoAmI("getWhoAmI()", [&]() { Motion::detection.getWhoAmI(); });
+    SensorFunction getTilt("getTilt()", [&]() { Motion::detection.getTilt(); });
+    SensorFunction getTiltDirection("getTiltDirection()", [&]() { Motion::detection.getTiltDirection(); });
+    motionSensor.addFunction(getAcceleration);
+    motionSensor.addFunction(getRotation);
+    motionSensor.addFunction(getTemperature);
+    motionSensor.addFunction(getWhoAmI);
+    motionSensor.addFunction(getTilt);
+    motionSensor.addFunction(getTiltDirection);
+    addSensor(motionSensor);
 
     server.begin();
     beginClientHandle();
