@@ -7,6 +7,8 @@
 
 Dezibot dezibot;
 
+int i = 0;
+
 void generateRandomLog() {
     static const std::vector<std::string> levels = {"INFO", "WARNING", "ERROR"};
     static const std::vector<std::string> messages = {
@@ -47,8 +49,9 @@ void setup() {
 }
 
 void loop() {
-    dezibot.colorDetection.getAmbientLight();
-    dezibot.debugServer.handleClient();
-    delay(1);
+    //dezibot.colorDetection.getAmbientLight();
+    delay(1000);
+    i++;
+    dezibot.display.println(i);
 }
 

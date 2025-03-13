@@ -3,7 +3,6 @@
 #include "MainPage.h"
 #include <WebServer.h>
 #include <WiFi.h>
-#include <WiFiClient.h>
 #include <SPIFFS.h>
 
 WebServer server;
@@ -78,12 +77,8 @@ void DebugServer::setup() {
     });
 
     server.begin();
+    beginClientHandle();
 };
-
-void DebugServer::handleClient() {
-    // call periodically to handle client requests
-    server.handleClient();
-}
 
 bool DebugServer::getSensorState(const String& sensor) {
     return sensorStates[sensor];
@@ -95,4 +90,29 @@ void DebugServer::setSensorState(const String& sensor, bool state) {
 
 std::map<String, bool>& DebugServer::getSensorStates() {
     return sensorStates;
+}
+
+void DebugServer::beginClientHandle() {
+    // create a FreeRTOS task to handle client requests
+    xTaskCreate(
+        handleClientTask,
+        "DebugServerTask",
+        8192,
+        this,
+        1,
+        nullptr
+    );
+}
+
+void DebugServer::handleClientTask(void* parameter) {
+    DebugServer* debugServer = static_cast<DebugServer*>(parameter);
+
+    // continuously handle client requests
+    while (debugServer->serveractive) {
+        debugServer->server.handleClient();
+        delay(10);
+    }
+
+    // Delete task when server is no longer active
+    vTaskDelete(nullptr);
 }
