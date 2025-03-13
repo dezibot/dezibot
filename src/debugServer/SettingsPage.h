@@ -6,6 +6,8 @@
 class SettingsPage : public PageProvider {
 private:
     WebServer* serverPointer;
+    void sendSensorData() const;
+    void toggleSensorFunction();
 public:
     explicit SettingsPage(WebServer* server);
     void handler() override;

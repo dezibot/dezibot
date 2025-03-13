@@ -1,4 +1,7 @@
 #include "DebugServer.h"
+
+#include <Dezibot.h>
+
 #include "PageProvider.h"
 #include "MainPage.h"
 #include <WebServer.h>
@@ -6,6 +9,7 @@
 #include <SPIFFS.h>
 
 WebServer server;
+extern Dezibot dezibot;
 
 DebugServer::DebugServer():server(80)
 {
@@ -76,6 +80,17 @@ void DebugServer::setup() {
         settingsPage->handler();
     });
 
+    // testing refactor
+    Sensor colorSensor("colorSensor", "ColorDetection");
+    SensorFunction getAmbientLight("getAmbientLight()", [&]() { dezibot.colorDetection.getAmbientLight(); });
+    colorSensor.addFunction(getAmbientLight);
+    SensorFunction getAmbientLight2("getAmbientLight()", [&]() { dezibot.colorDetection.getAmbientLight(); });
+    colorSensor.addFunction(getAmbientLight2);
+    addSensor(colorSensor);
+
+    Sensor Motor("Motor", "Motor");
+    addSensor(Motor);
+
     server.begin();
     beginClientHandle();
 };
@@ -91,6 +106,15 @@ void DebugServer::setSensorState(const String& sensor, bool state) {
 std::map<String, bool>& DebugServer::getSensorStates() {
     return sensorStates;
 }
+
+void DebugServer::addSensor(const Sensor& sensor) {
+    sensors.push_back(sensor);
+}
+
+std::vector<Sensor>& DebugServer::getSensors() {
+    return sensors;
+}
+
 
 void DebugServer::beginClientHandle() {
     // create a FreeRTOS task to handle client requests
