@@ -10,7 +10,7 @@ private:
     WebServer* serverPointer;
     std::map<std::string, std::function<void(JsonObject&)>> sensorValueFunctions;
 public:
-    LiveDataPage(WebServer* server);
+    explicit LiveDataPage(WebServer* server);
     void handler() override;
     void getEnabledSensorValues();
 };

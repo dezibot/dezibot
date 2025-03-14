@@ -13,7 +13,7 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
         getEnabledSensorValues();
     });
 
-    // add functions to map for faster access
+    // add functions to map for reading sensor values
     sensorValueFunctions["getAmbientLight()"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.colorDetection.getAmbientLight();
     };
@@ -35,105 +35,111 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
     };
 
     sensorValueFunctions["getValue(IR_FRONT)"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getValue(IR_FRONT);
+        sensorObject["value"] = LightDetection::getValue(IR_FRONT);
     };
 
     sensorValueFunctions["getValue(IR_LEFT)"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getValue(IR_LEFT);
+        sensorObject["value"] = LightDetection::getValue(IR_LEFT);
     };
 
     sensorValueFunctions["getValue(IR_RIGHT)"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getValue(IR_RIGHT);
+        sensorObject["value"] = LightDetection::getValue(IR_RIGHT);
     };
 
     sensorValueFunctions["getValue(IR_BACK)"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getValue(IR_BACK);
+        sensorObject["value"] = LightDetection::getValue(IR_BACK);
     };
 
     sensorValueFunctions["getValue(DL_BOTTOM)"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getValue(DL_BOTTOM);
+        sensorObject["value"] = LightDetection::getValue(DL_BOTTOM);
     };
 
     sensorValueFunctions["getValue(DL_FRONT)"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.lightDetection.getValue(DL_FRONT);
+        sensorObject["value"] = LightDetection::getValue(DL_FRONT);
     };
 
     sensorValueFunctions["getBrightest(IR)"] = [this](const JsonObject& sensorObject) {
-        photoTransistors result = dezibot.lightDetection.getBrightest(IR);
+        photoTransistors result = LightDetection::getBrightest(IR);
         sensorObject["value"] = Utility::sensorToString(result);
     };
 
     sensorValueFunctions["getBrightest(DAYLIGHT)"] = [this](const JsonObject& sensorObject) {
-        photoTransistors result = dezibot.lightDetection.getBrightest(DAYLIGHT);
+        photoTransistors result = LightDetection::getBrightest(DAYLIGHT);
         sensorObject["value"] = Utility::sensorToString(result);
     };
 
     sensorValueFunctions["getAcceleration()"] = [this](const JsonObject& sensorObject) {
-        IMUResult result = dezibot.motion.detection.getAcceleration();
+        IMUResult result = Motion::detection.getAcceleration();
         String resultString = "x: " + String(result.x) + ", y: " + String(result.y) + ", z: " + String(result.z);
         sensorObject["value"] = resultString;
     };
 
     sensorValueFunctions["getRotation()"] = [this](const JsonObject& sensorObject) {
-        IMUResult result = dezibot.motion.detection.getRotation();
+        IMUResult result = Motion::detection.getRotation();
         String resultString = "x: " + String(result.x) + ", y: " + String(result.y) + ", z: " + String(result.z);
         sensorObject["value"] = resultString;
     };
 
     sensorValueFunctions["getTemperature()"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.motion.detection.getTemperature();
+        sensorObject["value"] = Motion::detection.getTemperature();
     };
 
     sensorValueFunctions["getWhoAmI()"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.motion.detection.getWhoAmI();
+        sensorObject["value"] = Motion::detection.getWhoAmI();
     };
 
     sensorValueFunctions["getTilt()"] = [this](const JsonObject& sensorObject) {
-        Orientation result = dezibot.motion.detection.getTilt();
+        Orientation result = Motion::detection.getTilt();
         String resultString = "x: " + String(result.xRotation) + ", y: " + String(result.yRotation);
         sensorObject["value"] = resultString;
     };
 
     sensorValueFunctions["getTiltDirection()"] = [this](const JsonObject& sensorObject) {
-        auto result = dezibot.motion.detection.getTiltDirection();
+        auto result = Motion::detection.getTiltDirection();
         sensorObject["value"] = Utility::directionToString(result);
     };
 
     sensorValueFunctions["left.getSpeed()"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.motion.left.getSpeed();
+        sensorObject["value"] = Motion::left.getSpeed();
     };
 
     sensorValueFunctions["right.getSpeed()"] = [this](const JsonObject& sensorObject) {
-        sensorObject["value"] = dezibot.motion.right.getSpeed();
+        sensorObject["value"] = Motion::right.getSpeed();
     };
 }
 
+// send the html content of the LiveDataPage
 void LiveDataPage::handler() {
     String htmlContent = readHtmlFromFile("/LiveDataPage.html");
     serverPointer->send(200, "text/html", htmlContent);
 };
 
+// read values from enabled sensors and send them as json
 void LiveDataPage::getEnabledSensorValues() {
+    // create json document
     DynamicJsonDocument jsonDoc(4096);
     JsonArray sensorArray = jsonDoc.to<JsonArray>();
 
+    // disable logging to prevent unwanted entries
     Logger::getInstance().setLoggingEnabled(false);
 
+    // iterate over all sensors and sensorfunctions and add the values to the json
     auto& sensors = dezibot.debugServer.getSensors();
     for (auto& sensor : sensors) {
         for (auto& sensorFunction : sensor.getSensorFunctions()) {
-            if (sensorFunction.getSensorState()) { // If this function is active
+            if (sensorFunction.getSensorState()) {
+                // read and add value if sensorfunction is enabled
                 JsonObject sensorJson = sensorArray.createNestedObject();
-
                 sensorJson["name"] = sensorFunction.getFunctionName();
                 sensorValueFunctions[sensorFunction.getFunctionName()](sensorJson);
             }
         }
     }
 
+    // enable logging again
     Logger::getInstance().setLoggingEnabled(true);
 
-
+    // send json response
     String jsonResponse;
     serializeJson(jsonDoc, jsonResponse);
     serverPointer->send(200, "application/json", jsonResponse);
