@@ -1,7 +1,7 @@
 #include "SensorFunction.h"
 
 SensorFunction::SensorFunction(const std::string& name) : name(name) {
-    sensorState = true;
+    sensorState = true; // active by default
 }
 
 void SensorFunction::setSensorState(bool state) {
