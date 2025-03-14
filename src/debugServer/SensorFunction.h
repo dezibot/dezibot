@@ -10,7 +10,7 @@ private:
     std::function<void()> function;
     bool sensorState;
 public:
-    explicit SensorFunction(const std::string& name, std::function<void()> function);
+    explicit SensorFunction(const std::string& name);
     void setSensorState(bool state);
     bool getSensorState();
     std::string& getFunctionName();

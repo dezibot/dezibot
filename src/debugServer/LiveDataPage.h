@@ -8,7 +8,7 @@
 class LiveDataPage: public PageProvider {
 private:
     WebServer* serverPointer;
-    std::map<String, std::function<void(JsonObject&)>> sensorValueFunctions;
+    std::map<std::string, std::function<void(JsonObject&)>> sensorValueFunctions;
 public:
     LiveDataPage(WebServer* server);
     void handler() override;
