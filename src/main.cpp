@@ -7,6 +7,8 @@
 
 Dezibot dezibot;
 
+int i = 0;
+
 void generateRandomLog() {
     static const std::vector<std::string> levels = {"INFO", "WARNING", "ERROR"};
     static const std::vector<std::string> messages = {
@@ -31,7 +33,7 @@ void processAllLogs() {
     const auto& logs = LogDatabase::getInstance().getLogs();
 
     for (const auto& log : logs) {
-        if (log.level != LogEntry::Level::DEBUG) {
+        if (log.level != LogEntry::Level::TRACE) {
             // Construct a string representation of the log entry
             std::string logEntry = "[" + std::to_string(log.level) + "] " + log.timestamp + ": " + log.message;
 
@@ -43,18 +45,13 @@ void processAllLogs() {
 
 void setup() {
     dezibot.begin();
+    dezibot.debugServer.setup();
 }
 
 void loop() {
-    dezibot.colorDetection.getAmbientLight();
-
-    dezibot.motion.move(100);
-    dezibot.motion.stop();
-    // generateRandomLog();
-    processAllLogs();
-
-    // const String test = "Hello World!";
-    // dezibot.display.println(test);
-    delay(5000);
+    //dezibot.colorDetection.getAmbientLight();
+    delay(1000);
+    i++;
+    dezibot.display.println(i);
 }
 

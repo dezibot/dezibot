@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .home-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .home-button:hover {
+      background-color: #0056b3;
+    }
+
+    .sensor-container {
+      margin-top: 50px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sensor {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 300px;
+      text-align: center;
+      font-size: 16px;
+      background-color: #f9f9f9;
+    }
+
+    .sensor-value {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<a href="/" class="home-button">Home</a>
+<h1 style="text-align:center;">Live Data</h1>
+<div id="sensor-container" class="sensor-container"></div>
+
+<script>
+  async function fetchSensorData() {
+    try {
+      const response = await fetch('/getEnabledSensorValues');
+      if (!response.ok) throw new Error('Failed to fetch data');
+      const sensors = await response.json();
+      const container = document.getElementById('sensor-container');
+      container.innerHTML = '';
+      for (const sensor of sensors) {
+        const sensorDiv = document.createElement('div');
+        sensorDiv.className = 'sensor';
+        sensorDiv.innerHTML = `
+            <div>${sensor.name}</div>
+            <div class="sensor-value">${sensor.value}</div>
+          `;
+        container.appendChild(sensorDiv);
+      }
+    } catch (error) {
+      console.error('Error fetching sensor data:', error);
+    }
+  }
+  setInterval(fetchSensorData, 100);
+  fetchSensorData();
+</script>
+</body>
+</html>

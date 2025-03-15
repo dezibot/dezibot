@@ -18,6 +18,7 @@ public:
     void logError(const std::string& message) const;
     void logDebug(const std::string &message) const;
     void logTrace(const std::string& message) const;
+    void setLoggingEnabled(bool enabled);
 
 private:
     Logger() = default;
@@ -29,6 +30,7 @@ private:
     Logger& operator=(const Logger&) = delete;
 
     std::string getCurrentTimestamp() const;
+    bool loggingEnabled = true;
 };
 
 #endif // LOGGER_H
