@@ -11,8 +11,7 @@
 WebServer server;
 extern Dezibot dezibot;
 
-DebugServer::DebugServer():server(80)
-{
+DebugServer::DebugServer():server(80) {
     mainPage = new MainPage(&server);
     loggingPage = new LoggingPage(&server);
     settingsPage = new SettingsPage(&server);
