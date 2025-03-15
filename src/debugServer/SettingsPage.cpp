@@ -23,7 +23,6 @@ void SettingsPage::handler() {
 
 // send the JSON representation of sensors and their states
 void SettingsPage::sendSensorData() const {
-    // Create a JSON document
     DynamicJsonDocument jsonDocument(4096);
     JsonArray sensorsJson = jsonDocument.to<JsonArray>();
 

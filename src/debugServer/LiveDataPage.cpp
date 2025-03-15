@@ -119,7 +119,6 @@ void LiveDataPage::handler() {
 
 // read values from enabled sensors and send them as json
 void LiveDataPage::getEnabledSensorValues() {
-    // create json document
     DynamicJsonDocument jsonDoc(4096);
     JsonArray sensorArray = jsonDoc.to<JsonArray>();
 

@@ -1,7 +1,6 @@
 #include <Dezibot.h>
 #include "Utility.h"
 
-// get string representation of the Direction enum
 String Utility::directionToString(Direction direction) {
     switch (direction) {
         case Front:
@@ -22,7 +21,6 @@ String Utility::directionToString(Direction direction) {
     return "Error";
 }
 
-// get string representation of the photoTransistors enum
 String Utility::sensorToString(photoTransistors sensor) {
     switch (sensor) {
         case IR_FRONT:
