@@ -47,7 +47,7 @@ void SettingsPage::sendSensorData() const {
     serverPointer->send(200, "application/json", jsonResponse);
 }
 
-// toggle the sensorfunction state
+// receive json from the client, check if the sensor function exists and toggle its state
 void SettingsPage::toggleSensorFunction() {
     // error handling
     if (!serverPointer->hasArg("plain")) {
