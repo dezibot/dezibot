@@ -113,12 +113,10 @@ void DebugServer::setup() {
     beginClientHandle();
 };
 
-// add sensor to the list of sensors
 void DebugServer::addSensor(const Sensor& sensor) {
     sensors.push_back(sensor);
 }
 
-// get all sensors
 std::vector<Sensor>& DebugServer::getSensors() {
     return sensors;
 }
