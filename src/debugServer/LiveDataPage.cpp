@@ -68,12 +68,14 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
         sensorObject["value"] = Utility::sensorToString(result);
     };
 
+    // adds value of the acceleration in x, y and z direction to the json
     sensorValueFunctions["getAcceleration()"] = [this](const JsonObject& sensorObject) {
         IMUResult result = Motion::detection.getAcceleration();
         String resultString = "x: " + String(result.x) + ", y: " + String(result.y) + ", z: " + String(result.z);
         sensorObject["value"] = resultString;
     };
 
+    // adds value of the rotation in x, y and z direction to the json
     sensorValueFunctions["getRotation()"] = [this](const JsonObject& sensorObject) {
         IMUResult result = Motion::detection.getRotation();
         String resultString = "x: " + String(result.x) + ", y: " + String(result.y) + ", z: " + String(result.z);
@@ -88,6 +90,7 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
         sensorObject["value"] = Motion::detection.getWhoAmI();
     };
 
+    // adds value of the tilt in x, y and z direction to the json
     sensorValueFunctions["getTilt()"] = [this](const JsonObject& sensorObject) {
         Orientation result = Motion::detection.getTilt();
         String resultString = "x: " + String(result.xRotation) + ", y: " + String(result.yRotation);
