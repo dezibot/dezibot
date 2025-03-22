@@ -6,6 +6,7 @@
 class LoggingPage : public PageProvider{
 private:
     WebServer* serverPointer;
+    void sendLogs() const;
 public:
     explicit LoggingPage(WebServer* server);
     void handler() override;

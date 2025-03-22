@@ -18,7 +18,7 @@ String Utility::directionToString(Direction direction) {
         case Error:
             return "Error";
     }
-    return "Error";
+    return "Unknown";
 }
 
 String Utility::sensorToString(photoTransistors sensor) {
@@ -36,5 +36,21 @@ String Utility::sensorToString(photoTransistors sensor) {
         case DL_FRONT:
             return "DL_FRONT";
     }
-    return "Error";
+    return "Unknown";
+}
+
+String Utility::logLevelToString(LogEntry::Level level) {
+    switch (level) {
+        case LogEntry::INFO:
+            return "INFO";
+        case LogEntry::WARNING:
+            return "WARNING";
+        case LogEntry::ERROR:
+            return "ERROR";
+        case LogEntry::DEBUG:
+            return "DEBUG";
+        case LogEntry::TRACE:
+            return "TRACE";
+    }
+    return "UNKNOWN";
 }
