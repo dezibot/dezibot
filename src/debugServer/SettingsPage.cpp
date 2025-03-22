@@ -23,18 +23,18 @@ void SettingsPage::handler() {
 
 // send the JSON representation of sensors and their states
 void SettingsPage::sendSensorData() const {
-    DynamicJsonDocument jsonDocument(4096);
+    JsonDocument jsonDocument;
     JsonArray sensorsJson = jsonDocument.to<JsonArray>();
 
     // iterate over sensors and their functions, add them to the JSON document
     auto& sensors = dezibot.debugServer.getSensors();
     for (auto& sensor : sensors) {
-        JsonObject sensorJson = sensorsJson.createNestedObject();
+        JsonObject sensorJson = sensorsJson.add<JsonObject>();
         sensorJson["sensorName"] = sensor.getSensorName();
 
-        JsonArray functionsJson = sensorJson.createNestedArray("functions");
+        JsonArray functionsJson = sensorJson["functions"].to<JsonArray>();
         for (auto& sensorFunction : sensor.getSensorFunctions()) {
-            JsonObject functionJson = functionsJson.createNestedObject();
+            JsonObject functionJson = functionsJson.add<JsonObject>();
             functionJson["name"] = sensorFunction.getFunctionName();
             functionJson["state"] = sensorFunction.getSensorState();
         }
@@ -54,7 +54,7 @@ void SettingsPage::toggleSensorFunction() {
         return;
     }
 
-    DynamicJsonDocument json(256);
+    JsonDocument json;
     DeserializationError error = deserializeJson(json, serverPointer->arg("plain"));
 
     if (error) {
@@ -63,7 +63,7 @@ void SettingsPage::toggleSensorFunction() {
     }
 
     // check if the JSON contains the required keys
-    if (json.containsKey("sensorFunction") && json.containsKey("enabled")) {
+    if (json["sensorFunction"].is<String>() && json["enabled"].is<bool>()) {
         String functionName = json["sensorFunction"].as<String>();
         bool isEnabled = json["enabled"].as<bool>();
 
