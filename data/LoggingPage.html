@@ -74,6 +74,10 @@
         .refresh-button:hover {
             background-color: #0056b3;
         }
+
+        .ERROR {
+            color: red;
+        }
     </style>
     <script>
         async function loadLogs(logLevel = 'ALL') {
@@ -93,7 +97,7 @@
                 logs.forEach(log => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${log.level}</td>
+                        <td class=${log.level}>${log.level}</td>
                         <td>${log.timestamp}</td>
                         <td>${log.message}</td>
                     `;
