@@ -12,6 +12,7 @@ private:
 public:
     explicit LiveDataPage(WebServer* server);
     void handler() override;
+    void jsHandler();
     void getEnabledSensorValues();
 };
 

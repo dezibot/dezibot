@@ -19,7 +19,7 @@ DebugServer::DebugServer():server(80) {
 }
 
 void DebugServer::setup() {
-    // set wifi credentials
+    // set wi-fi credentials
     const char* SSID = "Debug-Server";
     const char* PSK = "PW4studProj";
 
@@ -28,30 +28,41 @@ void DebugServer::setup() {
     const IPAddress gateway(192,168,1,1);
     const IPAddress subnet(255,255,255,0);
 
-    // initalize SPIFFS for file access
+    // initialize SPIFFS for file access
     // changes in html files require "pio run -t uploadfs" or "Upload Filesystem Image" in plugin to take effect
     SPIFFS.begin();
 
-    // setup as wifi accesspoint
+    // setup as wi-fi access point
     WiFi.softAP(SSID, PSK);
     WiFi.softAPConfig(local_ip, gateway, subnet);
 
     // set uri and handler for each page
-    server.on("/", [this]() {
+    server.on("/", [this] {
         mainPage->handler();
     });
 
-    server.on("/logging", [this]() {
+    server.on("/style.css", [this] {
+       mainPage->cssHandler();
+    });
+
+    server.on("/logging", [this] {
         loggingPage->handler();
     });
 
-    server.on("/livedata", [this]() {
+    server.on("/livedata", [this] {
         liveDataPage->handler();
     });
 
-    server.on("/settings", [this]() {
+    server.on("/canvasjs.min.js", [this] {
+        liveDataPage->jsHandler();
+    });
+
+    server.on("/settings", [this] {
         settingsPage->handler();
     });
+
+    // TODO: we also need this, it should always return a 404
+    // server.onNotFound()
 
     // initialize color sensor
     Sensor colorSensor("Color Sensor", "ColorDetection");

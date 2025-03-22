@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="canvasjs.min.js"></script>
   <title>Live Data</title>
   <style>
     body {
@@ -54,6 +55,7 @@
 <body>
 <a href="/" class="home-button">Home</a>
 <h1 style="text-align:center;">Live Data</h1>
+<div id="chartContainer" style="height: 370px; width:100%;"></div>
 <div id="sensor-container" class="sensor-container"></div>
 
 <script>
@@ -79,6 +81,50 @@
   }
   setInterval(fetchSensorData, 100);
   fetchSensorData();
+
+  // INFO: Test canvasjs sample for dynamic charts
+  window.onload = function () {
+
+    let dps = []; // dataPoints
+    let chart = new CanvasJS.Chart("chartContainer", {
+      title :{
+        text: "Dynamic Data"
+      },
+      data: [{
+        type: "line",
+        dataPoints: dps
+      }]
+    });
+
+    let xVal = 0;
+    let yVal = 100;
+    let updateInterval = 1000;
+    let dataLength = 20; // number of dataPoints visible at any point
+
+    let updateChart = function (count) {
+
+      count = count || 1;
+
+      for (let j = 0; j < count; j++) {
+        yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+        dps.push({
+          x: xVal,
+          y: yVal
+        });
+        xVal++;
+      }
+
+      if (dps.length > dataLength) {
+        dps.shift();
+      }
+
+      chart.render();
+    };
+
+    updateChart(dataLength);
+    setInterval(function(){updateChart()}, updateInterval);
+
+  }
 </script>
 </body>
 </html>

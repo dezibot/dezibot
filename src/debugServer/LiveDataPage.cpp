@@ -117,6 +117,13 @@ void LiveDataPage::handler() {
     serverPointer->send(200, "text/html", htmlContent);
 };
 
+void LiveDataPage::jsHandler() {
+    String jsContent = readHtmlFromFile("/canvasjs.min.js");
+    serverPointer->send(200, "text/javascript", jsContent);
+    // serverPointer->streamFile()
+}
+
+
 // read values from enabled sensors and send them as json
 void LiveDataPage::getEnabledSensorValues() {
     JsonDocument jsonDoc;
