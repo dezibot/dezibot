@@ -27,7 +27,7 @@ private:
     bool serveractive = true;
 
     /**
-     * @brief Handles the client tasks.
+     * @brief Periodically handle client requests to the webserver.
      * @param parameter
      * @return void
      */
@@ -35,9 +35,32 @@ private:
     std::vector<Sensor> sensors;
 public:
     DebugServer();
+
+    /**
+     * @brief Set up the DebugServer.
+     * Initialize all webpage and sensor objects.
+     * Configure dezibot as wifi accesspoint and set ip configuration and credentials.
+     * @return void
+     */
     void setup();
+
+    /**
+     * @brief Start the client handler on a separate thread to run independently of main program.
+     * @return void
+     */
     void beginClientHandle();
+
+    /**
+     * @brief Add a sensor to the list of sensors.
+     * @param sensor
+     * @return void
+     */
     void addSensor(const Sensor& sensor);
+
+    /**
+     * @brief Get the list of sensors.
+     * @return std::vector<Sensor>&
+     */
     std::vector<Sensor>& getSensors();
 };
 
