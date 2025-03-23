@@ -59,15 +59,15 @@ void SettingsPage::sendSensorData() const {
 
 // receive json from the client, check if the sensor function exists and toggle its state
 void SettingsPage::toggleSensorFunction() {
-    // error handling
+    // error handling, check if the request contains the required data
     if (!serverPointer->hasArg("plain")) {
         serverPointer->send(400, "application/json", R"({"error":"No data provided"})");
         return;
     }
 
+    // check if the JSON is valid and parse it
     JsonDocument json;
     DeserializationError error = deserializeJson(json, serverPointer->arg("plain"));
-
     if (error) {
         serverPointer->send(400, "application/json", R"({"error":"Invalid JSON format"})");
         return;
