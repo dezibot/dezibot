@@ -1,3 +1,14 @@
+/**
+ * @file DebugServer.h
+ * @author Tim Dietrich, Felix Herrling
+ * @brief This component implements a webserver for debugging purposes.
+ * @version 1.0
+ * @date 2025-03-23
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
+
 #ifndef DEBUGSERVER_H
 #define DEBUGSERVER_H
 #include "MainPage.h"
@@ -14,6 +25,12 @@ private:
     LiveDataPage* liveDataPage;
     SettingsPage* settingsPage;
     bool serveractive = true;
+
+    /**
+     * @brief Handles the client tasks.
+     * @param parameter
+     * @return void
+     */
     static void handleClientTask(void* parameter);
     std::vector<Sensor> sensors;
 public:
