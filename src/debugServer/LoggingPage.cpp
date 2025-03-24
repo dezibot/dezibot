@@ -19,6 +19,10 @@ LoggingPage::LoggingPage(WebServer* server): serverPointer(server) {
     serverPointer->on("/logging/getLogs", [this]() {
         sendLogs();
     });
+
+    serverPointer->on("/logging/getNewLogs", [this]() {
+        sendNewLogs();
+    });
 }
 
 // send the html content of the LoggingPage
@@ -35,6 +39,29 @@ void LoggingPage::sendLogs() const {
 
     // iterate over logs and add them to the JSON document, filtering by log level
     auto& logs = LogDatabase::getInstance().getLogs();
+    for (const auto& log : logs) {
+        if (logLevel == "ALL" || logLevel == Utility::logLevelToString(log.level)) {
+            JsonObject logJson = logsJson.add<JsonObject>();
+            logJson["level"] = Utility::logLevelToString(log.level);
+            logJson["timestamp"] = log.timestamp;
+            logJson["message"] = log.message;
+        }
+    }
+
+    // send the JSON response
+    String jsonResponse;
+    serializeJson(jsonDocument, jsonResponse);
+    serverPointer->send(200, "application/json", jsonResponse);
+}
+
+// TODO: duplicate code
+void LoggingPage::sendNewLogs() {
+    String logLevel = serverPointer->arg("level");
+    JsonDocument jsonDocument;
+    JsonArray logsJson = jsonDocument.to<JsonArray>();
+
+    // iterate over logs and add them to the JSON document, filtering by log level
+    auto logs = LogDatabase::getInstance().getNewLogs();
     for (const auto& log : logs) {
         if (logLevel == "ALL" || logLevel == Utility::logLevelToString(log.level)) {
             JsonObject logJson = logsJson.add<JsonObject>();

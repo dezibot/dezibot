@@ -24,6 +24,9 @@ private:
      * @return void
      */
     void sendLogs() const;
+
+    void sendNewLogs();
+
 public:
     explicit LoggingPage(WebServer* server);
 
