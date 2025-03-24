@@ -12,7 +12,12 @@ private:
 public:
     explicit LiveDataPage(WebServer* server);
     void handler() override;
-    void jsHandler();
+    void canvasjsHandler();
+
+    void chartScriptHandler();
+
+    void liveDataPageStyleHandler();
+
     void getEnabledSensorValues();
 };
 

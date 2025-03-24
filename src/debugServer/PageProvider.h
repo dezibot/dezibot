@@ -13,5 +13,7 @@ public:
 
 protected:
     virtual String readHtmlFromFile(const char* filename);
+
+    static void serveFileFromSpiffs(WebServer *server, const char *filename, const char *contentType);
 };
 #endif //PAGEPROVIDER_H

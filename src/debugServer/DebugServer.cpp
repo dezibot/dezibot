@@ -54,7 +54,15 @@ void DebugServer::setup() {
     });
 
     server.on("/canvasjs.min.js", [this] {
-        liveDataPage->jsHandler();
+        liveDataPage->canvasjsHandler();
+    });
+
+    server.on("/chartScript.js", [this] {
+        liveDataPage->chartScriptHandler();
+    });
+
+    server.on("/liveDataPageStyle.css", [this] {
+       liveDataPage->liveDataPageStyleHandler();
     });
 
     server.on("/settings", [this] {
