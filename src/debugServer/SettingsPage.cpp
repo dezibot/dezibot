@@ -28,8 +28,15 @@ SettingsPage::SettingsPage(WebServer* server):serverPointer(server) {
 
 // send the html content of the SettingsPage
 void SettingsPage::handler() {
-    String htmlContent = readHtmlFromFile("/SettingsPage.html");
-    serverPointer->send(200, "text/html", htmlContent);
+    serveFileFromSpiffs(serverPointer, "/settingsPage.html", "text/html");
+};
+
+void SettingsPage::jsHandler() {
+    serveFileFromSpiffs(serverPointer, "/js/settingsPageScript.js", "text/javascript");
+}
+
+void SettingsPage::cssHandler() {
+    serveFileFromSpiffs(serverPointer, "/css/settingsPageStyle.css", "text/css");
 }
 
 // send the JSON representation of sensors and their states

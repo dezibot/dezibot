@@ -30,12 +30,11 @@ public:
 
 protected:
     /**
-     * @brief Reads the content of a html file stored in spiffs file system and returns it as a string.
-     * @param filename
-     * @return String
+     * @brief Streams a desired file to the given webserver with an accordingly set MIME type. Makes sure that files are sent in their entirety.
+     *
+     * @param filename absolute path and file name inside /data/ that leads to the desired path
+     * @param contentType MIME type of the content, for better specification of possible MIME types please refer to https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
      */
-    virtual String readHtmlFromFile(const char* filename);
-
     static void serveFileFromSpiffs(WebServer *server, const char *filename, const char *contentType);
 };
 #endif //PAGEPROVIDER_H

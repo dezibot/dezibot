@@ -47,36 +47,56 @@ void DebugServer::setup() {
     WiFi.softAPConfig(local_ip, gateway, subnet);
 
     // set uri and handler for each page
+    // Main Page
     server.on("/", [this] {
         mainPage->handler();
     });
 
-    server.on("/style.css", [this] {
+    server.on("/css/mainPageStyle.css", [this] {
        mainPage->cssHandler();
     });
 
+    // Logging
     server.on("/logging", [this] {
         loggingPage->handler();
     });
 
+    server.on("/css/loggingPageStyle.css", [this] {
+        loggingPage->cssHandler();
+    });
+
+    server.on("/js/loggingPageScript.js", [this] {
+        loggingPage->jsHandler();
+    });
+
+    // Live Data
     server.on("/livedata", [this] {
         liveDataPage->handler();
     });
 
-    server.on("/canvasjs.min.js", [this] {
+    server.on("/lib/canvasjs.min.js", [this] {
         liveDataPage->canvasjsHandler();
     });
 
-    server.on("/chartScript.js", [this] {
-        liveDataPage->chartScriptHandler();
+    server.on("/js/liveDataPageScript.js", [this] {
+        liveDataPage->jsHandler();
     });
 
-    server.on("/liveDataPageStyle.css", [this] {
-       liveDataPage->liveDataPageStyleHandler();
+    server.on("/css/liveDataPageStyle.css", [this] {
+       liveDataPage->cssHandler();
     });
 
+    // Settings
     server.on("/settings", [this] {
         settingsPage->handler();
+    });
+
+    server.on("/js/settingsPageScript.js", [this] {
+        settingsPage->jsHandler();
+    });
+
+    server.on("/css/settingsPageStyle.css", [this] {
+       settingsPage->cssHandler();
     });
 
     // TODO: we also need this, it should always return a 404

@@ -31,9 +31,9 @@ public:
     void handler() override;
     void canvasjsHandler();
 
-    void chartScriptHandler();
+    void jsHandler();
 
-    void liveDataPageStyleHandler();
+    void cssHandler();
 
 
     /**

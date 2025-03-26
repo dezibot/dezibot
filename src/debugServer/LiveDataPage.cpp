@@ -133,21 +133,19 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
 
 // send the html content of the LiveDataPage
 void LiveDataPage::handler() {
-    // String htmlContent = readHtmlFromFile("/LiveDataPage.html");
-    // serverPointer->send(200, "text/html", htmlContent);
-    serveFileFromSpiffs(serverPointer, "/LiveDataPage.html", "text/html");
+    serveFileFromSpiffs(serverPointer, "/liveDataPage.html", "text/html");
 };
 
 void LiveDataPage::canvasjsHandler() {
-    serveFileFromSpiffs(serverPointer, "/canvasjs.min.js", "text/javascript");
+    serveFileFromSpiffs(serverPointer, "/lib/canvasjs.min.js", "text/javascript");
 }
 
-void LiveDataPage::chartScriptHandler() {
-    serveFileFromSpiffs(serverPointer, "/chartScript.js", "text/javascript");
+void LiveDataPage::jsHandler() {
+    serveFileFromSpiffs(serverPointer, "/js/liveDataPageScript.js", "text/javascript");
 }
 
-void LiveDataPage::liveDataPageStyleHandler() {
-    serveFileFromSpiffs(serverPointer, "/liveDataPageStyle.css", "text/css");
+void LiveDataPage::cssHandler() {
+    serveFileFromSpiffs(serverPointer, "/css/liveDataPageStyle.css", "text/css");
 }
 
 // read values from enabled sensors and send them as json

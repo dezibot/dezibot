@@ -37,6 +37,10 @@ public:
      * @return void
      */
     void handler() override;
+
+    void jsHandler();
+
+    void cssHandler();
 };
 
 #endif //SETTINGSPAGE_H

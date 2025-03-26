@@ -17,7 +17,7 @@
 #include "logger/LogEntry.h"
 #include "logger/LogDatabase.h"
 
-class LoggingPage : public PageProvider{
+class LoggingPage : public PageProvider {
 private:
     WebServer* serverPointer;
 
@@ -50,6 +50,10 @@ public:
      * @return void
      */
     void handler() override;
+
+    void cssHandler();
+
+    void jsHandler();
 };
 
 #endif //LOGGINGPAGE_H
