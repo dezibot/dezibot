@@ -29,6 +29,15 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
         sensorObject["value"] = dezibot.colorDetection.getAmbientLight();
     };
 
+    // temporary? Fake function because it looks cool
+    sensorValueFunctions["getRGB()"] = [this](const JsonObject& sensorObject) {
+        const uint16_t x = dezibot.colorDetection.getColorValue(VEML_RED);
+        const uint16_t y = dezibot.colorDetection.getColorValue(VEML_GREEN);
+        const uint16_t z = dezibot.colorDetection.getColorValue(VEML_BLUE);
+        const String resultString = "x: " + String(x) + ", y: " + String(y) + ", z: " + String(z);
+        sensorObject["value"] = resultString;
+    };
+
     sensorValueFunctions["getColorValue(RED)"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_RED);
     };

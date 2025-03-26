@@ -85,11 +85,13 @@ void DebugServer::setup() {
     // initialize color sensor
     Sensor colorSensor("Color Sensor", "ColorDetection");
     SensorFunction getAmbientLight("getAmbientLight()");
+    SensorFunction getRGB("getRGB()");
     SensorFunction getColorValueRed("getColorValue(RED)");
     SensorFunction getColorValueGreen("getColorValue(GREEN)");
     SensorFunction getColorValueBlue("getColorValue(BLUE)") ;
     SensorFunction getColorValueWhite("getColorValue(WHITE)");
     colorSensor.addFunction(getAmbientLight);
+    colorSensor.addFunction(getRGB);
     colorSensor.addFunction(getColorValueRed);
     colorSensor.addFunction(getColorValueGreen);
     colorSensor.addFunction(getColorValueBlue);

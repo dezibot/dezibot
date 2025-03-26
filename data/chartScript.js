@@ -22,8 +22,6 @@ async function fetchSensorData() {
         const sensors = await response.json();
         const container = document.getElementById('sensor-container');
 
-
-
         sensors.forEach((sensor, index) => {
             const sensorId = `chartContainer-${index}`;
             const valueElementId = `sensor-value-${sensorId}`;
