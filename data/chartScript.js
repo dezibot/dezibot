@@ -1,10 +1,20 @@
 // Slider handling to adjust chartLimit
-document.getElementById('slider-input').addEventListener('input', function(event) {
-    chartLimit = parseInt(event.target.value);
-    console.log(`Chart limit updated to: ${chartLimit}`);
-});
+const sliderInput = document.getElementById('slider-input');
 
-// Setup for data fetching
+function handleSliderInput(event) {
+    chartLimit = parseInt(event.target.value, 10);
+    console.log(`Chart limit updated to: ${chartLimit}`);
+}
+
+sliderInput.addEventListener('input', handleSliderInput);
+
+// Chart management
+const charts = {};
+const dataPoints = {};
+let chartLimit = 100;
+let xVal = 0;
+
+// Data fetching and DOM update
 async function fetchSensorData() {
     try {
         const response = await fetch('/getEnabledSensorValues');
@@ -12,17 +22,18 @@ async function fetchSensorData() {
         const sensors = await response.json();
         const container = document.getElementById('sensor-container');
 
-        let sensorCounter = 0;
 
-        for (const sensor of sensors) {
-            const sensorId = `chartContainer-${sensorCounter}`;
+
+        sensors.forEach((sensor, index) => {
+            const sensorId = `chartContainer-${index}`;
+            const valueElementId = `sensor-value-${sensorId}`;
 
             if (!document.getElementById(sensorId)) {
                 const sensorDiv = document.createElement('div');
                 sensorDiv.className = 'sensor';
                 sensorDiv.innerHTML = `
                     <div>${sensor.name}</div>
-                    <div class="sensor-value" id="sensor-value-${sensorId}">${JSON.stringify(sensor.value)}</div>
+                    <div class="sensor-value" id="${valueElementId}">${JSON.stringify(sensor.value)}</div>
                     <div id="${sensorId}" style="height: 250px; width:90%;"></div>
                 `;
                 container.appendChild(sensorDiv);
@@ -31,72 +42,80 @@ async function fetchSensorData() {
                     createChart(sensorId, sensor.name);
                 }
             } else {
-                document.getElementById(`sensor-value-${sensorId}`).textContent = JSON.stringify(sensor.value);
+                const valueElement = document.getElementById(valueElementId);
+                if (valueElement) {
+                    valueElement.textContent = JSON.stringify(sensor.value);
+                }
             }
 
             handleIncomingData(sensorId, sensor.value);
-            sensorCounter++;
-        }
+        });
+
         xVal++;
     } catch (error) {
         console.error('Error fetching sensor data:', error);
     }
 }
 
-setInterval(fetchSensorData, 100);
-fetchSensorData();
-
-// Chart management
-let charts = {};
-let dps = {};
-let chartLimit = 100;
-let xVal = 0;
-
+// Chart creation
 function createChart(chartId, sensorName) {
-    dps[chartId] = [[], [], []]; // Support for up to 3 datasets
+    dataPoints[chartId] = [[], [], []];
     charts[chartId] = new CanvasJS.Chart(chartId, {
-        title: {
-            text: sensorName
-        },
+        // title: { text: sensorName },
+        axisY: { title: "Value" },
         data: [
-            { type: "line", dataPoints: dps[chartId][0], showInLegend: true, name: "x" },
-            { type: "line", dataPoints: dps[chartId][1], showInLegend: true, name: "y" },
-            { type: "line", dataPoints: dps[chartId][2], showInLegend: true, name: "z" }
+            createDataSeries("x", dataPoints[chartId][0]),
+            createDataSeries("y", dataPoints[chartId][1]),
+            createDataSeries("z", dataPoints[chartId][2])
         ],
-        axisY: {
-            title: "Value"
-        }
+        // TODO: we could style this, I'll leave it like this for now
+        backgroundColor: "transparent"
     });
 }
 
+// Data series factory function
+function createDataSeries(name, points) {
+    return {
+        type: "line",
+        dataPoints: points,
+        showInLegend: true,
+        name: name
+    };
+}
+
+// Data processing and chart update
 function handleIncomingData(chartId, value) {
-    if (!charts[chartId]) {
-        return;
-    }
+    if (!charts[chartId]) return;
 
     const numericValue = parseFloat(value);
+
     if (!isNaN(numericValue)) {
-        dps[chartId][0].push({ x: xVal, y: value });
+        dataPoints[chartId][0].push({ x: xVal, y: numericValue });
     } else if (typeof value === 'string' && value.includes(',')) {
-        const parts = value.split(',').map(part => parseFloat(part.split(':')[1]));
-        if (parts.length >= 2) {
-            dps[chartId][0].push({ x: xVal, y: parts[0] });
-            dps[chartId][1].push({ x: xVal, y: parts[1] });
-        }
-        if (parts.length === 3) {
-            dps[chartId][2].push({ x: xVal, y: parts[2] });
-        }
+        const parts = value.split(',')
+            .map(part => parseFloat(part.split(':')[1]))
+            .filter(num => !isNaN(num));
+
+        parts.forEach((part, index) => {
+            if (index < 3 && dataPoints[chartId][index]) {
+                dataPoints[chartId][index].push({ x: xVal, y: part });
+            }
+        });
     } else {
-        console.warn(`Unknown data format:`, value);
+        console.warn('Unknown data format:', value);
         return;
     }
 
-    // Shift data if limit exceeded
-    for (let i = 0; i < dps[chartId].length; i++) {
-        if (dps[chartId][i].length > chartLimit) {
-            dps[chartId][i].shift();
+    // Maintain data point limits
+    dataPoints[chartId].forEach(dataSeries => {
+        if (dataSeries.length > chartLimit) {
+            dataSeries.shift();
         }
-    }
+    });
 
     charts[chartId].render();
 }
+
+// Start periodic updates
+setInterval(fetchSensorData, 100);
+fetchSensorData();
