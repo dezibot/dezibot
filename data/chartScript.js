@@ -1,4 +1,4 @@
-// Slider to adjust chartLimit
+// Slider handling to adjust chartLimit
 document.getElementById('slider-input').addEventListener('input', function(event) {
     chartLimit = parseInt(event.target.value);
     console.log(`Chart limit updated to: ${chartLimit}`);
@@ -22,7 +22,7 @@ async function fetchSensorData() {
                 sensorDiv.className = 'sensor';
                 sensorDiv.innerHTML = `
                     <div>${sensor.name}</div>
-                    <div class="sensor-value" id="sensor-value-${sensorId}">${sensor.value}</div>
+                    <div class="sensor-value" id="sensor-value-${sensorId}">${JSON.stringify(sensor.value)}</div>
                     <div id="${sensorId}" style="height: 250px; width:90%;"></div>
                 `;
                 container.appendChild(sensorDiv);
@@ -31,18 +31,10 @@ async function fetchSensorData() {
                     createChart(sensorId, sensor.name);
                 }
             } else {
-                // Update sensor value display
-                document.getElementById(`sensor-value-${sensorId}`).textContent = sensor.value;
+                document.getElementById(`sensor-value-${sensorId}`).textContent = JSON.stringify(sensor.value);
             }
 
-            let value = parseFloat(sensor.value);
-            if (isNaN(value)) {
-                // Placeholder for non-numeric values
-                // console.warn(`Non-numeric value received for ${sensor.name}, using random placeholder.`);
-                value = Math.random() * 100;
-            }
-
-            updateChart(sensorId, sensor.value);
+            handleIncomingData(sensorId, sensor.value);
             sensorCounter++;
         }
         xVal++;
@@ -61,40 +53,49 @@ let chartLimit = 100;
 let xVal = 0;
 
 function createChart(chartId, sensorName) {
-    dps[chartId] = [];
+    dps[chartId] = [[], [], []]; // Support for up to 3 datasets
     charts[chartId] = new CanvasJS.Chart(chartId, {
         title: {
             text: sensorName
         },
-        data: [{
-            type: "line",
-            dataPoints: dps[chartId]
-        }],
+        data: [
+            { type: "line", dataPoints: dps[chartId][0], showInLegend: true, name: "x" },
+            { type: "line", dataPoints: dps[chartId][1], showInLegend: true, name: "y" },
+            { type: "line", dataPoints: dps[chartId][2], showInLegend: true, name: "z" }
+        ],
         axisY: {
             title: "Value"
         }
     });
 }
 
-function updateChart(chartId, value) {
+function handleIncomingData(chartId, value) {
     if (!charts[chartId]) {
         return;
     }
 
-    if (chartId === 'chartContainer-0') {
-        console.log('Pushing value: ' + value + ' at length ' + xVal);
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue)) {
+        dps[chartId][0].push({ x: xVal, y: value });
+    } else if (typeof value === 'string' && value.includes(',')) {
+        const parts = value.split(',').map(part => parseFloat(part.split(':')[1]));
+        if (parts.length >= 2) {
+            dps[chartId][0].push({ x: xVal, y: parts[0] });
+            dps[chartId][1].push({ x: xVal, y: parts[1] });
+        }
+        if (parts.length === 3) {
+            dps[chartId][2].push({ x: xVal, y: parts[2] });
+        }
+    } else {
+        console.warn(`Unknown data format:`, value);
+        return;
     }
-    dps[chartId].push({
-        x: xVal,
-        y: value
-    });
 
-    if (dps[chartId].length > chartLimit) {
-        dps[chartId].shift();
-    }
-
-    if (chartId ==='chartContainer-0') {
-        console.log(dps[chartId]);
+    // Shift data if limit exceeded
+    for (let i = 0; i < dps[chartId].length; i++) {
+        if (dps[chartId][i].length > chartLimit) {
+            dps[chartId][i].shift();
+        }
     }
 
     charts[chartId].render();
