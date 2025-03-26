@@ -1,5 +1,15 @@
-#include "DebugServer.h"
+/**
+ * @file DebugServer.cpp
+ * @author Tim Dietrich, Felix Herrling
+ * @brief Implementation of the DebugServer class.
+ * @version 1.0
+ * @date 2025-03-23
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
 
+#include "DebugServer.h"
 #include <Dezibot.h>
 
 #include "PageProvider.h"

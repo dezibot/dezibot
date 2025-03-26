@@ -1,3 +1,14 @@
+/**
+ * @file SettingsPage.cpp
+ * @author Tim Dietrich, Felix Herrling
+ * @brief Implementation of the SettingsPage class.
+ * @version 1.0
+ * @date 2025-03-23
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
+
 #include "SettingsPage.h"
 #include "Dezibot.h"
 
@@ -48,15 +59,15 @@ void SettingsPage::sendSensorData() const {
 
 // receive json from the client, check if the sensor function exists and toggle its state
 void SettingsPage::toggleSensorFunction() {
-    // error handling
+    // error handling, check if the request contains the required data
     if (!serverPointer->hasArg("plain")) {
         serverPointer->send(400, "application/json", R"({"error":"No data provided"})");
         return;
     }
 
+    // check if the JSON is valid and parse it
     JsonDocument json;
     DeserializationError error = deserializeJson(json, serverPointer->arg("plain"));
-
     if (error) {
         serverPointer->send(400, "application/json", R"({"error":"Invalid JSON format"})");
         return;
