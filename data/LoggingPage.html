@@ -76,10 +76,12 @@
         }
     </style>
     <script>
-        async function loadLogs(logLevel = 'ALL') {
+        const endpointAllLogs = '/logging/getLogs';
+        const endpointNewLogs = '/logging/getNewLogs';
+        async function loadLogs(endpoint, logLevel = 'ALL') {
             try {
                 // fetch logs from endpoint with current log level
-                const response = await fetch(`/logging/getLogs?level=${logLevel}`);
+                const response = await fetch(`${endpoint}?level=${logLevel}`);
                 if (!response.ok) {
                     console.error('Failed to load logs:', response.statusText);
                     return;
@@ -87,36 +89,11 @@
 
                 const logs = await response.json();
                 const tableBody = document.getElementById('log-table-body');
-                tableBody.innerHTML = '';
 
-                // create a new row for each log entry
-                logs.forEach(log => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${log.level}</td>
-                        <td>${log.timestamp}</td>
-                        <td>${log.message}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error loading logs:', error);
-            }
-        }
-
-        // TODO: duplicate code
-        async function loadNewLogs(logLevel = 'ALL') {
-            try {
-                // fetch logs from endpoint with current log level
-                const response = await fetch(`/logging/getNewLogs?level=${logLevel}`);
-                if (!response.ok) {
-                    console.error('Failed to load logs:', response.statusText);
-                    return;
+                // clear table content if all logs are read
+                if (endpoint === endpointAllLogs) {
+                    tableBody.innerHTML = '';
                 }
-
-                const logs = await response.json();
-                const tableBody = document.getElementById('log-table-body');
-                // tableBody.innerHTML = '';
 
                 // create a new row for each log entry
                 logs.forEach(log => {
@@ -136,22 +113,22 @@
         // reload logs when log level changes
         function onLogLevelChange() {
             const logLevel = document.getElementById('log-level').value;
-            loadLogs(logLevel);
+            loadLogs(endpointAllLogs, logLevel);
         }
 
         // manually reload logs when refresh button is clicked
         function onRefreshButtonClick() {
             const logLevel = document.getElementById('log-level').value;
-            loadLogs(logLevel);
+            loadLogs(endpointAllLogs, logLevel);
         }
 
         // initial load after opening page
         window.onload = () => {
             document.getElementById('log-level').value = 'ALL';
-            loadLogs();
+            loadLogs(endpointAllLogs);
             setInterval(() => {
                 const logLevel = document.getElementById('log-level').value;
-                loadNewLogs(logLevel);
+                loadLogs(endpointNewLogs, logLevel);
             }, 1000);
         };
     </script>
