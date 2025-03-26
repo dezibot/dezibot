@@ -1,3 +1,9 @@
+// Slider to adjust chartLimit
+document.getElementById('slider-input').addEventListener('input', function(event) {
+    chartLimit = parseInt(event.target.value);
+    console.log(`Chart limit updated to: ${chartLimit}`);
+});
+
 // Setup for data fetching
 async function fetchSensorData() {
     try {
@@ -53,21 +59,6 @@ let charts = {};
 let dps = {};
 let chartLimit = 100;
 let xVal = 0;
-
-// TODO: specific arrays for some charts
-// Acceleration
-let xAcc = [];
-let yAcc = [];
-let zAcc = [];
-
-// Rotation
-let xRot = [];
-let yRot = [];
-let zRot = [];
-
-// Tilt
-let xTil = [];
-let yTil = [];
 
 function createChart(chartId, sensorName) {
     dps[chartId] = [];
