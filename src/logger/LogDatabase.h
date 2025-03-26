@@ -14,17 +14,19 @@ public:
     static LogDatabase& getInstance();
 
     void addLog(const LogEntry::Entry& entry);
-    const std::vector<LogEntry::Entry>& getLogs() const;
+    const std::vector<LogEntry::Entry>& getLogs();
+    std::vector<LogEntry::Entry> getNewLogs();
 
 private:
-    LogDatabase() = default;
+    LogDatabase() : lastSentIndex_(0) {};
     ~LogDatabase() = default;
 
     LogDatabase(const LogDatabase&) = delete;
     LogDatabase& operator=(const LogDatabase&) = delete;
 
     std::vector<LogEntry::Entry> logEntries_;
-    mutable std::mutex mutex_;
+    std::mutex mutex_;
+    size_t lastSentIndex_;
 };
 
 #endif // LOGDATABASE_H

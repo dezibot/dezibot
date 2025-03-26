@@ -1,3 +1,14 @@
+/**
+ * @file SettingsPage.cpp
+ * @author Tim Dietrich, Felix Herrling
+ * @brief Implementation of the SettingsPage class.
+ * @version 1.0
+ * @date 2025-03-23
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
+
 #include "SettingsPage.h"
 #include "Dezibot.h"
 
@@ -23,18 +34,18 @@ void SettingsPage::handler() {
 
 // send the JSON representation of sensors and their states
 void SettingsPage::sendSensorData() const {
-    DynamicJsonDocument jsonDocument(4096);
+    JsonDocument jsonDocument;
     JsonArray sensorsJson = jsonDocument.to<JsonArray>();
 
     // iterate over sensors and their functions, add them to the JSON document
     auto& sensors = dezibot.debugServer.getSensors();
     for (auto& sensor : sensors) {
-        JsonObject sensorJson = sensorsJson.createNestedObject();
+        JsonObject sensorJson = sensorsJson.add<JsonObject>();
         sensorJson["sensorName"] = sensor.getSensorName();
 
-        JsonArray functionsJson = sensorJson.createNestedArray("functions");
+        JsonArray functionsJson = sensorJson["functions"].to<JsonArray>();
         for (auto& sensorFunction : sensor.getSensorFunctions()) {
-            JsonObject functionJson = functionsJson.createNestedObject();
+            JsonObject functionJson = functionsJson.add<JsonObject>();
             functionJson["name"] = sensorFunction.getFunctionName();
             functionJson["state"] = sensorFunction.getSensorState();
         }
@@ -48,22 +59,22 @@ void SettingsPage::sendSensorData() const {
 
 // receive json from the client, check if the sensor function exists and toggle its state
 void SettingsPage::toggleSensorFunction() {
-    // error handling
+    // error handling, check if the request contains the required data
     if (!serverPointer->hasArg("plain")) {
         serverPointer->send(400, "application/json", R"({"error":"No data provided"})");
         return;
     }
 
-    DynamicJsonDocument json(256);
+    // check if the JSON is valid and parse it
+    JsonDocument json;
     DeserializationError error = deserializeJson(json, serverPointer->arg("plain"));
-
     if (error) {
         serverPointer->send(400, "application/json", R"({"error":"Invalid JSON format"})");
         return;
     }
 
     // check if the JSON contains the required keys
-    if (json.containsKey("sensorFunction") && json.containsKey("enabled")) {
+    if (json["sensorFunction"].is<String>() && json["enabled"].is<bool>()) {
         String functionName = json["sensorFunction"].as<String>();
         bool isEnabled = json["enabled"].as<bool>();
 

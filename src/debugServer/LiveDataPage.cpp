@@ -1,3 +1,14 @@
+/**
+ * @file LiveDataPage.cpp
+ * @author Tim Dietrich, Felix Herrling
+ * @brief Implementation of the LiveDataPage class.
+ * @version 1.0
+ * @date 2025-03-23
+ *
+ * @copyright Copyright (c) 2025
+ *
+ */
+
 #include "LiveDataPage.h"
 #include <Dezibot.h>
 #include <ArduinoJson.h>
@@ -119,7 +130,7 @@ void LiveDataPage::handler() {
 
 // read values from enabled sensors and send them as json
 void LiveDataPage::getEnabledSensorValues() {
-    DynamicJsonDocument jsonDoc(4096);
+    JsonDocument jsonDoc;
     JsonArray sensorArray = jsonDoc.to<JsonArray>();
 
     // disable logging to prevent unwanted entries
@@ -131,7 +142,7 @@ void LiveDataPage::getEnabledSensorValues() {
         for (auto& sensorFunction : sensor.getSensorFunctions()) {
             if (sensorFunction.getSensorState()) {
                 // read and add value if sensorfunction is enabled
-                JsonObject sensorJson = sensorArray.createNestedObject();
+                JsonObject sensorJson = sensorArray.add<JsonObject>();
                 sensorJson["name"] = sensorFunction.getFunctionName();
                 sensorValueFunctions[sensorFunction.getFunctionName()](sensorJson);
             }

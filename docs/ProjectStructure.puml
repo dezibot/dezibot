@@ -2,16 +2,17 @@
 'https://plantuml.com/class-diagram
 
 Package LoggingProject {
-    WebServer <-> DatabaseHandler : calls DB Data
+    DebugServer <-> DatabaseHandler : calls DB Data
 
-    class WebServer {
-        + begin()
+    class DebugServer {
         + setup()
+        + addSensor(sensor)
+        + getSensors()
     }
 
-    Note top of WebServer : setup() registers all appropriate\n page handlers
+    Note top of DebugServer : setup() registers all appropriate\n page handlers and starts server
 
-    WebServer <-- PageProvider : "utilizes"
+    DebugServer <-- PageProvider : "utilizes"
 
     abstract PageProvider {
         + handler()
@@ -28,6 +29,35 @@ Package LoggingProject {
     class SettingsPage {}
 
     Note right of PageProvider : Provides complete HTML Pages\n with JS,CSS and required libraries
+
+    class Sensor {
+        - sensorName
+        - className
+        - sensorFunctions
+        + addFunction(SensorFunction)
+        + getSensorFunctions()
+        + getSensorName()
+    }
+
+    class SensorFunction {
+        - name
+        - function
+        - sensorstate
+        + setSensorState(state)
+        + getSensorState()
+        + getFunctionName()
+    }
+
+    DebugServer "1" *-- "many" Sensor : "contains"
+    Sensor "1" *-- "many" SensorFunction : "contains"
+
+    class Utility {
+        + directionToString(direction)
+        + sensorToString(sensor)
+        + logLevelToString(level)
+    }
+    DebugServer *-- Utility : "utilizes"
+    Note bottom of Utility : Provides conversion functions\n for enums
 
     Logger --> DatabaseHandler : adds DB entries
 
@@ -57,7 +87,7 @@ Package LoggingProject {
 
     Note right of EntryType : Defines how the logging command\n was created
 
-    WebServer --> Logger : Provides required instruments\n for measurements
+    DebugServer --> Logger : Provides required instruments\n for measurements
 
     class DatabaseHandler {
         - Database db
@@ -67,7 +97,7 @@ Package LoggingProject {
 }
 
 Package Dezibot {
-    Dezibot -right-> WebServer : calls
+    Dezibot -right-> DebugServer : calls
     class Dezibot {}
 
     Logger --> GenericRobotController : Requests measurement data\n when instructed

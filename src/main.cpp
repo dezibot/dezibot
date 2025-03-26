@@ -50,7 +50,8 @@ void setup() {
 
 void loop() {
     //dezibot.colorDetection.getAmbientLight();
-    delay(1000);
+    delay(30000);
+    dezibot.colorDetection.getColorValue(VEML_RED);
     i++;
     dezibot.display.println(i);
 }
