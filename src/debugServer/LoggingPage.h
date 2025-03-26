@@ -14,18 +14,33 @@
 #define LOGGINGPAGE_H
 
 #include "PageProvider.h"
+#include "logger/LogEntry.h"
+#include "logger/LogDatabase.h"
 
 class LoggingPage : public PageProvider{
 private:
     WebServer* serverPointer;
 
     /**
-     * @brief Read log entries from logdatabase, format as json and send to the client.
+     * @brief Read all log entries from logdatabase, format as json and send to the client.
+     * Converting log entries to json format and sending them to the client is done by the processLogs function.
      * @return void
      */
     void sendLogs() const;
 
-    void sendNewLogs();
+    /**
+     * @brief Read only new log entries from logdatabase, format as json and send to the client.
+     * Converting log entries to json format and sending them to the client is done by the processLogs function.
+     * @return void
+     */
+    void sendNewLogs() const;
+
+    /**
+     * @brief Helper function for converting the logs to json format
+     * Logs are filtered by log level.
+     * @return void
+     */
+    void processLogs(const std::vector<LogEntry::Entry>& logs, const String& logLevel) const;
 
 public:
     explicit LoggingPage(WebServer* server);
