@@ -100,7 +100,9 @@ void DebugServer::setup() {
     });
 
     // TODO: we also need this, it should always return a 404
-    // server.onNotFound()
+    server.onNotFound([this] {
+        mainPage->errorPageHandler();
+    });
 
     // initialize color sensor
     Sensor colorSensor("Color Sensor", "ColorDetection");

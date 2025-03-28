@@ -27,3 +27,27 @@ h1 {
     color: #fff;
     text-decoration: none;
 }
+
+/* Error Page Style */
+.error-content {
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.error-content h2 {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.error-content p {
+    color: #888;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+body h1 {
+    font-size: 4em;
+    color: #007BFF;
+    margin-bottom: 20px;
+}

@@ -21,3 +21,6 @@ void MainPage::cssHandler() {
     serveFileFromSpiffs(serverPointer, "/css/mainPageStyle.css", "text/css");
 }
 
+void MainPage::errorPageHandler() {
+    serveFileFromSpiffs(serverPointer, "/errorPage.html", "text/html");
+}

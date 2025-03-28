@@ -27,6 +27,8 @@ public:
      */
     void handler() override;
     void cssHandler();
+
+    void errorPageHandler();
 };
 
 #endif //MAINPAGE_H
