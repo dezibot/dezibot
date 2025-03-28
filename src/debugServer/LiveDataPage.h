@@ -29,6 +29,12 @@ public:
      * @return void
      */
     void handler() override;
+    void canvasjsHandler();
+
+    void jsHandler();
+
+    void cssHandler();
+
 
     /**
      * @brief Read current values from enabled sensors, format them as json and send to client.

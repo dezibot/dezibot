@@ -10,11 +10,14 @@
  */
 
 #include "MainPage.h"
-#include "SPIFFS.h"
 
 MainPage::MainPage(WebServer* server):serverPointer(server) {}
 
 void MainPage::handler() {
-    String htmlContent = readHtmlFromFile("/MainPage.html");
-    serverPointer->send(200, "text/html", htmlContent);
+    serveFileFromSpiffs(serverPointer, "/mainPage.html", "text/html");
 };
+
+void MainPage::cssHandler() {
+    serveFileFromSpiffs(serverPointer, "/css/mainPageStyle.css", "text/css");
+}
+

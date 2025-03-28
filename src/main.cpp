@@ -9,26 +9,6 @@ Dezibot dezibot;
 
 int i = 0;
 
-void generateRandomLog() {
-    static const std::vector<std::string> levels = {"INFO", "WARNING", "ERROR"};
-    static const std::vector<std::string> messages = {
-        "System initialized successfully.",
-        "Low memory warning.",
-        "Failed to connect to the server.",
-        "File not found.",
-        "User login successful.",
-        "Disk space is critically low.",
-        "Unhandled exception occurred.",
-        "Configuration loaded."
-    };
-
-    // Generate a random level, message, and timestamp
-    const std::string& message = messages[std::rand() % messages.size()];
-
-    // Log the random entry
-    Logger::getInstance().logInfo(message);
-}
-
 void processAllLogs() {
     const auto& logs = LogDatabase::getInstance().getLogs();
 
@@ -50,9 +30,9 @@ void setup() {
 
 void loop() {
     //dezibot.colorDetection.getAmbientLight();
-    delay(30000);
     dezibot.colorDetection.getColorValue(VEML_RED);
-    i++;
     dezibot.display.println(i);
+    i++;
+    delay(30000);
 }
 

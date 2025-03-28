@@ -27,9 +27,17 @@ LoggingPage::LoggingPage(WebServer* server): serverPointer(server) {
 }
 
 // send the html content of the LoggingPage
+
 void LoggingPage::handler() {
-    String htmlContent = readHtmlFromFile("/LoggingPage.html");
-    serverPointer->send(200, "text/html", htmlContent);
+    serveFileFromSpiffs(serverPointer, "/loggingPage.html", "text/html");
+}
+
+void LoggingPage::cssHandler() {
+    serveFileFromSpiffs(serverPointer, "/css/loggingPageStyle.css", "text/css");
+}
+
+void LoggingPage::jsHandler() {
+    serveFileFromSpiffs(serverPointer, "/js/loggingPageScript.js", "text/javascript");
 }
 
 // gets logs from logger, filters them by log level and sends them as JSON

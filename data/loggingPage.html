@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logging</title>
+    <link rel="stylesheet" href="/css/loggingPageStyle.css">
+</head>
+<body>
+<a href="/" class="home-button">Home</a>
+<h1>Logging</h1>
+<div class="log-container">
+    <div class="log-level">
+        <label for="log-level">Log Level:</label>
+        <select id="log-level" onchange="onLogLevelChange()">
+            <option value="ALL">ALL</option>
+            <option value="INFO">INFO</option>
+            <option value="WARNING">WARNING</option>
+            <option value="ERROR">ERROR</option>
+            <option value="DEBUG">DEBUG</option>
+            <option value="TRACE">TRACE</option>
+        </select>
+    </div>
+    <button class="refresh-button" onclick="onRefreshButtonClick()">Refresh</button>
+    <table>
+        <thead>
+        <tr>
+            <th>Loglevel</th>
+            <th>Timestamp</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+        <tbody id="log-table-body">
+        </tbody>
+    </table>
+</div>
+<script src="/js/loggingPageScript.js"></script>
+</body>
+</html>

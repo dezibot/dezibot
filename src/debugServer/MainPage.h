@@ -26,6 +26,7 @@ public:
      * @return void
      */
     void handler() override;
+    void cssHandler();
 };
 
 #endif //MAINPAGE_H

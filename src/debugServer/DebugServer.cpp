@@ -29,7 +29,7 @@ DebugServer::DebugServer():server(80) {
 }
 
 void DebugServer::setup() {
-    // set wifi credentials
+    // set wi-fi credentials
     const char* SSID = "Debug-Server";
     const char* PSK = "PW4studProj";
 
@@ -38,39 +38,80 @@ void DebugServer::setup() {
     const IPAddress gateway(192,168,1,1);
     const IPAddress subnet(255,255,255,0);
 
-    // initalize SPIFFS for file access
+    // initialize SPIFFS for file access
     // changes in html files require "pio run -t uploadfs" or "Upload Filesystem Image" in plugin to take effect
     SPIFFS.begin();
 
-    // setup as wifi accesspoint
+    // setup as wi-fi access point
     WiFi.softAP(SSID, PSK);
     WiFi.softAPConfig(local_ip, gateway, subnet);
 
     // set uri and handler for each page
-    server.on("/", [this]() {
+    // Main Page
+    server.on("/", [this] {
         mainPage->handler();
     });
 
-    server.on("/logging", [this]() {
+    server.on("/css/mainPageStyle.css", [this] {
+       mainPage->cssHandler();
+    });
+
+    // Logging
+    server.on("/logging", [this] {
         loggingPage->handler();
     });
 
-    server.on("/livedata", [this]() {
+    server.on("/css/loggingPageStyle.css", [this] {
+        loggingPage->cssHandler();
+    });
+
+    server.on("/js/loggingPageScript.js", [this] {
+        loggingPage->jsHandler();
+    });
+
+    // Live Data
+    server.on("/livedata", [this] {
         liveDataPage->handler();
     });
 
-    server.on("/settings", [this]() {
+    server.on("/lib/canvasjs.min.js", [this] {
+        liveDataPage->canvasjsHandler();
+    });
+
+    server.on("/js/liveDataPageScript.js", [this] {
+        liveDataPage->jsHandler();
+    });
+
+    server.on("/css/liveDataPageStyle.css", [this] {
+       liveDataPage->cssHandler();
+    });
+
+    // Settings
+    server.on("/settings", [this] {
         settingsPage->handler();
     });
+
+    server.on("/js/settingsPageScript.js", [this] {
+        settingsPage->jsHandler();
+    });
+
+    server.on("/css/settingsPageStyle.css", [this] {
+       settingsPage->cssHandler();
+    });
+
+    // TODO: we also need this, it should always return a 404
+    // server.onNotFound()
 
     // initialize color sensor
     Sensor colorSensor("Color Sensor", "ColorDetection");
     SensorFunction getAmbientLight("getAmbientLight()");
+    SensorFunction getRGB("getRGB()");
     SensorFunction getColorValueRed("getColorValue(RED)");
     SensorFunction getColorValueGreen("getColorValue(GREEN)");
     SensorFunction getColorValueBlue("getColorValue(BLUE)") ;
     SensorFunction getColorValueWhite("getColorValue(WHITE)");
     colorSensor.addFunction(getAmbientLight);
+    colorSensor.addFunction(getRGB);
     colorSensor.addFunction(getColorValueRed);
     colorSensor.addFunction(getColorValueGreen);
     colorSensor.addFunction(getColorValueBlue);

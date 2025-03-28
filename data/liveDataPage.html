@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/liveDataPageStyle.css">
+    <title>Live Data</title>
+  </head>
+  <body>
+    <!-- Page Content -->
+    <a href="/" class="home-button">Home</a>
+    <h1 style="text-align:center;">Live Data</h1>
+    <div class="slider">
+      <label>
+        <input type="range" min="50" max="2000" value="100" id="slider-input">
+      </label>
+    </div>
+    <div id="sensor-container" class="sensor-container"></div>
+
+    <!-- Scripts -->
+    <script src="/lib/canvasjs.min.js"></script>
+    <script src="/js/liveDataPageScript.js"></script>
+  </body>
+</html>

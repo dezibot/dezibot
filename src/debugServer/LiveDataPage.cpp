@@ -29,6 +29,15 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
         sensorObject["value"] = dezibot.colorDetection.getAmbientLight();
     };
 
+    // temporary? Fake function because it looks cool
+    sensorValueFunctions["getRGB()"] = [this](const JsonObject& sensorObject) {
+        const uint16_t x = dezibot.colorDetection.getColorValue(VEML_RED);
+        const uint16_t y = dezibot.colorDetection.getColorValue(VEML_GREEN);
+        const uint16_t z = dezibot.colorDetection.getColorValue(VEML_BLUE);
+        const String resultString = "x: " + String(x) + ", y: " + String(y) + ", z: " + String(z);
+        sensorObject["value"] = resultString;
+    };
+
     sensorValueFunctions["getColorValue(RED)"] = [this](const JsonObject& sensorObject) {
         sensorObject["value"] = dezibot.colorDetection.getColorValue(VEML_RED);
     };
@@ -124,9 +133,20 @@ LiveDataPage::LiveDataPage(WebServer* server): serverPointer(server)
 
 // send the html content of the LiveDataPage
 void LiveDataPage::handler() {
-    String htmlContent = readHtmlFromFile("/LiveDataPage.html");
-    serverPointer->send(200, "text/html", htmlContent);
+    serveFileFromSpiffs(serverPointer, "/liveDataPage.html", "text/html");
 };
+
+void LiveDataPage::canvasjsHandler() {
+    serveFileFromSpiffs(serverPointer, "/lib/canvasjs.min.js", "text/javascript");
+}
+
+void LiveDataPage::jsHandler() {
+    serveFileFromSpiffs(serverPointer, "/js/liveDataPageScript.js", "text/javascript");
+}
+
+void LiveDataPage::cssHandler() {
+    serveFileFromSpiffs(serverPointer, "/css/liveDataPageStyle.css", "text/css");
+}
 
 // read values from enabled sensors and send them as json
 void LiveDataPage::getEnabledSensorValues() {
