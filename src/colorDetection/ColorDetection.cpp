@@ -1,83 +1,61 @@
 #include  "ColorDetection.h"
 
-void ColorDetection::begin(void){
-    ColorDetection::configure(VEML_CONFIG{.mode = AUTO,.enabled = true,.exposureTime=MS40});
+void ColorDetection::beginAutoMode(void) {
+    const VEML_CONFIG DEFAULT_CONFIG = VEML_CONFIG {
+        .mode = AUTO,
+        .enabled = true,
+        .exposureTime = MS320 };
+    ColorDetection::configure(DEFAULT_CONFIG);
 };
-void ColorDetection::configure(VEML_CONFIG config){
-     uint8_t configRegister = 0;
-    switch(config.exposureTime)
-    {
+
+void ColorDetection::configure(VEML_CONFIG config) {
+    rgbwSensor.begin();
+
+    uint8_t configuration = 0;
+
+    switch(config.exposureTime) {
         case MS40:
-            configRegister = 0x00;break;
+            configuration += VEML6040_IT_40MS;
+            break;
         case MS80:
-            configRegister = 0x01;break;
+            configuration += VEML6040_IT_80MS;
+            break;
         case MS160:
-            configRegister = 0x02;break;
+            configuration += VEML6040_IT_160MS;
+            break;
         case MS320:
-            configRegister = 0x03;break;
+            configuration += VEML6040_IT_320MS;
+            break;
         case MS640:
-            configRegister = 0x04;break;
+            configuration += VEML6040_IT_640MS;
+            break;
         case MS1280:
-            configRegister = 0x05;break;
+            configuration += VEML6040_IT_1280MS;
+            break;
     }
-    configRegister = configRegister << 4;
-    if(config.mode == MANUAL)
-    {
-        configRegister = configRegister | (0x01<<1);
-    }
-    if(!config.enabled)
-    {
-        configRegister = configRegister | 1;
-    }
-    ColorDetection::writeDoubleRegister(CMD_CONFIG,(uint16_t)configRegister);
+
+    configuration += (config.mode == MANUAL) ? VEML6040_AF_FORCE : VEML6040_AF_AUTO;
+    configuration += config.enabled ? VEML6040_SD_ENABLE : VEML6040_SD_DISABLE;
+    
+    rgbwSensor.setConfiguration(configuration);
 };
 
 uint16_t ColorDetection::getColorValue(color color){
-   
-    switch(color)
-    {
+    switch(color) {
         case VEML_RED:
-            return readDoubleRegister(REG_RED); 
-            break;
+            return rgbwSensor.getRed();
         case VEML_GREEN:
-            return readDoubleRegister(REG_GREEN);
-            break;
+            return rgbwSensor.getGreen();
         case VEML_BLUE: 
-            return readDoubleRegister(REG_BLUE);
-            break;
+            return rgbwSensor.getBlue();
         case VEML_WHITE:
-            return readDoubleRegister(REG_WHITE);
-            break;
+            return rgbwSensor.getWhite();
         default:
             Serial.println("Color is not supported by the sensor");
             return 0;
     } 
 };
 
-uint16_t ColorDetection::readDoubleRegister(uint8_t regAddr){
-    uint16_t result = 0;
-    Wire.beginTransmission(VEML_ADDR);
-    Wire.write(regAddr);
-    if(Wire.endTransmission() != 0){
-        Serial.printf("Reading Register %d failed",regAddr);
-    }
-    Wire.requestFrom(VEML_ADDR,2);
-    uint8_t offset = 0;
-    while(Wire.available()){
-        result = result << 8;
-        result = result | (Wire.read()<<offset);
-        offset = offset + 8;
-    }
-    return result;
-};
-
-void ColorDetection::writeDoubleRegister(uint8_t regAddr, uint16_t data){
-    //erst low dann high
-    Wire.beginTransmission(VEML_ADDR);
-    Wire.write(regAddr);
-    Wire.write((uint8_t)(data&0x00FF));
-    Wire.write((uint8_t)((data>>8)&0x00FF));
-    if(Wire.endTransmission() != 0){
-        Serial.printf("Reading Register %d failed",regAddr);
-    }
+float ColorDetection::getAmbientLight() {
+    return rgbwSensor.getAmbientLight();
 };

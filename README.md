@@ -5,7 +5,7 @@
 * [PDF-Doku Device](https://hardwarelabor.imn.htwk-leipzig.de/dezibot/dezibot-4doku.pdf)
 
 ## Link to Software
-* [Library](https://github.com/hhaupt-dezibot/Dezibot)
+* [Library](https://github.com/dezibot/dezibot)
 
 ## Introduction
 
@@ -165,3 +165,12 @@ Arduino IDE -> Sketch -> Manage Library -> Search for missing Library
 It is important, before using any functions of Dezibot, to call ```dezibot.begin()``` once in the setup function.
 
 In the examples folder, a sketch ``start`` is provided, that handles the initialization.
+
+## Third-Party Licenses
+
+This project uses the following third-party libraries:
+
+- `veml6040` (version 0.3.2) by [@thewknd](https://github.com/thewknd) et al.
+    - Vishay VEML6040 RGBW color sensor library for Arduino
+    - Licensed under the MIT license
+    - For more information, see the [library's repository](https://github.com/thewknd/VEML6040/blob/master/LICENSE)

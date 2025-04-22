@@ -1,9 +1,12 @@
 /**
  * @file ColorDetecion.h
- * @author Hans Haupt
- * @brief Class that controls the colorsensor (VEML6040) of the dezibot.
- * @version 0.1
- * @date 2024-06-01
+ * @author Nico Schramm, Ines Rohrbach, Hans Haupt
+ * @brief Class that controls the color sensor (VEML6040) of the dezibot.
+ * 
+ * This module uses the VEML6040 library (version 0.3.2) by thewknd (MIT license).
+ * 
+ * @version 0.2
+ * @date 2024-11-05
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -11,25 +14,13 @@
 
 #ifndef ColorDetection_h
 #define ColorDetection_h
+
 #include <stdint.h>
 #include <Wire.h>
 #include <Arduino.h>
-//Definitions for I2c
-#define I2C_MASTER_SCL_IO           2      /*!< GPIO number used for I2C master clock */
-#define I2C_MASTER_SDA_IO           1      /*!< GPIO number used for I2C master data  */
+#include <veml6040.h>
 
-//Chipadress of the VEML6040
-#define VEML_ADDR                   0x10        /*!< Slave address of the MPU9250 sensor */
-
-//CMDCodes for communicate with the VEML6040
-#define CMD_CONFIG                  0x00
-#define REG_RED                     0x08
-#define REG_GREEN                   0x09
-#define REG_BLUE                    0x0A
-#define REG_WHITE                   0x0B
-
-
-enum duration{
+enum duration {
     MS40,
     MS80,
     MS160,
@@ -38,31 +29,60 @@ enum duration{
     MS1280
 };
 
-enum vemlMode{
+enum vemlMode {
     AUTO,
     MANUAL
 };
 
-struct VEML_CONFIG{
+struct VEML_CONFIG {
+    // force mode
     vemlMode mode;
+    
+    // chip shutdown setting
     bool enabled;
+    
+    // integration time
     duration exposureTime;
 };
 
-
-enum color{
+enum color {
     VEML_RED,
     VEML_GREEN,
     VEML_BLUE,
     VEML_WHITE
 };
-class ColorDetection{
-public: 
-    void begin(void);
+
+class ColorDetection {
+public:
+    /**
+     * @brief Start RBGW sensor with default configuration.
+     * 
+     */
+    void beginAutoMode();
+    
+    /**
+     * @brief Begin RGBW sensor with passed configuration values.
+     * 
+     * @param config configuration for VEML6040 sensor
+     */
     void configure(VEML_CONFIG config);
+
+    /**
+     * @brief Get color value of RGBW sensor.
+     * 
+     * @param color RGBW color which to get
+     * @return uint16_t color value
+     */
     uint16_t getColorValue(color color);
+
+    /**
+     * @brief Get the ambient light in lux.
+     * 
+     * @return float ambient light in lux.
+     */
+    float getAmbientLight();
+
 protected:
-    uint16_t readDoubleRegister(uint8_t regAddr);
-    void writeDoubleRegister(uint8_t regAddr, uint16_t data);
+    VEML6040 rgbwSensor;
 };
 #endif //ColorDetection_h
