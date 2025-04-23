@@ -174,3 +174,9 @@ This project uses the following third-party libraries:
     - Vishay VEML6040 RGBW color sensor library for Arduino
     - Licensed under the MIT license
     - For more information, see the [library's repository](https://github.com/thewknd/VEML6040/blob/master/LICENSE)
+
+## Credits
+### Core Team
+Saskia Uta Duebener, Anton Jacker, Anina Ambra Morgner, Hans Felix Haupt, Jens Wagner, Mirella Willems, Nico Schramm, Ines Rohrbach
+### Contributors
+[All members who Contibuteted in this Project](./CREDITS.md)
