@@ -21,26 +21,45 @@ void Motor::begin(void){
     ledc_channel_config(&channelConfig);
 };
 
-void Motor::setSpeed(uint16_t duty){
-    
-    int difference = duty-this->getSpeed();
-    if (difference > 0){
-        for(int i = 0;i<difference;i+=difference/20){
-            this->duty += difference/20;
-            ledc_set_duty(LEDC_MODE,this->channel,duty);
-            ledc_update_duty(LEDC_MODE,this->channel);
+void Motor::setSpeed(uint16_t duty) {
+    int difference = duty - this->getSpeed();
+
+    // Sicherheitsüberprüfung: Unterschied zu klein -> Direkte Zuweisung
+    if (abs(difference) < 20) {
+        this->duty = duty;
+        ledc_set_duty(LEDC_MODE, this->channel, duty);
+        ledc_update_duty(LEDC_MODE, this->channel);
+        return;
+    }
+
+    int step = abs(difference) / 20;
+    step = step > 0 ? step : 1; // Sicherstellen, dass der Schrittwert niemals 0 ist.
+
+    if (difference > 0) {
+        for (int i = 0; i < difference; i += step) {
+            this->duty += step;
+            if (this->duty > duty) this->duty = duty; // Begrenzung
+            ledc_set_duty(LEDC_MODE, this->channel, this->duty);
+            ledc_update_duty(LEDC_MODE, this->channel);
             delayMicroseconds(5);
         }
     } else {
-        for(int i = 0;i>difference;i-=abs(difference/20)){
-            this->duty -= abs(difference/20);
-            ledc_set_duty(LEDC_MODE,this->channel,duty);
-            ledc_update_duty(LEDC_MODE,this->channel);
+        for (int i = 0; i > difference; i -= step) {
+            this->duty -= step;
+            if (this->duty < duty) this->duty = duty; // Begrenzung
+            ledc_set_duty(LEDC_MODE, this->channel, this->duty);
+            ledc_update_duty(LEDC_MODE, this->channel);
             delayMicroseconds(5);
         }
     }
 
-};
+    // Am Ende sicherstellen, dass der Zielwert erreicht wird
+    this->duty = duty;
+    ledc_set_duty(LEDC_MODE, this->channel, duty);
+    ledc_update_duty(LEDC_MODE, this->channel);
+}
+
+
 
 uint16_t Motor::getSpeed(void){
     return this->duty;

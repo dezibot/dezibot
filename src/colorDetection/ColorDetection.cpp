@@ -34,6 +34,7 @@ void ColorDetection::configure(VEML_CONFIG config) {
             break;
     }
 
+    configuration += config.triggerEnabled ? VEML6040_TRIG_ENABLE : VEML6040_TRIG_DISABLE;
     configuration += (config.mode == MANUAL) ? VEML6040_AF_FORCE : VEML6040_AF_AUTO;
     configuration += config.enabled ? VEML6040_SD_ENABLE : VEML6040_SD_DISABLE;
     
@@ -58,4 +59,8 @@ uint16_t ColorDetection::getColorValue(color color){
 
 float ColorDetection::getAmbientLight() {
     return rgbwSensor.getAmbientLight();
+};
+
+uint16_t ColorDetection::gettCCT(float offset) {
+    return rgbwSensor.getCCT(offset);
 };
