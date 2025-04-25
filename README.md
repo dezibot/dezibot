@@ -177,6 +177,10 @@ This project uses the following third-party libraries:
 
 ## Credits
 ### Core Team
-Saskia Uta Duebener, Anton Jacker, Anina Ambra Morgner, Hans Felix Haupt, Jens Wagner, Mirella Willems, Nico Schramm, Ines Rohrbach
+- [Hans Felix Haupt](https://www.researchgate.net/profile/Hans-Haupt)
+- [Anina Ambra Morgner](https://www.researchgate.net/profile/Anina-Morgner) 
+- [Saskia Uta Duebener](https://www.researchgate.net/profile/Saskia-Duebener) 
+- [Anton Jacker](https://www.researchgate.net/profile/Anton-Jacker) 
+- [Jens Wagner](https://fim.htwk-leipzig.de/fakultaet/personen/professorinnen-und-professoren/jens-wagner) 
 ### Contributors
 [All members who Contibuteted in this Project](./CREDITS.md)
