@@ -1,0 +1,17 @@
+on:
+  - push
+  - delete
+
+jobs:
+  sync:
+    runs-on: alpine:3.22.1
+    name: Git Repo Sync
+    steps:
+      - uses: actions/checkout@v2
+        with:
+         fetch-depth: 0
+      - uses: wangchucheng/git-repo-sync@v0.1.0
+        with:
+         target-url: ${{ secrets.TARGET_URL }}
+         target-username: ${{ secrets.TARGET_USERNAME }}
+         target-token:  ${{ secrets.TARGET_TOKEN }} 
