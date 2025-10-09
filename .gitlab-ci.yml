@@ -10,21 +10,21 @@ test:
   script:
     - echo "dies ist ein test, ob die GitLab Action trotzdem läuft" 
 
-pages:
-  stage: deploy
+# pages:
+  # stage: deploy
 
-  script:
-  - apk update && apk add doxygen graphviz ttf-freefont && apk add make && apk add lftp
-  - doxygen doxygen.txt
-  - mkdir public
-  - cp -r docs/html public
-  - cd ./public/html
-  - lftp -e "open plesk.iaccam.com; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --exclude node_modules --verbose --delete ./ ./; bye"
+ #  script:
+  # - apk update && apk add doxygen graphviz ttf-freefont && apk add make && apk add lftp
+  # - doxygen doxygen.txt
+  # - mkdir public
+  # - cp -r docs/html public
+  # - cd ./public/html
+  # - lftp -e "open plesk.iaccam.com; user $FTP_USERNAME $FTP_PASSWORD; mirror -X .* -X .*/ --reverse --exclude node_modules --verbose --delete ./ ./; bye"
 
 
   #- mv docs/html/ public/
-  artifacts:
-    paths:
-    - public
-  only:
-  - release
+  # artifacts:
+    # paths:
+    # - public
+  # only:
+  # - release
