@@ -1,5 +1,15 @@
 image: alpine
 
+stages:
+  - build
+  - hardware
+#  - deploy
+
+test:
+  stage: build
+  script:
+    - echo "dies ist ein test, ob die GitLab Action trotzdem läuft" 
+
 pages:
   stage: deploy
 
