@@ -8,7 +8,7 @@ stages:
 test:
   stage: build
   script:
-    - echo "dies ist ein test, ob die GitLab Action trotzdem läuft" 
+    - echo "Synced" 
 
 # pages:
   # stage: deploy
