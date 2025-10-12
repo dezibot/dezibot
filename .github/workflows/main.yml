@@ -27,8 +27,9 @@ jobs:
           fetch-depth: 0
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
+      #timeout 1h
       - name: Configure Arduino CLI
-        run: arduino-cli config set network.connection_timeout 600s
+        run: arduino-cli config set network.connection_timeout 6000s
       - name: Install dependencies
         run: |
           deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
@@ -40,8 +41,6 @@ jobs:
               arduino-cli lib install "$lib" || echo "⚠️  Warning: Failed to install $lib"
             fi
           done
-
-
       - name: install Board
         run: arduino-cli core install esp32:esp32
       - name: install dezibot
