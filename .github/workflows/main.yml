@@ -30,13 +30,17 @@ jobs:
       - name: Configure Arduino CLI
         run: arduino-cli config set network.connection_timeout 600s
       - name: Install dependencies
-        # read libary.properties from root and read from there line that starts with depends= , split by comma and remove spaces after the , install each library
         run: |
-          deps=$(grep "^depends=" library.properties | cut -d'=' -f2 | tr -d ' ')
+          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
           IFS=',' read -ra ADDR <<< "$deps"
           for i in "${ADDR[@]}"; do
-            arduino-cli lib install "$i"
+            lib=$(echo "$i" | xargs) # entfernt führende und nachgestellte Leerzeichen
+            if [ -n "$lib" ]; then
+              echo "Installing $lib..."
+              arduino-cli lib install "$lib" || echo "⚠️  Warning: Failed to install $lib"
+            fi
           done
+
 
       - name: install Board
         run: arduino-cli core install esp32:esp32
