@@ -43,7 +43,9 @@ jobs:
             fi
           done
       - name: install Board
-        run: arduino-cli core install esp32:esp32
+        run: | 
+          arduino-cli core install esp32:esp32
+          arduino-cli core upgrade esp32:esp32
       - name: install dezibot
         run: |
           git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
