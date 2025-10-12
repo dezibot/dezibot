@@ -39,6 +39,7 @@ jobs:
             if [ -n "$lib" ]; then
               echo "Installing $lib..."
               arduino-cli lib install "$lib" || echo "⚠️  Warning: Failed to install $lib"
+              arduino-cli lib upgrade "$lib" || echo "⚠️  Warning: Failed to upgrade $lib"
             fi
           done
       - name: install Board
