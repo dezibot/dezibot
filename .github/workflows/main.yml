@@ -55,4 +55,6 @@ jobs:
           arduino-cli config set library.enable_unsafe_install false
 
       - name: Compile
-        run: arduino-cli compile --fqbn esp32:esp32:esp32s3 test.ino
+        run: | 
+          ls -la  
+          arduino-cli compile --fqbn esp32:esp32:esp32s3 test.ino
