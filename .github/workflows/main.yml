@@ -49,7 +49,10 @@ jobs:
       - name: install dezibot
         run: |
           git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
+          arduino-cli lib uninstall dezibot || echo "Dezibot was not installed"
+          arduino-cli config set library.enable_unsafe_install true
           arduino-cli lib install --zip-path dezibot.zip
+          arduino-cli config set library.enable_unsafe_install false
 
       - name: Compile
         run: arduino-cli compile --fqbn esp32:esp32:esp32s3 test.ino
