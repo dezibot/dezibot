@@ -25,8 +25,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
       - name: Configure Arduino CLI
-        
         run: arduino-cli config set network.connection_timeout 600s
       - name: Install dependencies
         # read libary.properties from root and read from there line that starts with depends= , split by comma and install each library
