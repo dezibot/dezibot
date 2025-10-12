@@ -47,7 +47,7 @@ jobs:
       - name: install dezibot
         run: |
           git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
-          arduino-cli lib install dezibot.zip
+          arduino-cli lib install --zip-path dezibot.zip
 
       - name: Compile
-        run: arduino-cli compile test.ino
+        run: arduino-cli compile --fqbn esp32:esp32:esp32s3 test.ino
