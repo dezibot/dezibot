@@ -14,4 +14,32 @@ jobs:
         with:
          target-url: ${{ secrets.TARGET_URL }}
          target-username: ${{ secrets.TARGET_USERNAME }}
-         target-token:  ${{ secrets.TARGET_TOKEN }} 
+         target-token:  ${{ secrets.TARGET_TOKEN }}
+
+  compile:
+    runs-on: self-hosted
+    name: Compile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install Arduino CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh -s "latest"
+          echo "::add-path::$(pwd)/bin"  
+      - name: Configure Arduino CLI
+        
+        run: arduino-cli config set network.connection_timeout 600s
+      - name: Install dependencies
+        # read libary.properties from root and read from there line that starts with depends= , split by comma and install each library
+        run: |
+          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
+          IFS=',' read -ra ADDR <<< "$deps"
+          for i in "${ADDR[@]}"; do
+            arduino-cli lib install "$i"
+          done
+      - name: install Board
+        run: arduino-cli core install esp32:esp32    
+      - name: Compile
+        run: arduino-cli compile test.ino
