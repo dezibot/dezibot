@@ -56,4 +56,6 @@ jobs:
 
       - name: Compile
         run: | 
-          arduino-cli compile --fqbn esp32:esp32:esp32s3 test.ino
+          mkdir test
+          cp test.ino test
+          arduino-cli compile --fqbn esp32:esp32:esp32s3 test/test.ino
