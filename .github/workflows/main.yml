@@ -44,8 +44,8 @@ jobs:
           done
       - name: install Board
         run: | 
-          arduino-cli core install esp32:esp32
-          arduino-cli core upgrade esp32:esp32
+          arduino-cli core install esp32:esp32:esp32s3
+          arduino-cli core upgrade esp32:esp32:esp32s3
       - name: install dezibot
         run: |
           git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
@@ -53,7 +53,6 @@ jobs:
           arduino-cli config set library.enable_unsafe_install true
           arduino-cli lib install --zip-path dezibot.zip
           arduino-cli config set library.enable_unsafe_install false
-
       - name: Compile
         run: | 
           mv test.ino dezibot.ino
