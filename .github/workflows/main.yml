@@ -58,4 +58,5 @@ jobs:
         run: | 
           mkdir test
           cp test.ino test
+          arduino-cli board details -b esp32:esp32:esp32s3
           arduino-cli compile --fqbn esp32:esp32:esp32s3 test/test.ino
