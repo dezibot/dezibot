@@ -56,7 +56,6 @@ jobs:
 
       - name: Compile
         run: | 
-          mkdir test
-          cp test.ino test
+          mv test.ino dezibot.ino
           arduino-cli board details -b esp32:esp32:esp32s3
-          arduino-cli compile --fqbn esp32:esp32:esp32s3 test/test.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32s3
