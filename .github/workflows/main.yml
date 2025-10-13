@@ -55,5 +55,6 @@ jobs:
           arduino-cli config set library.enable_unsafe_install false
       - name: Compile
         run: | 
-          mv test.ino dezibot.ino
-          arduino-cli compile --fqbn esp32:esp32:esp32s3
+          mkdir test
+          cp test.ino test/
+          arduino-cli compile --fqbn esp32:esp32:esp32s3 test/test.ino
