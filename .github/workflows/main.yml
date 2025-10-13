@@ -44,8 +44,8 @@ jobs:
           done
       - name: install Board
         run: | 
-          arduino-cli core install esp32:esp32:esp32s3
-          arduino-cli core upgrade esp32:esp32:esp32s3
+          arduino-cli core install esp32:esp32s3
+          arduino-cli core upgrade esp32:esp32s3
       - name: install dezibot
         run: |
           git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
@@ -56,5 +56,4 @@ jobs:
       - name: Compile
         run: | 
           mv test.ino dezibot.ino
-          arduino-cli board details -b esp32:esp32:esp32s3
           arduino-cli compile --fqbn esp32:esp32:esp32s3
