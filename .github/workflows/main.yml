@@ -3,20 +3,7 @@ on:
   - delete
 
 jobs:
-  sync:
-    runs-on: self-hosted
-    name: Git Repo Sync
-    needs: compile
-    steps:
-      - uses: actions/checkout@v2
-        with:
-         fetch-depth: 0
-      - uses: wangchucheng/git-repo-sync@v0.1.0
-        with:
-         target-url: ${{ secrets.TARGET_URL }}
-         target-username: ${{ secrets.TARGET_USERNAME }}
-         target-token:  ${{ secrets.TARGET_TOKEN }}
-
+ 
   compile:
     runs-on: self-hosted
     name: Compile
@@ -44,7 +31,7 @@ jobs:
           done
       - name: install Board
         run: | 
-          rm -rf ~/.arduino15/packages/esp3
+          rm -rf ~/.arduino15/packages/esp32
           arduino-cli core install esp32:esp32
           arduino-cli core upgrade esp32:esp32
           arduino-cli core list
@@ -58,5 +45,76 @@ jobs:
       - name: Compile
         run: | 
           mkdir test
-          cp test.ino test/
-          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg test/test.ino
+          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino -P test/
+          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg test/all.ino
+
+  RGBLED:
+    runs-on: self-hosted
+    name: RGB LED Test
+    needs: compile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+      - name: prepare test
+        run: |
+          arduino-cli config set network.connection_timeout 6000s
+          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
+          IFS=',' read -ra ADDR <<< "$deps"
+          for i in "${ADDR[@]}"; do
+            lib=$(echo "$i" | xargs) # entfernt führende und nachgestellte Leerzeichen
+            if [ -n "$lib" ]; then
+              echo "Installing $lib..."
+              arduino-cli lib install "$lib" || echo "⚠️  Warning: Failed to install $lib"
+              arduino-cli lib upgrade "$lib" || echo "⚠️  Warning: Failed to upgrade $lib"
+            fi
+          done
+          rm -rf ~/.arduino15/packages/esp32
+          arduino-cli core install esp32:esp32
+          arduino-cli core upgrade esp32:esp32
+          arduino-cli core list
+          git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
+          arduino-cli lib uninstall dezibot || echo "Dezibot was not installed"
+          arduino-cli config set library.enable_unsafe_install true
+          arduino-cli lib install --zip-path dezibot.zip
+          arduino-cli config set library.enable_unsafe_install false
+      - name: Compile and Upload
+        run: | 
+          mkdir test
+          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/RGB.ino -P test/
+          arduino-cli upload -p /dev/ttyUSB0 --fqbn esp32:esp32:esp32s3usbotg test/RGB.ino
+      - name: Monitor RGB Test
+        run: |
+          timeout 60s arduino-cli monitor -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --config 115200 | tee rgb_test_output.log
+      - name: Upload Artefact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rgb-test-log
+          path: rgb_test_output.log
+      # TODO Parse test result from log
+      - name: check test result
+        run: |
+          if grep -q "RGB LED Test: PASS" rgb_test_output.log; then
+            echo "RGB LED Test passed."
+          else
+            echo "RGB LED Test failed."
+            exit 1
+          fi
+
+
+  sync:
+    runs-on: self-hosted
+    name: Git Repo Sync
+    needs: RGBLED
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: wangchucheng/git-repo-sync@v0.1.0
+        with:
+          target-url: ${{ secrets.TARGET_URL }}
+          target-username: ${{ secrets.TARGET_USERNAME }}
+          target-token:  ${{ secrets.TARGET_TOKEN }}
