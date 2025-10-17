@@ -91,11 +91,11 @@ jobs:
           sleep 2
           arduino-cli monitor -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --config 115200 | tee rgb_test_output.log
           sleep 60
-      #- name: Upload Artefact
-        #uses: actions/upload-artifact@v4
-       # with:
-        #  name: rgb-test-log
-        #  path: rgb_test_output.log
+      - name: Upload Artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rgb-test-log
+          path: rgb_test_output.log
       # TODO Parse test result from log
       #- name: check test result
        # run: |
