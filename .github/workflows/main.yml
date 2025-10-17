@@ -82,10 +82,8 @@ jobs:
           arduino-cli config set library.enable_unsafe_install false
       - name: Compile and Upload
         run: | 
-          mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/RGB.ino -O test/test.ino
-          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg test/test.ino
-          arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg test/test.ino
+          sleep 2
+          arduino-cli monitor -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --config 115200 | tee rgb_test_output.log
       - name: Monitor RGB Test
         run: |
           timeout 60000 arduino-cli monitor -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --config 115200 | tee rgb_test_output.log
