@@ -45,8 +45,8 @@ jobs:
       - name: Compile
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino -P test/
-          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg test/all.ino
+          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino -O test.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg test/test.ino
 
   RGBLED:
     runs-on: self-hosted
@@ -72,7 +72,6 @@ jobs:
               arduino-cli lib upgrade "$lib" || echo "⚠️  Warning: Failed to upgrade $lib"
             fi
           done
-          rm -rf ~/.arduino15/packages/esp32
           arduino-cli core install esp32:esp32
           arduino-cli core upgrade esp32:esp32
           arduino-cli core list
