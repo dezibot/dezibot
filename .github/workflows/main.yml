@@ -45,7 +45,7 @@ jobs:
       - name: Compile
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino -O test.ino
+          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino -O test/test.ino
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg test/test.ino
 
   RGBLED:
