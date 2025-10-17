@@ -87,7 +87,7 @@ jobs:
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg test/test.ino
       - name: Monitor RGB Test
         run: |
-          timeout 60s arduino-cli monitor -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --config 115200 | tee rgb_test_output.log
+          timeout 60000 arduino-cli monitor -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --config 115200 | tee rgb_test_output.log
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
