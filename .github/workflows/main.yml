@@ -84,7 +84,7 @@ jobs:
         run: | 
           mkdir test
           wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/RGB.ino -O test/test.ino
-          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg --board-options "USBMode=hwcdc,UploadMode=uart0,CDCOnBoot=enabled" test/test.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg --board-options "USBMode=hwcdc,UploadMode=UART0,CDCOnBoot=enabled" test/test.ino
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg --board-options "USBMode=hwcdc,UploadMode=uart0,CDCOnBoot=enabled" test/test.ino
       - name: Monitor RGB Test
         run: |
