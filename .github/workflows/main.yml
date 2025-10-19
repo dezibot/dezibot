@@ -90,7 +90,7 @@ jobs:
       - name: Monitor RGB Test
         run: |
           sleep 2
-          timeout 60s screen /dev/ttyACM0 115200 -L rgb_test_output.log
+          timeout 60s screen /dev/ttyACM0 115200 > rgb_test_output.log
           sleep 65
           
       - name: Upload Artefact
