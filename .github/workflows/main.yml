@@ -90,7 +90,7 @@ jobs:
       - name: Monitor RGB Test
         run: |
           sleep 2
-          timeout 60s arduino-cli monitor -p /dev/ttyACM0 --config baudrate=115200 --log > rgb_test_output.log
+          arduino-cli monitor -p /dev/ttyACM0 --config baudrate=115200 --log > rgb_test_output.log
           
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
