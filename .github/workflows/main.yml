@@ -91,9 +91,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
-          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
-            bash -c 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a rgb_test_output.log'
+          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl 
+          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \ 
+            bash -c 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a rgb_test_output.log' 
+
           
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
