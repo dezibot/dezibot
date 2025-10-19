@@ -88,11 +88,12 @@ jobs:
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor RGB Test
+        shell: bash
         run: |
-          sleep 2
-          sleep 90
-          timeout --preserve-status 120s stdbuf -oL -eL cat /dev/ttyACM0 | tee rgb_test_output.log
-          
+          set -euo pipefail
+          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
+          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
+            bash -c 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a rgb_test_output.log'
           
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
