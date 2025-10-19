@@ -7,6 +7,7 @@ jobs:
   compile:
     runs-on: self-hosted
     name: Compile
+    needs: RGBLED
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -51,7 +52,7 @@ jobs:
   RGBLED:
     runs-on: self-hosted
     name: RGB LED Test
-    needs: compile
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -89,15 +90,8 @@ jobs:
       - name: Monitor RGB Test
         run: |
           sleep 2
-          timeout 40s arduino-cli monitor -p /dev/ttyACM0 --config baudrate=115200 > rgb_test_output.log 2>&1
-          RET=$?
-          if [ $RET -eq 124 ]; then
-            echo "Monitor timed out after 40 seconds"
-          else
-            echo "Monitor exited with status $RET"
-          fi
-          echo "======== Log preview ========"
-          tail -n 20 rgb_test_output.log
+          timeout 60s arduino-cli monitor -p /dev/ttyACM0 --config baudrate=115200 --log > rgb_test_output.log
+          
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
