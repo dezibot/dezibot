@@ -90,8 +90,8 @@ jobs:
       - name: Monitor RGB Test
         run: |
           sleep 2
-          timeout --preserve-status 90s stdbuf -oL -eL cat /dev/ttyACM0 | tee rgb_test_output.log
-          sleep 95
+          timeout --preserve-status 120s stdbuf -oL -eL cat /dev/ttyACM0 | tee rgb_test_output.log
+          sleep 120
           
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
