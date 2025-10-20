@@ -109,21 +109,20 @@ jobs:
             137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
-                
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
           name: rgb-test-log
           path: rgb_test_output.log
-    # TODO Parse test result from log
-    #- name: check test result
-    # run: |
-        #if grep -q "RGB LED Test: PASS" rgb_test_output.log; then
-      #   echo "RGB LED Test passed."
-      #  else
-      #   echo "RGB LED Test failed."
-      #    exit 1
-    #   fi
+    # Last line of test shows whether it passed or failed with: "Test: PASSED" or "Test: FAILED"
+      - name: check test result
+        run: |
+          if grep -q "Test: PASSED" rgb_test_output.log; then
+            echo "Test: PASSED"
+          else
+            echo "Test: FAILED"
+            exit 1
+          fi
   sync:
     runs-on: self-hosted
     name: Git Repo Sync
