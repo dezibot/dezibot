@@ -5,41 +5,16 @@ on:
 jobs:
  
   compile:
-    runs-on: self-hosted
-    name: Compile
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: compile
-        uses: ./.github/workflows/compile.yaml
-        with:
-          sketch: https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino
+    uses: ./.github/workflows/compile.yaml
+    with:
+      sketch: https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino
       
   RGBLED:
-    runs-on: self-hosted
-    name: RGB LED Test
+    uses: ./.github/workflows/hardwaretest.yaml
     needs: compile
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Test Hardware LED
-        uses: ./github/workflows/hardwaretest.yaml
-        with:
-          sketch: https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/RGB.ino
-          name: rgb-test-log
-    # Last line of test shows whether it passed or failed with: "Test: PASSED" or "Test: FAILED"
-      - name: check test result
-        run: |
-          if grep -q "Test: PASSED" rgb-test-log.log; then
-            echo "Test: PASSED"
-          else
-            echo "Test: FAILED"
-            exit 1
-          fi
+    with:
+      sketch: https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/RGB.ino
+      name: rgb-test-log
 
   InfraredLED:
     runs-on: self-hosted
