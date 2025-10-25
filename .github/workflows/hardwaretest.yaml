@@ -52,3 +52,11 @@ jobs:
         with:
           name: ${{ inputs.name }}.log
           path: ${{ inputs.name }}.log
+      - name: check test result
+        run: |
+          if grep -q "Test: PASSED" rgb-test-log.log; then
+            echo "Test: PASSED"
+          else
+            echo "Test: FAILED"
+            exit 1
+          fi
