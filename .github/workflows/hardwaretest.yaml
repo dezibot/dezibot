@@ -46,7 +46,7 @@ jobs:
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}.log
           path: ${{ inputs.name }}.log
