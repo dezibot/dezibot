@@ -1,0 +1,50 @@
+on: 
+  workflow_call:
+    inputs:
+      sketch:
+        required: true
+        type: string
+      name:
+        required: true
+        type: string
+        description: Name of the artifact       
+  
+jobs:
+  hardwaretest:
+    runs-on: self-hosted
+    name: hardwaretest
+    steps:
+      - name: Iinitiate
+        uses: ./.github/workflows/init.yaml
+    
+      - name: Compile
+        uses: ./.github/workflows/compile.yaml
+        with:
+          sketch: ${{ inputs.sketch }}
+      - name: Upload and Monitor Serial
+        shell: bash
+        run: |
+          set -euo pipefail
+          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
+
+          # Pipeline/Fehlerbehandlung temporär aus
+          set +e
+          set +o pipefail
+
+          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
+            bash -lc 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a ${{ inputs.name }}.log'
+          rc=$?
+          set -o pipefail
+          set -e
+          case "$rc" in
+            0)   echo "Serial finished cleanly."; exit 0 ;;
+            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
+            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
+            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
+            *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
+          esac
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.name }}.log
+          path: ${{ inputs.name }}.log

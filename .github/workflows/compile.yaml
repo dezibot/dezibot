@@ -1,0 +1,19 @@
+on: 
+  workflow_call:
+    inputs:
+      sketch:
+        required: true
+        type: string
+
+jobs:
+  compile:
+    runs-on: self-hosted
+    name: Compile
+    steps:
+      - name: Initiate
+        uses: ./.github/workflows/init.yaml
+      - name: Compile
+        run: | 
+          mkdir test
+          wget ${{ inputs.sketch }} -O test/test.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
