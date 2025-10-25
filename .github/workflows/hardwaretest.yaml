@@ -10,6 +10,11 @@ on:
         description: Name of the artifact       
   
 jobs:
+  compile:
+    uses: ./.github/workflows/compile.yaml
+    with:
+      sketch: ${{ inputs.sketch }}
+    
   hardwaretest:
     runs-on: self-hosted
     name: hardwaretest
@@ -18,13 +23,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Iinitiate
-        uses: ./.github/workflows/init.yaml
-    
-      - name: Compile
-        uses: ./.github/workflows/compile.yaml
-        with:
-          sketch: ${{ inputs.sketch }}
       - name: Upload and Monitor Serial
         shell: bash
         run: |
