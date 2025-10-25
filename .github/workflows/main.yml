@@ -21,7 +21,7 @@ jobs:
   sync:
     runs-on: self-hosted
     name: Git Repo Sync
-    needs: [RGBLED, InfraredLED, IMU_Motors, Batterie]
+    needs: RGBLED
     steps:
       - uses: actions/checkout@v2
         with:
