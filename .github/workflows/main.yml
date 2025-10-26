@@ -59,26 +59,8 @@ jobs:
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
       - name: prepare test
-        run: |
-          arduino-cli config set network.connection_timeout 6000s
-          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
-          IFS=',' read -ra ADDR <<< "$deps"
-          for i in "${ADDR[@]}"; do
-            lib=$(echo "$i" | xargs)
-            if [ -n "$lib" ]; then
-              echo "Installing $lib..."
-              arduino-cli lib install "$lib" || echo "Failed to install $lib"
-              arduino-cli lib upgrade "$lib" || echo "Failed to upgrade $lib"
-            fi
-          done
-          arduino-cli core install esp32:esp32
-          arduino-cli core upgrade esp32:esp32
-          arduino-cli core list
-          git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
-          arduino-cli lib uninstall dezibot || echo "Dezibot was not installed"
-          arduino-cli config set library.enable_unsafe_install true
-          arduino-cli lib install --zip-path dezibot.zip
-          arduino-cli config set library.enable_unsafe_install false
+        run: ${{secrets.INSTALL_AND_PREPARE}}
+         
       - name: Compile and Upload
         run: | 
           mkdir test
