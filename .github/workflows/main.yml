@@ -60,7 +60,6 @@ jobs:
         uses: arduino/setup-arduino-cli@v2
       - name: prepare test
         run: ${{secrets.INSTALL_AND_PREPARE}}
-         
       - name: Compile and Upload
         run: | 
           mkdir test
@@ -69,26 +68,7 @@ jobs:
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor RGB Test
         shell: bash
-        run: |
-          set -euo pipefail
-          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
-
-          # Pipeline/Fehlerbehandlung temporär aus
-          set +e
-          set +o pipefail
-
-          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
-            bash -lc 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a rgb_test_output.log'
-          rc=$?
-          set -o pipefail
-          set -e
-          case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
-            *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
-          esac
+        run: ${{ vars.MONITOR_SCRIPT }}
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
@@ -116,26 +96,7 @@ jobs:
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
       - name: prepare test
-        run: |
-          arduino-cli config set network.connection_timeout 6000s
-          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
-          IFS=',' read -ra ADDR <<< "$deps"
-          for i in "${ADDR[@]}"; do
-            lib=$(echo "$i" | xargs)
-            if [ -n "$lib" ]; then
-              echo "Installing $lib..."
-              arduino-cli lib install "$lib" || echo "Failed to install $lib"
-              arduino-cli lib upgrade "$lib" || echo "Failed to upgrade $lib"
-            fi
-          done
-          arduino-cli core install esp32:esp32
-          arduino-cli core upgrade esp32:esp32
-          arduino-cli core list
-          git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
-          arduino-cli lib uninstall dezibot || echo "Dezibot was not installed"
-          arduino-cli config set library.enable_unsafe_install true
-          arduino-cli lib install --zip-path dezibot.zip
-          arduino-cli config set library.enable_unsafe_install false
+        run: ${{secrets.INSTALL_AND_PREPARE}}
       - name: Compile and Upload
         run: | 
           mkdir test
@@ -144,26 +105,7 @@ jobs:
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor IR Test
         shell: bash
-        run: |
-          set -euo pipefail
-          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
-
-          # Pipeline/Fehlerbehandlung temporär aus
-          set +e
-          set +o pipefail
-
-          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
-            bash -lc 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a ir_test_output.log'
-          rc=$?
-          set -o pipefail
-          set -e
-          case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
-            *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
-          esac
+        run: ${{ vars.MONITOR_SCRIPT }}
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
@@ -191,26 +133,7 @@ jobs:
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
       - name: prepare test
-        run: |
-          arduino-cli config set network.connection_timeout 6000s
-          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
-          IFS=',' read -ra ADDR <<< "$deps"
-          for i in "${ADDR[@]}"; do
-            lib=$(echo "$i" | xargs)
-            if [ -n "$lib" ]; then
-              echo "Installing $lib..."
-              arduino-cli lib install "$lib" || echo "Failed to install $lib"
-              arduino-cli lib upgrade "$lib" || echo "Failed to upgrade $lib"
-            fi
-          done
-          arduino-cli core install esp32:esp32
-          arduino-cli core upgrade esp32:esp32
-          arduino-cli core list
-          git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
-          arduino-cli lib uninstall dezibot || echo "Dezibot was not installed"
-          arduino-cli config set library.enable_unsafe_install true
-          arduino-cli lib install --zip-path dezibot.zip
-          arduino-cli config set library.enable_unsafe_install false
+        run: ${{secrets.INSTALL_AND_PREPARE}}
       - name: Compile and Upload
         run: | 
           mkdir test
@@ -219,26 +142,7 @@ jobs:
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor IMU and Motors Test
         shell: bash
-        run: |
-          set -euo pipefail
-          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
-
-          # Pipeline/Fehlerbehandlung temporär aus
-          set +e
-          set +o pipefail
-
-          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
-            bash -lc 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a imu_test_output.log'
-          rc=$?
-          set -o pipefail
-          set -e
-          case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
-            *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
-          esac
+        run: ${{ vars.MONITOR_SCRIPT }}
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
@@ -266,26 +170,7 @@ jobs:
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
       - name: prepare test
-        run: |
-          arduino-cli config set network.connection_timeout 6000s
-          deps=$(grep "^depends=" library.properties | cut -d'=' -f2)
-          IFS=',' read -ra ADDR <<< "$deps"
-          for i in "${ADDR[@]}"; do
-            lib=$(echo "$i" | xargs)
-            if [ -n "$lib" ]; then
-              echo "Installing $lib..."
-              arduino-cli lib install "$lib" || echo "Failed to install $lib"
-              arduino-cli lib upgrade "$lib" || echo "Failed to upgrade $lib"
-            fi
-          done
-          arduino-cli core install esp32:esp32
-          arduino-cli core upgrade esp32:esp32
-          arduino-cli core list
-          git archive --format=zip --prefix=dezibot/ --output=dezibot.zip HEAD
-          arduino-cli lib uninstall dezibot || echo "Dezibot was not installed"
-          arduino-cli config set library.enable_unsafe_install true
-          arduino-cli lib install --zip-path dezibot.zip
-          arduino-cli config set library.enable_unsafe_install false
+        run: ${{secrets.INSTALL_AND_PREPARE}}
       - name: Compile and Upload
         run: | 
           mkdir test
@@ -294,26 +179,7 @@ jobs:
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor Batterie Test
         shell: bash
-        run: |
-          set -euo pipefail
-          stty -F /dev/ttyACM0 115200 -echo -icanon min 1 time 0 -crtscts -ixon -ixoff -hupcl
-
-          # Pipeline/Fehlerbehandlung temporär aus
-          set +e
-          set +o pipefail
-
-          /usr/bin/timeout --preserve-status --signal=SIGINT --kill-after=2s 120s \
-            bash -lc 'exec stdbuf -i0 -o0 -e0 cat /dev/ttyACM0 | stdbuf -i0 -o0 -e0 tee -a batterie_test_output.log'
-          rc=$?
-          set -o pipefail
-          set -e
-          case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
-            *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
-          esac
+        run: ${{ vars.MONITOR_SCRIPT }}
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
         with:
