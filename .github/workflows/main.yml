@@ -44,7 +44,7 @@ jobs:
       - name: Compile
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/all.ino -O test/test.ino
+          wget $OVERALL_TEST -O test/test.ino
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
 
   RGBLED:
