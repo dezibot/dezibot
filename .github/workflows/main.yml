@@ -1,9 +1,9 @@
 on:
   - push
   - delete
+  - pull_request
 
 jobs:
- 
   compile:
     runs-on: self-hosted
     name: Compile
