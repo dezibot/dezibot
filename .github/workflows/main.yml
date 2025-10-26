@@ -31,7 +31,6 @@ jobs:
           done
       - name: install Board
         run: | 
-          rm -rf ~/.arduino15/packages/esp32
           arduino-cli core install esp32:esp32
           arduino-cli core upgrade esp32:esp32
           arduino-cli core list
