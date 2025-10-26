@@ -82,7 +82,7 @@ jobs:
       - name: Compile and Upload
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/RGB.ino -O test/test.ino
+          wget ${{ vars.RGB_TEST }} -O test/test.ino
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor RGB Test
@@ -157,7 +157,7 @@ jobs:
       - name: Compile and Upload
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/IR.ino -O test/test.ino
+          wget ${{ vars.IR_TEST }} -O test/test.ino
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor IR Test
@@ -232,7 +232,7 @@ jobs:
       - name: Compile and Upload
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/IMU.ino -O test/test.ino
+          wget ${{ vars.IMU_TEST }} -O test/test.ino
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor IMU and Motors Test
@@ -307,7 +307,7 @@ jobs:
       - name: Compile and Upload
         run: | 
           mkdir test
-          wget https://raw.githubusercontent.com/YouDyZ/dezibot-tests/refs/heads/main/batterie.ino -O test/test.ino
+          wget ${{vars.BATTERIE_TEST}} -O test/test.ino
           arduino-cli compile --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino 
           arduino-cli upload -p /dev/ttyACM0 --fqbn esp32:esp32:esp32s3usbotg:USBMode=hwcdc,PartitionScheme=default,DebugLevel=none,EraseFlash=none test/test.ino
       - name: Monitor Batterie Test
