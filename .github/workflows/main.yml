@@ -2,6 +2,7 @@ on:
   - push
   - delete
   - pull_request
+  - workflow_dispatch
 
 jobs:
   compile:
