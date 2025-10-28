@@ -92,6 +92,7 @@ jobs:
           esac
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: rgb-test-log
           path: rgb_test_output.log
@@ -166,6 +167,7 @@ jobs:
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ir-test-log
@@ -241,6 +243,7 @@ jobs:
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: imu-test-log
@@ -316,6 +319,7 @@ jobs:
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: batterie-test-log
