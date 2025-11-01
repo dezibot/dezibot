@@ -84,11 +84,11 @@ jobs:
           set -o pipefail
           set -e
           case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
-            *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
+            	0)   echo "Finished cleanly."; exit 0 ;;
+              124) echo "Timeout after 120s."; exit 0 ;;   # timeout
+              130) echo "Ended by SIGINT."; exit 0 ;;
+              137) echo "Force-killed after 2s grace."; exit 0 ;;
+              *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
         uses: actions/upload-artifact@v4
@@ -160,10 +160,10 @@ jobs:
           set -o pipefail
           set -e
           case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
+            0)   echo "Finished cleanly."; exit 0 ;;
+            124) echo "Timeout after 120s."; exit 0 ;;   # timeout
+            130) echo "Ended by SIGINT."; exit 0 ;;
+            137) echo "Force-killed after 2s grace."; exit 0 ;;
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
@@ -236,10 +236,10 @@ jobs:
           set -o pipefail
           set -e
           case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
+            0)   echo "Finished cleanly."; exit 0 ;;
+            124) echo "Timeout after 120s."; exit 0 ;;   # timeout
+            130) echo "Ended by SIGINT."; exit 0 ;;
+            137) echo "Force-killed after 2s grace."; exit 0 ;;
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
@@ -312,10 +312,10 @@ jobs:
           set -o pipefail
           set -e
           case "$rc" in
-            0)   echo "Serial finished cleanly."; exit 0 ;;
-            124) echo "Timeout after 120s (expected)."; exit 0 ;;   # timeout
-            130) echo "Ended by SIGINT as intended (exit 130)."; exit 0 ;;
-            137) echo "Force-killed after 2s grace (SIGKILL, exit 137)."; exit 0 ;;
+            0)   echo "Finished cleanly."; exit 0 ;;
+            124) echo "Timeout after 120s."; exit 0 ;;   # timeout
+            130) echo "Ended by SIGINT."; exit 0 ;;
+            137) echo "Force-killed after 2s grace."; exit 0 ;;
             *)   echo "Unexpected exit code $rc — treating as success for CI."; exit 0 ;;
           esac
       - name: Upload Artefact
