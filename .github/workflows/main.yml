@@ -8,6 +8,12 @@ jobs:
   compile:
     runs-on: self-hosted
     name: Compile
+    if: >
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
+      (github.event_name == 'push' &&
+       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) ||
+      (github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -52,6 +58,12 @@ jobs:
     runs-on: self-hosted
     name: RGB LED Test
     needs: compile
+    if: >
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
+      (github.event_name == 'push' &&
+       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) ||
+      (github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -110,6 +122,12 @@ jobs:
     runs-on: self-hosted
     name: Infrared LED and Transistors Test
     needs: compile
+    if: >
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
+      (github.event_name == 'push' &&
+       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) ||
+      (github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -186,6 +204,12 @@ jobs:
     runs-on: self-hosted
     name: IMU and Motors Test
     needs: compile
+    if: >
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
+      (github.event_name == 'push' &&
+       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) ||
+      (github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -262,6 +286,12 @@ jobs:
     runs-on: self-hosted
     name: Batterie and Power Test
     needs: compile
+    if: >
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
+      (github.event_name == 'push' &&
+       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) ||
+      (github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
