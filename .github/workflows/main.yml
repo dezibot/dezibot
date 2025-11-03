@@ -8,12 +8,6 @@ jobs:
   compile:
     runs-on: self-hosted
     name: Compile
-    if: >
-      (github.event_name == 'pull_request' &&
-       (github.base_ref == 'main' || github.base_ref == 'dev')) ||
-      (github.event_name == 'push' &&
-       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) ||
-      (github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
