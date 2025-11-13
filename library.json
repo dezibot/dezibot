@@ -1,0 +1,23 @@
+{
+    "name": "Dezibot",
+    "version": "0.0.3",
+    "dependencies": [
+        {
+        "name": "Adafruit NeoPixel",
+        "version": "^1.12.3"
+        },
+        {
+        "name": "painlessMesh",
+        "version": "^1.5.4"
+        },
+        {
+        "name": "AsyncTCP",
+        "url": "https://github.com/dvarrel/AsyncTCP"
+        },
+        {
+        "name": "VEML6040",
+        "version": "^0.3.2",
+        "owner": "thewknd"
+        }
+    ]
+}
