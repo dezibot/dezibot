@@ -13,8 +13,12 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   //Serial.println(dezibot.motion.detection.getTemperature());
-  Serial.println(dezibot.motion.detection.getAcceleration().z);
-  //Serial.println(dezibot.motion.detection.getRotation().x);
-  Serial.println(dezibot.motion.detection.getWhoAmI());
-  delay(5000);
+  Serial.print("x: "); Serial.println(dezibot.motion.detection.getAcceleration().x);
+  Serial.print("y: "); Serial.println(dezibot.motion.detection.getAcceleration().y);
+  Serial.print("z: "); Serial.println(dezibot.motion.detection.getAcceleration().z);
+  Serial.print("Just to make sure that thing is alive, (expact 103): "); Serial.println(dezibot.motion.detection.getWhoAmI());
+  Serial.println("");
+
+  delay(500);
 }
+
