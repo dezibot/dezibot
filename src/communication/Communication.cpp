@@ -5,12 +5,18 @@ painlessMesh mesh;
 uint32_t Communication::groupNumber = 0;
 
 // User-defined callback function pointer
-void (*Communication::userCallback)(String &msg) = nullptr;
+void (*Communication::userCallbackSingle)(uint32_t from, String &msg) = nullptr;
+void (*Communication::userCallbackGroup)(uint32_t from, String &msg) = nullptr;
 
-void Communication::sendMessage(String msg)
+void Communication::broadcast(String msg)
 {
     String data = String(groupNumber) + "#" + msg;
     mesh.sendBroadcast(data);
+}
+
+void Communication::unicast(uint32_t targetId, String msg)
+{
+    mesh.sendSingle(targetId, msg);
 }
 
 // Needed for painless library
@@ -27,8 +33,12 @@ void Communication::receivedCallback(uint32_t from, String &msg)
         if (groupNumber != num) return;
 
         // Execute user-defined callback if it is set
-        if (userCallback) {
-            userCallback(restOfMsg);
+        if (userCallbackGroup) {
+            userCallbackGroup(from, restOfMsg);
+        }
+    } else {
+        if (userCallbackSingle) {
+            userCallbackSingle(from, msg);
         }
     }
 }
@@ -61,9 +71,19 @@ void Communication::setGroupNumber(uint32_t number) {
 }
 
 // Method to set the user-defined callback function
-void Communication::onReceive(void (*callbackFunc)(String &msg))
+void Communication::onReceiveGroup(void (*callbackFunc)(uint32_t from, String &msg))
 {
-    userCallback = callbackFunc;
+    userCallbackGroup = callbackFunc;
+}
+
+void Communication::onReceiveSingle(void (*callbackFunc)(uint32_t from, String &msg))
+{
+    userCallbackSingle = callbackFunc;
+}
+
+uint32_t Communication::getNodeId()
+{
+    return mesh.getNodeId();
 }
 
 void Communication::begin(void)

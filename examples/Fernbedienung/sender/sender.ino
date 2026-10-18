@@ -13,32 +13,32 @@ void loop() {
   switch (dezibot.motion.detection.getTiltDirection()) {
     case Front:
       dezibot.multiColorLight.setTopLeds(GREEN);
-      dezibot.communication.sendMessage("vorn");
+      dezibot.communication.broadcast("vorn");
       break;
     case Left:
       dezibot.multiColorLight.setTopLeds(YELLOW);
-      dezibot.communication.sendMessage("links");
+      dezibot.communication.broadcast("links");
       break;
     case Right:
       dezibot.multiColorLight.setTopLeds(TURQUOISE);
-      dezibot.communication.sendMessage("rechts");
+      dezibot.communication.broadcast("rechts");
       break;
     case Back:
       dezibot.multiColorLight.setTopLeds(BLUE);
-      dezibot.communication.sendMessage("stop");
+      dezibot.communication.broadcast("stop");
       break;
     case Flipped:
       dezibot.multiColorLight.setTopLeds(PINK);
-      dezibot.communication.sendMessage("stop");
+      dezibot.communication.broadcast("stop");
       break;
     case Neutral:
       dezibot.multiColorLight.turnOffLed();
-      dezibot.communication.sendMessage("stop");
+      dezibot.communication.broadcast("stop");
       break;
 
     case Error:
       dezibot.multiColorLight.setTopLeds(RED);
-      dezibot.communication.sendMessage("stop");
+      dezibot.communication.broadcast("stop");
       break;
   }
 

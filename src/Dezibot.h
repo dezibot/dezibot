@@ -1,12 +1,12 @@
 /**
  * @file Dezibot.h
  * @author Hans Haupt, Jens Wagner, Anina Morgner, Anton Jacker, Saskia Dübener
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2023-11-19
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 #ifndef Dezibot_h
 #define Dezibot_h
@@ -33,7 +33,7 @@ public:
     InfraredLight infraredLight;
     Communication communication;
     Display display;
-    void begin(void);
+    virtual void begin(void);
 };
 
 #endif //Dezibot_h

@@ -3,7 +3,7 @@
 
 Dezibot dezibot = Dezibot();
 
-void receivedCallback(String &msg) {
+void receivedCallback(uint32_t from, String &msg) {
   if (msg == "vorn") {
     dezibot.motion.move();
   } else if (msg == "links") {
@@ -18,7 +18,7 @@ void setup() {
   dezibot.begin();
   dezibot.communication.begin();
   dezibot.communication.setGroupNumber(5);
-  dezibot.communication.onReceive(&receivedCallback);
+  dezibot.communication.onReceiveGroup(&receivedCallback);
 }
 
 void loop() {
