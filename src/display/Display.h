@@ -1,6 +1,6 @@
 /**
- * @file InfraredLight.h
- * @author Hans Haupt (hans.haupt@dezibot.de)
+ * @file Display.h
+ * @author Hans Haupt (hans.haupt@dezibot.de), Bastian Wecke (bastian.wecke@stud.htwk-leipzig.de)
  * @brief Adds the ability to print to the display of the robot.
  * @version 0.1
  * @date 2024-05-24
@@ -42,6 +42,19 @@ class Display{
          * @param charAmount How many characters where added to the screen
          */
         void updateLine(uint charAmount);
+
+        /**
+         * @brief shared implementation for drawBitmap and fillRect.
+         * Validates, clips, sets up the display region, and streams bytes via I2C.
+         * Uses pgm_read_byte which works transparently for both RAM and PROGMEM on ESP32.
+         * @param x column start (0–127)
+         * @param y row start (0–63, must be multiple of 8)
+         * @param data pointer to bitmap data (ignored when fill=true)
+         * @param w width in pixels
+         * @param h height in pixels (must be multiple of 8)
+         * @param fill if true, writes 0x00 instead of reading from data
+         */
+        void sendBitmapRegion(uint8_t x, uint8_t y, const uint8_t* data, uint8_t w, uint8_t h, bool fill);
 
     public:
         
@@ -121,6 +134,61 @@ class Display{
          * 
          */
         void invertColor(void);
+
+        /**
+         * @brief draws a monochrome bitmap at (x,y). Requires page alignment: y and h must be multiples of 8.
+         * Bitmap format: SSD1306 column-major, each byte = 8 vertical pixels.
+         * Works with both RAM and PROGMEM data (pgm_read_byte is a no-op on ESP32).
+         * @param x column start (0–127)
+         * @param y row start (0–63, must be multiple of 8)
+         * @param bitmap pointer to bitmap data (RAM or PROGMEM)
+         * @param w width in pixels
+         * @param h height in pixels (must be multiple of 8)
+         */
+        void drawBitmap(uint8_t x, uint8_t y, const uint8_t* bitmap, uint8_t w, uint8_t h);
+
+        /**
+         * @brief fills a rectangle with black (erases region). Requires page alignment: y and h multiples of 8.
+         * Use for partial updates (e.g. erase before redrawing a sprite) to avoid full-screen flicker.
+         * @param x column start (0–127)
+         * @param y row start (0–63, must be multiple of 8)
+         * @param w width in pixels
+         * @param h height in pixels (must be multiple of 8)
+         */
+        void fillRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
+
+        /**
+         * @brief sets display brightness (contrast). 0 = dimmest, 255 = brightest.
+         * @param value brightness level (0–255)
+         */
+        void setBrightness(uint8_t value);
+
+        /**
+         * @brief plays a frame animation at (x,y). Frames must be in PROGMEM, concatenated.
+         * Each frame overwrites the previous. Blocks for the full duration.
+         * @param x column start
+         * @param y row start (must be multiple of 8)
+         * @param frames pointer to PROGMEM data (frame0, frame1, frame2, ... concatenated)
+         * @param frameCount number of frames
+         * @param w width of each frame
+         * @param h height of each frame (must be multiple of 8)
+         * @param frameDurationMs milliseconds per frame
+         */
+        void playAnimation(uint8_t x, uint8_t y, const uint8_t* frames, uint8_t frameCount, uint8_t w, uint8_t h, uint16_t frameDurationMs);
+
+        /**
+         * @brief plays a frame animation from an array of frame pointers (e.g. image2cpp allArray).
+         * Each frame must be in PROGMEM. Use this overload when frames are separate arrays.
+         * Each frame overwrites the previous. Blocks for the full duration.
+         * @param x column start
+         * @param y row start (must be multiple of 8)
+         * @param framePtrs array of pointers to PROGMEM frame data
+         * @param frameCount number of frames
+         * @param w width of each frame
+         * @param h height of each frame (must be multiple of 8)
+         * @param frameDurationMs milliseconds per frame
+         */
+        void playAnimation(uint8_t x, uint8_t y, const uint8_t* const* framePtrs, uint8_t frameCount, uint8_t w, uint8_t h, uint16_t frameDurationMs);
 };
 
 
